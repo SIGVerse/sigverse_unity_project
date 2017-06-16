@@ -29,6 +29,8 @@ namespace SIGVerse.Common
 		private const string SIGVerseGroupName     = "SIGVerse";
 		private const string SIGVerseGroupFilePath = SIGVerseGroupName + ".log";
 
+		private const int LogInterval = 300; // [ms]
+
 		public enum LogLevel
 		{
 			INFO, 
@@ -165,8 +167,6 @@ namespace SIGVerse.Common
 		{
 			try
 			{
-				const int LogInterval = 1000; // [ms]
-
 				string logGroupName = (string)args;
 
 				DateTime preTime = DateTime.Now;
@@ -175,7 +175,7 @@ namespace SIGVerse.Common
 
 				while (true)
 				{
-					int sleepTime = LogInterval - (int)DateTime.Now.Subtract(preTime).TotalMilliseconds;
+					int sleepTime = SIGVerseLogger.LogInterval - (int)DateTime.Now.Subtract(preTime).TotalMilliseconds;
 
 					if(sleepTime > 0)
 					{

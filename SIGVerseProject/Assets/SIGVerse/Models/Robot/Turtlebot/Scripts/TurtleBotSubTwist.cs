@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using SIGVerse.ROSBridge;
 using SIGVerse.Common;
 
@@ -8,7 +8,7 @@ namespace SIGVerse.TurtleBot
 	public class TurtleBotSubTwist : MonoBehaviour
 	{
 		public string rosBridgeIP;
-		public int rosBridgePort = 9090;
+		public int    rosBridgePort;
 
 		public string topicName;
 
@@ -19,13 +19,16 @@ namespace SIGVerse.TurtleBot
 
 		void Start()
 		{
-			if (!ConfigManager.Instance.configInfo.rosIP.Equals(string.Empty))
+			if (this.rosBridgeIP.Equals(string.Empty))
 			{
 				this.rosBridgeIP = ConfigManager.Instance.configInfo.rosIP;
+			}
+			if (this.rosBridgePort==0)
+			{
 				this.rosBridgePort = int.Parse(ConfigManager.Instance.configInfo.rosPort);
 			}
 
-			this.webSocketConnection = new SIGVerse.ROSBridge.ROSBridgeWebSocketConnection(rosBridgeIP, rosBridgePort);
+			this.webSocketConnection = new SIGVerse.ROSBridge.ROSBridgeWebSocketConnection(this.rosBridgeIP, this.rosBridgePort);
 
 			this.webSocketConnection.Subscribe<SIGVerse.ROSBridge.geometry_msgs.Twist>(topicName, this.TwistCallback);
 

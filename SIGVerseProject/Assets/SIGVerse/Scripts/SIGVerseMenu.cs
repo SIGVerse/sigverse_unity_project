@@ -77,7 +77,7 @@ namespace SIGVerse.Common
 
 			this.mainPanelImage = this.mainPanel.GetComponent<Image>();
 
-			this.targetsOfHiding = this.mainPanel.transform.FindChild("TargetsOfHiding").gameObject;
+			this.targetsOfHiding = this.mainPanel.transform.Find("TargetsOfHiding").gameObject;
 
 			this.canvas.SetActive(false);
 			this.mainPanel.SetActive(true);

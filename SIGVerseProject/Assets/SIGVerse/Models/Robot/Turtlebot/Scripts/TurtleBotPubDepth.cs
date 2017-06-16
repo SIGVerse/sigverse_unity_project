@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 using System.Collections;
 using SIGVerse.ROSBridge.sensor_msgs;
@@ -12,8 +12,7 @@ namespace SIGVerse.TurtleBot
 	public class TurtleBotPubDepth : MonoBehaviour
 	{
 		public string rosBridgeIP;
-		public int rosBridgePort = 9090;
-		public int sigverseBridgePort = 50001;
+		public int sigverseBridgePort;
 
 		public string topicNameCameraInfo = "/camera/depth/camera_info";
 		public string topicNameImage      = "/camera/depth/image_raw";
@@ -41,14 +40,17 @@ namespace SIGVerse.TurtleBot
 
 		void Start()
 		{
-			if (!ConfigManager.Instance.configInfo.rosIP.Equals(string.Empty))
+			if (this.rosBridgeIP.Equals(string.Empty))
 			{
 				this.rosBridgeIP = ConfigManager.Instance.configInfo.rosIP;
-				this.rosBridgePort = int.Parse(ConfigManager.Instance.configInfo.rosPort);
+			}
+			if (this.sigverseBridgePort==0)
+			{
+				this.sigverseBridgePort = int.Parse(ConfigManager.Instance.configInfo.sigverseBridgePort);
 			}
 
 
-			this.tcpClient = new System.Net.Sockets.TcpClient(rosBridgeIP, sigverseBridgePort);
+			this.tcpClient = new System.Net.Sockets.TcpClient(this.rosBridgeIP, this.sigverseBridgePort);
 
 			this.networkStream = this.tcpClient.GetStream();
 
@@ -57,7 +59,7 @@ namespace SIGVerse.TurtleBot
 
 
 			// Depth Camera
-			this.xtionDepthCamera = this.transform.FindChild("Xtion_depth").GetComponent<Camera>();
+			this.xtionDepthCamera = this.transform.Find("Xtion_depth").GetComponent<Camera>();
 
 			int imageWidth  = this.xtionDepthCamera.targetTexture.width;
 			int imageHeight = this.xtionDepthCamera.targetTexture.height;

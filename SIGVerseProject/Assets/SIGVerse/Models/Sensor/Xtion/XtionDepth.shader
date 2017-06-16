@@ -1,4 +1,6 @@
-﻿Shader "SIGVerse/XtionDepth" 
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "SIGVerse/XtionDepth" 
 {
 	SubShader
 	{
@@ -24,7 +26,7 @@
 			v2f vert(appdata_base v) 
 			{
 				v2f o;
-				o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+				o.pos = UnityObjectToClipPos(v.vertex);
 				o.uv = ComputeScreenPos(o.pos);
 				o.uv.y = 1 - o.uv.y;
 

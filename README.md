@@ -1,2 +1,6 @@
-# unity
-Tools and modules for Unity system
+# Unity Projects
+
+Unity projects for SIGVerse.
+
+http://www.sigverse.org/web/
+

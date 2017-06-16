@@ -7,7 +7,11 @@ namespace SIGVerse.Common
 {
 	public class ConfigManager : Singleton<ConfigManager>
 	{
-		private static readonly string ConfigFilePath = "SIGVerseConfig.json";
+		private const string FolderPath = "/../SIGVerseConfig/";
+		private const string FileName = "SIGVerseConfig.json";
+
+		private string configFolderPath;
+		private string configFilePath;
 
 		protected ConfigManager() { } // guarantee this will be always a singleton only - can't use the constructor!
 
@@ -15,14 +19,22 @@ namespace SIGVerse.Common
 
 		void Awake()
 		{
+			this.configFolderPath = Application.dataPath + FolderPath;
+			this.configFilePath = this.configFolderPath + FileName;
+
 			this.configInfo = new ConfigInfo();
 
-			if (File.Exists(ConfigFilePath))
+			if (!Directory.Exists(this.configFolderPath))
+			{
+				Directory.CreateDirectory(this.configFolderPath);
+			}
+
+			if (File.Exists(configFilePath))
 			{
 				Debug.Log("Config file exists.");
 
 				// File open
-				StreamReader srConfigReader = new StreamReader(ConfigFilePath, Encoding.UTF8);
+				StreamReader srConfigReader = new StreamReader(configFilePath, Encoding.UTF8);
 
 				this.configInfo = JsonUtility.FromJson<ConfigInfo>(srConfigReader.ReadToEnd());
 
@@ -32,8 +44,9 @@ namespace SIGVerse.Common
 			{
 				Debug.Log("Config file not exists.");
 
-				this.configInfo.rosIP = "";
-				this.configInfo.rosPort = "";
+				this.configInfo.rosIP = "192.168.1.101";
+				this.configInfo.rosPort = "9090";
+				this.configInfo.sigverseBridgePort = "50001";
 
 				this.SaveConfig();
 			}
@@ -47,7 +60,7 @@ namespace SIGVerse.Common
 
 		public void SaveConfig()
 		{
-			StreamWriter swConfigWriter = new StreamWriter(ConfigFilePath, false, Encoding.UTF8);
+			StreamWriter swConfigWriter = new StreamWriter(configFilePath, false, Encoding.UTF8);
 
 			Debug.Log("SaveConfig : " + JsonUtility.ToJson(ConfigManager.Instance.configInfo));
 
@@ -63,6 +76,7 @@ namespace SIGVerse.Common
 	{
 		public string rosIP;
 		public string rosPort;
+		public string sigverseBridgePort;
 	}
 }
 

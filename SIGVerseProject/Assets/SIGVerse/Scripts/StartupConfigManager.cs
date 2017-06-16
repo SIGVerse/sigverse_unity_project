@@ -16,10 +16,10 @@ namespace SIGVerse.Common
 			// Update Scene Select values
 			GameObject valuesObj = GameObject.Find("SceneSelect/Canvas/Panel/InputField/Value/");
 
-			GameObject rosIPObj = valuesObj.transform.FindChild("ROSBridgeIPInputField").gameObject;
+			GameObject rosIPObj = valuesObj.transform.Find("ROSBridgeIPInputField").gameObject;
 			rosIPObj.GetComponentInChildren<InputField>().text = ConfigManager.Instance.configInfo.rosIP;
 
-			GameObject rosPortObj = valuesObj.transform.FindChild("ROSBridgePortInputField").gameObject;
+			GameObject rosPortObj = valuesObj.transform.Find("ROSBridgePortInputField").gameObject;
 			rosPortObj.GetComponentInChildren<InputField>().text = ConfigManager.Instance.configInfo.rosPort;
 		}
 	}
