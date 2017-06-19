@@ -17,10 +17,10 @@ namespace SIGVerse.Common
 			GameObject valuesObj = GameObject.Find("SceneSelect/Canvas/Panel/InputField/Value/");
 
 			GameObject rosIPObj = valuesObj.transform.Find("ROSBridgeIPInputField").gameObject;
-			rosIPObj.GetComponentInChildren<InputField>().text = ConfigManager.Instance.configInfo.rosIP;
+			rosIPObj.GetComponentInChildren<InputField>().text = ConfigManager.Instance.configInfo.rosbridgeIP;
 
 			GameObject rosPortObj = valuesObj.transform.Find("ROSBridgePortInputField").gameObject;
-			rosPortObj.GetComponentInChildren<InputField>().text = ConfigManager.Instance.configInfo.rosPort;
+			rosPortObj.GetComponentInChildren<InputField>().text = ConfigManager.Instance.configInfo.rosbridgePort.ToString();
 		}
 	}
 }

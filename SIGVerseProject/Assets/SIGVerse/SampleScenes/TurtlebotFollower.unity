@@ -1678,8 +1678,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 975513976c038c348b76d2bc5d511f48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rosBridgeIP: 192.168.31.101
-  sigverseBridgePort: 50001
+  rosBridgeIP: 
+  sigverseBridgePort: 0
   topicNameCameraInfo: /camera/rgb/camera_info
   topicNameImage: /camera/rgb/image_raw
 --- !u!95 &646741755
@@ -1729,8 +1729,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86fcff80c3b539a4e8d79e018e0e6c70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rosBridgeIP: 192.168.31.101
-  sigverseBridgePort: 50001
+  rosBridgeIP: 
+  sigverseBridgePort: 0
   topicNameCameraInfo: /camera/depth/camera_info
   topicNameImage: /camera/depth/image_raw
 --- !u!114 &646741758
@@ -1744,8 +1744,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22487e437b22fc24fa31098aed59c4de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rosBridgeIP: 192.168.31.101
-  rosBridgePort: 9090
+  rosBridgeIP: 
+  rosBridgePort: 0
   topicName: /cmd_vel_mux/input/navi
 --- !u!1 &704158084
 GameObject:
@@ -4912,7 +4912,7 @@ Transform:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1724439117}
-  m_LocalRotation: {x: 0.5326752, y: 0.070340455, z: 0.83613276, w: -0.110415146}
+  m_LocalRotation: {x: 0.53267515, y: 0.07034045, z: 0.83613265, w: -0.11041513}
   m_LocalPosition: {x: 0.000022271464, y: -0.00006150465, z: 0.026027026}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

@@ -11,7 +11,7 @@ namespace SIGVerse.TurtleBot
 {
 	public class TurtleBotPubRGB : MonoBehaviour
 	{
-		public string rosBridgeIP;
+		public string rosbridgeIP;
 		public int    sigverseBridgePort;
 
 		public string topicNameCameraInfo = "/camera/rgb/camera_info";
@@ -38,17 +38,17 @@ namespace SIGVerse.TurtleBot
 
 		void Start()
 		{
-			if (this.rosBridgeIP.Equals(string.Empty))
+			if (this.rosbridgeIP.Equals(string.Empty))
 			{
-				this.rosBridgeIP = ConfigManager.Instance.configInfo.rosIP;
+				this.rosbridgeIP = ConfigManager.Instance.configInfo.rosbridgeIP;
 			}
 			if (this.sigverseBridgePort==0)
 			{
-				this.sigverseBridgePort = int.Parse(ConfigManager.Instance.configInfo.sigverseBridgePort);
+				this.sigverseBridgePort = ConfigManager.Instance.configInfo.sigverseBridgePort;
 			}
 
 
-			this.tcpClient = new System.Net.Sockets.TcpClient(this.rosBridgeIP, this.sigverseBridgePort);
+			this.tcpClient = new System.Net.Sockets.TcpClient(this.rosbridgeIP, this.sigverseBridgePort);
 
 			this.networkStream = this.tcpClient.GetStream();
 

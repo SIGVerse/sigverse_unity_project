@@ -42,10 +42,10 @@ namespace SIGVerse.Common
 			}
 
 			// Update ROS Bridge IP
-			this.rosIPVal.GetComponentInChildren<InputField>().text = ConfigManager.Instance.configInfo.rosIP;
+			this.rosIPVal.GetComponentInChildren<InputField>().text = ConfigManager.Instance.configInfo.rosbridgeIP;
 
 			// Update ROS Bridge Port 
-			this.rosPortVal.GetComponentInChildren<InputField>().text = ConfigManager.Instance.configInfo.rosPort;
+			this.rosPortVal.GetComponentInChildren<InputField>().text = ConfigManager.Instance.configInfo.rosbridgePort.ToString();
 		}
 
 		//// Update is called once per frame
@@ -65,17 +65,17 @@ namespace SIGVerse.Common
 
 		public void UpdateConfigRosIP(Text rosIPText)
 		{
-			ConfigManager.Instance.configInfo.rosIP = rosIPText.text;
+			ConfigManager.Instance.configInfo.rosbridgeIP = rosIPText.text;
 		}
 
 		public void UpdateConfigRosPort(Text rosPortText)
 		{
-			ConfigManager.Instance.configInfo.rosPort = rosPortText.text;
+			ConfigManager.Instance.configInfo.rosbridgePort = int.Parse(rosPortText.text);
 		}
 
 		public void LoadScene(Text sceneNameText)
 		{
-			ConfigManager.Instance.SaveConfig();
+			ConfigManager.SaveConfig();
 
 			SceneManager.LoadScene(sceneNameText.text);
 		}

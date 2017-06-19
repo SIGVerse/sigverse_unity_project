@@ -108,7 +108,7 @@ namespace SIGVerse.Common
 
 			if (!AddLogGroup(SIGVerseGroupName, SIGVerseGroupFilePath)) { return; }
 
-			Info("Application Start");
+			Info("SIGVerseLogger Start");
 		}
 
 		/// <summary>

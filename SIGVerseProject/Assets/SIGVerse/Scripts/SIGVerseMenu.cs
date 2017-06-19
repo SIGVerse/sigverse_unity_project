@@ -14,6 +14,7 @@ namespace SIGVerse.Common
 		private const float defaultTimeScale = 1.0f;
 
 		[HeaderAttribute("Panels")]
+		public Image      backgroundImage;
 		public GameObject mainPanel;
 		public GameObject messagePanel;
 		public GameObject infoPanel;
@@ -28,6 +29,9 @@ namespace SIGVerse.Common
 		//---------------------------------------------------
 
 		private GameObject canvas;
+
+		private Color backgroundDarkColor;
+		private Color backgroundBrightColor;
 
 		private Text timeValueText;
 
@@ -45,11 +49,38 @@ namespace SIGVerse.Common
 		private float elapsedTime = 0.0f;
 
 
+		[RuntimeInitializeOnLoadMethod()]
+		private static void Init()
+		{
+			if(GameObject.Find("SIGVerseMenu")!=null) { return; };
+
+			if(!ConfigManager.Instance.configInfo.displaySigverseMenu) { return; }
+
+			GameObject sigverseMenuObj = (GameObject)Resources.Load("SIGVerse/Prefabs/SIGVerseMenu");
+
+			Instantiate(sigverseMenuObj, Vector3.zero, Quaternion.identity);
+
+			DontDestroyOnLoad(sigverseMenuObj);
+
+			SIGVerseLogger.Info("SIGVerseMenu Start");
+		}
+
 		void Awake()
 		{
 			Time.timeScale = 0.0f;
 
 			DontDestroyOnLoad(this);
+
+			this.rosIPObj  .GetComponent<Text>().text = ConfigManager.Instance.configInfo.rosbridgeIP;
+			this.rosPortObj.GetComponent<Text>().text = ConfigManager.Instance.configInfo.rosbridgePort.ToString();
+
+			this.canvas = this.transform.GetComponentInChildren<Canvas>().gameObject;
+
+			this.timeValueText = this.timeValObj.GetComponent<Text>();
+
+			this.mainPanelImage = this.mainPanel.GetComponent<Image>();
+
+			this.targetsOfHiding = this.mainPanel.transform.Find("TargetsOfHiding").gameObject;
 
 			SceneManager.sceneLoaded += OnSceneLoaded;
 		}
@@ -68,18 +99,11 @@ namespace SIGVerse.Common
 		// Use this for initialization
 		void Start()
 		{
-			this.rosIPObj.GetComponent<Text>().text = ConfigManager.Instance.configInfo.rosIP;
-			this.rosPortObj.GetComponent<Text>().text = ConfigManager.Instance.configInfo.rosPort;
+			this.backgroundDarkColor   = this.backgroundImage.color;
+			this.backgroundBrightColor = this.backgroundImage.color;
+			this.backgroundBrightColor.a = 0.0f;
 
-			this.canvas = this.transform.GetComponentInChildren<Canvas>().gameObject;
-
-			this.timeValueText = this.timeValObj.GetComponent<Text>();
-
-			this.mainPanelImage = this.mainPanel.GetComponent<Image>();
-
-			this.targetsOfHiding = this.mainPanel.transform.Find("TargetsOfHiding").gameObject;
-
-			this.canvas.SetActive(false);
+			this.canvas.SetActive(true);
 			this.mainPanel.SetActive(true);
 			this.messagePanel.SetActive(false);
 			this.infoPanel.SetActive(false);
@@ -170,6 +194,20 @@ namespace SIGVerse.Common
 			Debug.Log("Quit!!!");
 			Application.Quit();
 		}
+
+
+		public void OnGUI ()
+		{
+			if (this.isRunning)
+			{
+				this.backgroundImage.color = this.backgroundBrightColor;
+			}
+			else
+			{
+				this.backgroundImage.color = this.backgroundDarkColor;
+			}
+		}
+
 
 		public void OnBeginDrag(PointerEventData eventData)
 		{

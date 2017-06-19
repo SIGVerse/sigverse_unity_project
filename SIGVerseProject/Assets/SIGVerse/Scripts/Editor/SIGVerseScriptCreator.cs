@@ -10,20 +10,22 @@ using UnityEngine;
 /// </summary>
 public static class SIGVerseScriptCreator
 {
-	private const string MenuItemName = "SIGVerseTools/Create Scripts"; 
-	private const string ScriptPath   = "Assets/SIGVerse/Scripts/EditorConstantsManager.cs";
+	private const string MenuItemName = "SIGVerse/Create Scripts"; 
+	public  const string ScriptName   = "EditorConstantsManager.cs";
+	private const string ScriptPath   = "Assets/SIGVerse/Scripts/" + ScriptName;
 
 	/// <summary>
 	/// Create script
 	/// </summary>
-	[MenuItem(MenuItemName)]
-	public static void Create()
+//	[MenuItem(MenuItemName)]
+	public static void CreateScript()
 	{
 		if (!CanCreate()) { return; }
 
 		SIGVerseScriptCreator.CreateScripts();
 
-		EditorUtility.DisplayDialog("Create Scripts", "Creating scripts is finished.", "OK");
+		Debug.Log("Created '" +ScriptName+ "'");
+		EditorUtility.DisplayDialog("Create Scripts", "Created '" +ScriptName+ "'", "OK");
 	}
 
 	/// <summary>
@@ -78,7 +80,7 @@ public static class SIGVerseScriptCreator
 	/// <summary>
 	/// Return that creating the script file is possible or not
 	/// </summary>
-	[MenuItem(MenuItemName, true)]
+//	[MenuItem(MenuItemName, true)]
 	public static bool CanCreate()
 	{
 		return !EditorApplication.isPlaying && !Application.isPlaying && !EditorApplication.isCompiling;
