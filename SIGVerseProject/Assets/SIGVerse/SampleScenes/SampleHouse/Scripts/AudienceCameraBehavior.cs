@@ -8,6 +8,17 @@ namespace SIGVerse.SampleScenes.SampleHouse
 {
 	public class AudienceCameraBehavior : MonoBehaviour
 	{
+		public enum SubviewNumber
+		{
+			Subview1 = 1,
+			Subview2,
+			Subview3,
+			Subview4,
+		}
+		
+
+		public SubviewNumber subviewNumber;
+
 		// Use this for initialization
 		void Start ()
 		{
@@ -15,7 +26,7 @@ namespace SIGVerse.SampleScenes.SampleHouse
 			(
 				target: GameObject.Find(SIGVerseMenu.SIGVerseMenuName),
 				eventData: null,
-				functor: (reciever, eventData) => reciever.OnUpdateSubviewCamera(1, this.GetComponent<Camera>())
+				functor: (reciever, eventData) => reciever.OnUpdateSubviewCamera((int)this.subviewNumber, this.GetComponent<Camera>())
 			);
 		}
 	
