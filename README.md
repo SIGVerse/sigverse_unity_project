@@ -1,6 +1,6 @@
 # Unity Projects
 
-Unity projects for SIGVerse.
+Unity projects of SIGVerse.
 
 http://www.sigverse.org/web/
 

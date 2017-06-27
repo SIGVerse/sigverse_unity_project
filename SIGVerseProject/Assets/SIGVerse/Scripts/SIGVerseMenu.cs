@@ -4,20 +4,37 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.Common;
+using System.Linq;
 
 namespace SIGVerse.Common
 {
 	public class SIGVerseMenu : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 	{
-		private const string timeFormat = "#####0.0";
-		private const float defaultTimeScale = 1.0f;
+		public enum PanelOperationType
+		{
+			Move, 
+			ExpandXY, 
+			ExpandX,
+			ExpandY,
+		}
 
-		[HeaderAttribute("Panels")]
+		public const string SIGVerseMenuName = "SIGVerseMenu";
+
+		private const string TimeFormat = "#####0.0";
+		private const float DefaultTimeScale = 1.0f;
+
+		private const float DraggingThreshold = 15;
+		private const float MinimumPanelSize  = 100;
+
+		[HeaderAttribute("Major Panels")]
 		public Image      backgroundImage;
 		public GameObject mainPanel;
-		public GameObject messagePanel;
+		public GameObject subviewPanel;
 		public GameObject infoPanel;
+		public GameObject messagePanel;
+
+		[HeaderAttribute("Subview Panels")]
+		public List<GameObject> subviewPanels;
 
 		[HeaderAttribute("Time")]
 		public GameObject timeValObj;
@@ -35,14 +52,17 @@ namespace SIGVerse.Common
 
 		private Text timeValueText;
 
+		private PanelOperationType panelOperationType;
 		private GameObject draggingPanel;
+		private RectTransform   expandingRectTransform;
 
 		private Image mainPanelImage;
 		private GameObject targetsOfHiding;
 
 		private bool canSeeMainPanel;
-		private bool canSeeMessagePanel;
+		private bool canSeeSubviewPanel;
 		private bool canSeeInfoPanel;
+		private bool canSeeMessagePanel;
 
 		private bool isRunning = false;
 
@@ -52,21 +72,24 @@ namespace SIGVerse.Common
 		[RuntimeInitializeOnLoadMethod()]
 		private static void Init()
 		{
-			if(GameObject.Find("SIGVerseMenu")!=null) { return; };
+			if(GameObject.Find(SIGVerseMenuName)!=null) { return; };
 
 			if(!ConfigManager.Instance.configInfo.displaySigverseMenu) { return; }
 
-			GameObject sigverseMenuObj = (GameObject)Resources.Load("SIGVerse/Prefabs/SIGVerseMenu");
+			GameObject sigverseMenuObjPrefab = (GameObject)Resources.Load("SIGVerse/Prefabs/SIGVerseMenu");
 
-			Instantiate(sigverseMenuObj, Vector3.zero, Quaternion.identity);
-
-			DontDestroyOnLoad(sigverseMenuObj);
+			GameObject sigverseMenuObj = Instantiate(sigverseMenuObjPrefab, Vector3.zero, Quaternion.identity);
+			sigverseMenuObj.name = SIGVerseMenuName;
 
 			SIGVerseLogger.Info("SIGVerseMenu Start");
 		}
 
 		void Awake()
 		{
+			this.backgroundDarkColor   = this.backgroundImage.color;
+			this.backgroundBrightColor = this.backgroundImage.color;
+			this.backgroundBrightColor.a = 0.0f;
+
 			Time.timeScale = 0.0f;
 
 			DontDestroyOnLoad(this);
@@ -82,11 +105,35 @@ namespace SIGVerse.Common
 
 			this.targetsOfHiding = this.mainPanel.transform.Find("TargetsOfHiding").gameObject;
 
+
+			this.canvas      .SetActive(true);
+			this.mainPanel   .SetActive(true);
+			this.subviewPanel.SetActive(false);
+			this.infoPanel   .SetActive(false);
+			this.messagePanel.SetActive(false);
+
+			for(int i=0; i<this.subviewPanels.Count; i++)
+			{
+				this.subviewPanels[i].SetActive(false);
+
+				// Set subviews position
+				float posX = Screen.width - 300;
+				float posY = Screen.height - 15 - i*200;
+
+				if(posY-200 < 0) { posY = 200; }
+				
+				RectTransform rectTransform = this.subviewPanels[i].GetComponent<RectTransform>();
+				rectTransform.position = new Vector3(posX, posY, 0.0f);
+			}
+
 			SceneManager.sceneLoaded += OnSceneLoaded;
 		}
 
+
 		void OnSceneLoaded(Scene loadedScene, LoadSceneMode mode)
 		{
+//			Debug.Log("scene name="+SceneManager.GetActiveScene().name);
+
 			this.sceneNameObj.GetComponent<Text>().text = SceneManager.GetActiveScene().name;
 
 			if (loadedScene.buildIndex != 0)
@@ -99,36 +146,31 @@ namespace SIGVerse.Common
 		// Use this for initialization
 		void Start()
 		{
-			this.backgroundDarkColor   = this.backgroundImage.color;
-			this.backgroundBrightColor = this.backgroundImage.color;
-			this.backgroundBrightColor.a = 0.0f;
-
-			this.canvas.SetActive(true);
-			this.mainPanel.SetActive(true);
-			this.messagePanel.SetActive(false);
-			this.infoPanel.SetActive(false);
 		}
+
 
 		// Update is called once per frame
 		void Update()
 		{
 			this.elapsedTime += Time.deltaTime;
 
-			this.timeValueText.text = this.elapsedTime.ToString(timeFormat);
+			this.timeValueText.text = this.elapsedTime.ToString(TimeFormat);
 		}
 
-		public void ClickHiddingButton()
+		public void OnHiddingButtonClick()
 		{
 			if (this.mainPanelImage.enabled)
 			{
-				this.canSeeMainPanel = this.mainPanelImage.enabled;
+				this.canSeeMainPanel    = this.mainPanelImage.enabled;
+				this.canSeeSubviewPanel = this.subviewPanel.activeSelf;
+				this.canSeeInfoPanel    = this.infoPanel   .activeSelf;
 				this.canSeeMessagePanel = this.messagePanel.activeSelf;
-				this.canSeeInfoPanel = this.infoPanel.activeSelf;
 
 				this.mainPanelImage.enabled = false;
 				this.targetsOfHiding.SetActive(false);
+				this.subviewPanel.SetActive(false);
+				this.infoPanel   .SetActive(false);
 				this.messagePanel.SetActive(false);
-				this.infoPanel.SetActive(false);
 			}
 			else
 			{
@@ -137,18 +179,22 @@ namespace SIGVerse.Common
 					this.mainPanelImage.enabled = true;
 					this.targetsOfHiding.SetActive(true);
 				}
-				if (this.canSeeMessagePanel)
+				if (this.canSeeSubviewPanel)
 				{
-					this.messagePanel.SetActive(true);
+					this.subviewPanel.SetActive(true);
 				}
 				if (this.canSeeInfoPanel)
 				{
 					this.infoPanel.SetActive(true);
 				}
+				if (this.canSeeMessagePanel)
+				{
+					this.messagePanel.SetActive(true);
+				}
 			}
 		}
 
-		public void ClickStartButton(Text buttonText)
+		public void OnStartButtonClick(Text buttonText)
 		{
 			if (this.isRunning)
 			{
@@ -158,13 +204,25 @@ namespace SIGVerse.Common
 			}
 			else
 			{
-				Time.timeScale = defaultTimeScale;
+				Time.timeScale = DefaultTimeScale;
 				buttonText.text = "Stop";
 				this.isRunning = true;
 			}
 		}
 
-		public void ClickInfoButton()
+		public void OnSubviewButtonClick()
+		{
+			if (this.subviewPanel.activeSelf)
+			{
+				this.subviewPanel.SetActive(false);
+			}
+			else
+			{
+				this.subviewPanel.SetActive(true);
+			}
+		}
+
+		public void OnInfoButtonClick()
 		{
 			if (this.infoPanel.activeSelf)
 			{
@@ -176,7 +234,7 @@ namespace SIGVerse.Common
 			}
 		}
 
-		public void ClickMessageButton()
+		public void OnMessageButtonClick()
 		{
 			if (this.messagePanel.activeSelf)
 			{
@@ -188,9 +246,8 @@ namespace SIGVerse.Common
 			}
 		}
 
-		public void ClickQuitButton()
+		public void OnQuitButtonClick()
 		{
-			//TODO Want to reboot
 			Debug.Log("Quit!!!");
 			Application.Quit();
 		}
@@ -211,17 +268,63 @@ namespace SIGVerse.Common
 
 		public void OnBeginDrag(PointerEventData eventData)
 		{
-			if (eventData.pointerEnter == null) { return; }
+			if (eventData.pointerPressRaycast.gameObject == null) { return; }
 
-			Transform selectedObj = eventData.pointerEnter.transform;
+			Transform selectedObj = eventData.pointerPressRaycast.gameObject.transform;
 
 			do
 			{
-				if (selectedObj.gameObject.GetInstanceID() == this.mainPanel.GetInstanceID() ||
-					selectedObj.gameObject.GetInstanceID() == this.infoPanel.GetInstanceID() ||
-					selectedObj.gameObject.GetInstanceID() == this.messagePanel.GetInstanceID())
+				bool isMajorPanel = 
+					selectedObj.gameObject == this.mainPanel    ||
+					selectedObj.gameObject == this.infoPanel    ||
+					selectedObj.gameObject == this.messagePanel;
+
+				bool isSubviewPanels = 
+					selectedObj.gameObject == this.subviewPanel ||
+					this.subviewPanels.Select(panel => panel).Any(panel => panel == selectedObj.gameObject);
+
+				if (isMajorPanel)
 				{
 					this.draggingPanel = selectedObj.gameObject;
+
+					this.panelOperationType = PanelOperationType.Move;
+
+					break;
+				}
+				else if(isSubviewPanels)
+				{
+					this.draggingPanel = selectedObj.gameObject;
+
+					this.expandingRectTransform  = this.draggingPanel.GetComponent<RectTransform>();
+
+					float rightEnd = this.draggingPanel.transform.position.x + expandingRectTransform.rect.width;
+					float lowerEnd = this.draggingPanel.transform.position.y - expandingRectTransform.rect.height;
+
+					bool isExpandingX = eventData.pressPosition.x >= rightEnd - DraggingThreshold && eventData.pressPosition.x <= rightEnd;
+					bool isExpandingY = eventData.pressPosition.y <= lowerEnd + DraggingThreshold && eventData.pressPosition.y >= lowerEnd;
+
+					if(selectedObj.gameObject.GetInstanceID() == this.subviewPanel.GetInstanceID())
+					{
+						isExpandingY = false;
+					}
+
+					if(isExpandingX && isExpandingY)
+					{
+						this.panelOperationType = PanelOperationType.ExpandXY;
+					}
+					else if(isExpandingX)
+					{
+						this.panelOperationType = PanelOperationType.ExpandX;
+					}
+					else if(isExpandingY)
+					{
+						this.panelOperationType = PanelOperationType.ExpandY;
+					}
+					else
+					{
+						this.panelOperationType = PanelOperationType.Move;
+					}
+
 					break;
 				}
 
@@ -234,7 +337,54 @@ namespace SIGVerse.Common
 		{
 			if (this.draggingPanel == null) { return; }
 
-			this.draggingPanel.transform.position += (Vector3)eventData.delta;
+			switch(this.panelOperationType)
+			{
+				case PanelOperationType.Move:
+				{
+					this.draggingPanel.transform.position += (Vector3)eventData.delta;
+					break;
+				}
+				case PanelOperationType.ExpandXY:
+				{
+					this.ResizePanelWidth(eventData);
+					this.ResizePanelHeight(eventData);
+					break;
+				}
+				case PanelOperationType.ExpandX:
+				{
+					this.ResizePanelWidth(eventData);
+					break;
+				}
+				case PanelOperationType.ExpandY:
+				{
+					this.ResizePanelHeight(eventData);
+					break;
+				}
+			}
+		}
+
+		private void ResizePanelWidth(PointerEventData eventData)
+		{
+			float panelWidth = eventData.position.x - this.expandingRectTransform.position.x;
+
+			if(panelWidth >= MinimumPanelSize)
+			{
+				float deltaWidth = panelWidth - this.expandingRectTransform.rect.width;
+
+				this.expandingRectTransform.sizeDelta = new Vector2(this.expandingRectTransform.sizeDelta.x + deltaWidth, this.expandingRectTransform.sizeDelta.y);
+			}
+		}
+
+		private void ResizePanelHeight(PointerEventData eventData)
+		{
+			float panelHeight = this.expandingRectTransform.position.y - eventData.position.y;
+
+			if(panelHeight >= MinimumPanelSize)
+			{
+				float deltaHeight = panelHeight - this.expandingRectTransform.rect.height;
+
+				this.expandingRectTransform.sizeDelta = new Vector2(this.expandingRectTransform.sizeDelta.x, this.expandingRectTransform.sizeDelta.y + deltaHeight);
+			}
 		}
 
 		public void OnEndDrag(PointerEventData eventData)

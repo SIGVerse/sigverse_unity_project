@@ -75,6 +75,8 @@ namespace SIGVerse.Common
 
 			GUILayout.Space(10);
 
+			GUILayout.Box("", GUILayout.Width(this.position.width), GUILayout.Height(2));
+
 			// Create Scripts
 			GUILayout.Label("Create Scripts", EditorStyles.boldLabel);
 

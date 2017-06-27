@@ -33,9 +33,9 @@ namespace SIGVerse.Common
 
 		public enum LogLevel
 		{
-			INFO, 
-			WARN, 
-			ERROR,
+			Info, 
+			Warn, 
+			Error,
 		}
 
 		private static string LogLevelToString(LogLevel loglevel)
@@ -75,7 +75,7 @@ namespace SIGVerse.Common
 
 			public LogGroup(string filePath)
 			{
-				this.LogLevel     = LogLevel.INFO;
+				this.LogLevel     = LogLevel.Info;
 				this.DataQueue    = new Queue<LogData>();
 				this.FilePath     = filePath;
 				this.LogWriter    = new StreamWriter(filePath, false, Encoding.UTF8);
@@ -202,9 +202,9 @@ namespace SIGVerse.Common
 					// Write a final message and finish the thread.
 					if (SIGVerseLogger.isFinishing)
 					{
-						if (logGroupName == SIGVerseGroupName && logGroup.LogLevel <= LogLevel.INFO)
+						if (logGroupName == SIGVerseGroupName && logGroup.LogLevel <= LogLevel.Info)
 						{
-							LogData logData = new LogData(LogLevel.INFO, "Application Quit");
+							LogData logData = new LogData(LogLevel.Info, "Application Quit");
 
 							logDataQueue = new Queue<LogData>();
 							logDataQueue.Enqueue(logData);
@@ -311,9 +311,9 @@ namespace SIGVerse.Common
 		{
 			if (!ExistsLogGroup(logGroupName, MethodBase.GetCurrentMethod().Name)) { return; }
 
-			if (SIGVerseLogger.logGroupMap[logGroupName].LogLevel > LogLevel.INFO) { return; }
+			if (SIGVerseLogger.logGroupMap[logGroupName].LogLevel > LogLevel.Info) { return; }
 
-			LogData logData = new LogData(LogLevel.INFO, message);
+			LogData logData = new LogData(LogLevel.Info, message);
 
 			lock(SIGVerseLogger.logGroupMap[logGroupName])
 			{
@@ -341,9 +341,9 @@ namespace SIGVerse.Common
 		{
 			if (!ExistsLogGroup(logGroupName, MethodBase.GetCurrentMethod().Name)) { return; }
 
-			if (SIGVerseLogger.logGroupMap[logGroupName].LogLevel > LogLevel.WARN) { return; }
+			if (SIGVerseLogger.logGroupMap[logGroupName].LogLevel > LogLevel.Warn) { return; }
 
-			LogData logData = new LogData(LogLevel.WARN, message);
+			LogData logData = new LogData(LogLevel.Warn, message);
 
 			lock(SIGVerseLogger.logGroupMap[logGroupName])
 			{
@@ -371,7 +371,7 @@ namespace SIGVerse.Common
 		{
 			if(!ExistsLogGroup(logGroupName, MethodBase.GetCurrentMethod().Name)) { return; }
 
-			LogData logData = new LogData(LogLevel.ERROR, message);
+			LogData logData = new LogData(LogLevel.Error, message);
 
 			lock(SIGVerseLogger.logGroupMap[logGroupName])
 			{
