@@ -54,6 +54,8 @@ namespace SIGVerse.Common
 		private Material[]      subviewMaterials;
 		private Image[]         subviewImages;
 
+		private DateTime[] subviewLastUpdateTime;
+
 		private Shader unlitTexturShader;
 		private Texture2D subviewTextureDefault;
 
@@ -67,6 +69,7 @@ namespace SIGVerse.Common
 			this.subviewRenderTextures = new RenderTexture[SubviewNum];
 			this.subviewMaterials      = new Material     [SubviewNum];
 			this.subviewImages         = new Image        [SubviewNum];
+			this.subviewLastUpdateTime = new DateTime     [SubviewNum];
 
 			this.unlitTexturShader = Shader.Find("Unlit/Texture");
 
@@ -87,6 +90,8 @@ namespace SIGVerse.Common
 				this.subviewImages[i] = subviewPanelImages[0].GetComponent<Image>();
 
 				this.UpdateRenderTexture(i);
+
+				this.subviewLastUpdateTime[i] = DateTime.MinValue;
 			}
 
 			this.OnActiveSceneChanged(SceneManager.GetActiveScene(), SceneManager.GetActiveScene());
@@ -296,6 +301,14 @@ namespace SIGVerse.Common
 			}
 
 			int index = subviewNumber - 1;
+
+			if((DateTime.Now - this.subviewLastUpdateTime[index]).TotalMilliseconds < 500)
+			{
+				SIGVerseLogger.Warn("The update time interval of Subview is too short. (<500[ms])");
+				return;
+			}
+
+			this.subviewLastUpdateTime[index] = DateTime.Now;
 
 			// Update button state
 			if(isShowing)
