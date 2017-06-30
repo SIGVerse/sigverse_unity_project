@@ -26,6 +26,9 @@ namespace SIGVerse.Common
 		private const float DraggingThreshold = 15;
 		private const float MinimumPanelSize  = 100;
 
+		private const int SubviewNum = 4;
+
+
 		[HeaderAttribute("Major Panels")]
 		public Image      backgroundImage;
 		public GameObject mainPanel;
@@ -64,6 +67,8 @@ namespace SIGVerse.Common
 		private bool canSeeInfoPanel;
 		private bool canSeeMessagePanel;
 
+		private bool[] canSeeSubviewPanels;
+
 		private bool isRunning = false;
 
 		private float elapsedTime = 0.0f;
@@ -72,7 +77,7 @@ namespace SIGVerse.Common
 		[RuntimeInitializeOnLoadMethod()]
 		private static void Init()
 		{
-			if(GameObject.Find(SIGVerseMenuName)!=null) { return; };
+			if(GameObject.FindObjectOfType<SIGVerseMenu>()!=null) { return; };
 
 			if(!ConfigManager.Instance.configInfo.displaySigverseMenu) { return; }
 
@@ -105,26 +110,13 @@ namespace SIGVerse.Common
 
 			this.targetsOfHiding = this.mainPanel.transform.Find("TargetsOfHiding").gameObject;
 
+			this.canSeeSubviewPanels = new bool[SubviewNum];
 
 			this.canvas      .SetActive(true);
 			this.mainPanel   .SetActive(true);
 			this.subviewPanel.SetActive(false);
 			this.infoPanel   .SetActive(false);
 			this.messagePanel.SetActive(false);
-
-			for(int i=0; i<this.subviewPanels.Count; i++)
-			{
-				this.subviewPanels[i].SetActive(false);
-
-				// Set subviews position
-				float posX = Screen.width - 300;
-				float posY = Screen.height - 15 - i*200;
-
-				if(posY-200 < 0) { posY = 200; }
-				
-				RectTransform rectTransform = this.subviewPanels[i].GetComponent<RectTransform>();
-				rectTransform.position = new Vector3(posX, posY, 0.0f);
-			}
 
 			SceneManager.sceneLoaded += OnSceneLoaded;
 		}
@@ -162,15 +154,25 @@ namespace SIGVerse.Common
 			if (this.mainPanelImage.enabled)
 			{
 				this.canSeeMainPanel    = this.mainPanelImage.enabled;
-				this.canSeeSubviewPanel = this.subviewPanel.activeSelf;
-				this.canSeeInfoPanel    = this.infoPanel   .activeSelf;
-				this.canSeeMessagePanel = this.messagePanel.activeSelf;
+				this.canSeeSubviewPanel = this.subviewPanel  .activeSelf;
+				this.canSeeInfoPanel    = this.infoPanel     .activeSelf;
+				this.canSeeMessagePanel = this.messagePanel  .activeSelf;
 
-				this.mainPanelImage.enabled = false;
+				for(int i=0; i<SubviewNum; i++)
+				{
+					this.canSeeSubviewPanels[i] = this.subviewPanels[i].activeSelf;
+				}
+
+				this.mainPanelImage .enabled = false;
 				this.targetsOfHiding.SetActive(false);
-				this.subviewPanel.SetActive(false);
-				this.infoPanel   .SetActive(false);
-				this.messagePanel.SetActive(false);
+				this.subviewPanel   .SetActive(false);
+				this.infoPanel      .SetActive(false);
+				this.messagePanel   .SetActive(false);
+
+				for(int i=0; i<SubviewNum; i++)
+				{
+					this.subviewPanels[i].SetActive(false);
+				}
 			}
 			else
 			{
@@ -190,6 +192,13 @@ namespace SIGVerse.Common
 				if (this.canSeeMessagePanel)
 				{
 					this.messagePanel.SetActive(true);
+				}
+				for(int i=0; i<SubviewNum; i++)
+				{
+					if (this.canSeeSubviewPanels[i])
+					{
+						this.subviewPanels[i].SetActive(true);
+					}
 				}
 			}
 		}

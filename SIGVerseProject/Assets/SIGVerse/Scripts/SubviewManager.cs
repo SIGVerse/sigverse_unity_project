@@ -16,7 +16,7 @@ namespace SIGVerse.Common
 		/// </summary>
 		/// <param name="subviewNumber">subview number (this number is greater than 0)</param>
 		/// <param name="camera"></param>
-		void OnUpdateSubviewCamera(int subviewNumber, Camera camera);
+		void OnSetSubviewCamera(int subviewNumber, Camera camera);
 
 		/// <summary>
 		/// Update a camera information of a subview
@@ -24,16 +24,31 @@ namespace SIGVerse.Common
 		/// <param name="subviewNumber">subview number (this number is greater than 0)</param>
 		/// <param name="camera"></param>
 		/// <param name="isShowing"></param>
-		void OnUpdateSubviewCamera(int subviewNumber, Camera camera, bool isShowing);
+		void OnSetSubviewCamera(int subviewNumber, Camera camera, bool isShowing);
 	}
 
 
 	public class SubviewManager : MonoBehaviour, ISubviewHandler
 	{
+		public enum SubviewType
+		{
+			Subview1 = 1,
+			Subview2,
+			Subview3,
+			Subview4,
+		}
+
 		public const string ButtonTextOff = "OFF";
 		public const string ButtonTextOn  = "ON";
 
+		private const int MaxCameraListUpdateInterval = 500;
+
 		private const int SubviewNum = 4;
+
+		private readonly Color ColorLightGreen = new Color(200/255f, 255/255f, 175/255f, 255/255f);
+
+
+		//----------------------------------------
 
 		[HeaderAttribute("Subview Panel")]
 		public GameObject[] subviewObjects;
@@ -54,10 +69,11 @@ namespace SIGVerse.Common
 		private Material[]      subviewMaterials;
 		private Image[]         subviewImages;
 
+		private Shader unlitTexturShader;
+
+		private DateTime   cameraListLastUpdateTime;
 		private DateTime[] subviewLastUpdateTime;
 
-		private Shader unlitTexturShader;
-		private Texture2D subviewTextureDefault;
 
 		void Awake()
 		{
@@ -73,13 +89,28 @@ namespace SIGVerse.Common
 
 			this.unlitTexturShader = Shader.Find("Unlit/Texture");
 
-			this.subviewTextureDefault = new Texture2D(1, 1);
-			this.subviewTextureDefault.SetPixel(0, 0, Color.gray);
-			this.subviewTextureDefault.Apply();
+			// Initialize Subviews
+			for(int i=0; i<this.subviewPanels.Length; i++)
+			{
+				this.subviewPanels[i].SetActive(false);
 
+				// Set subviews position (All panels are the same size)
+				RectTransform rectTransform = this.subviewPanels[i].GetComponent<RectTransform>();
+
+				float posX = Screen.width - rectTransform.rect.width;
+				float posY = Screen.height - 15 - i * rectTransform.rect.height;
+
+				if(posY-rectTransform.rect.height < 0) { posY = rectTransform.rect.height; }
+				
+				rectTransform.position = new Vector3(posX, posY, 0.0f);
+			}
+
+			this.cameraListLastUpdateTime = DateTime.MinValue;
 
 			for (int i = 0; i < SubviewNum; i++)
 			{
+				this.subviewCameras[i] = this.subviewPanels[i].GetComponentInChildren<Camera>();
+
 				this.subviewButtons[i]     = this.subviewObjects[i].GetComponentInChildren<Button>();
 				this.subviewDropdowns[i]   = this.subviewObjects[i].GetComponentInChildren<Dropdown>();
 
@@ -89,7 +120,11 @@ namespace SIGVerse.Common
 
 				this.subviewImages[i] = subviewPanelImages[0].GetComponent<Image>();
 
+				this.subviewDropdowns[i].value = 0;
+
 				this.UpdateRenderTexture(i);
+
+				this.subviewImages[i].material = null;
 
 				this.subviewLastUpdateTime[i] = DateTime.MinValue;
 			}
@@ -101,6 +136,7 @@ namespace SIGVerse.Common
 			SceneManager.activeSceneChanged += OnActiveSceneChanged;
 		}
 
+
 		private void UpdateRenderTexture(int index)
 		{
 			this.subviewRectSizes[index] = new Vector2(this.subviewRectTransforms[index].rect.width, this.subviewRectTransforms[index].rect.height);
@@ -110,23 +146,15 @@ namespace SIGVerse.Common
 			{
 				this.subviewRenderTextures[index].Release();
 			}
-
 			this.subviewRenderTextures[index] = new RenderTexture((int)this.subviewRectSizes[index].x, (int)this.subviewRectSizes[index].y, 16, RenderTextureFormat.ARGB32);
 			this.subviewRenderTextures[index].Create();
 
-			// Have to reset the material when creating the render texture
 			this.subviewMaterials[index] = new Material(this.unlitTexturShader);
-
-			if(this.subviewCameras[index]!=null)
-			{
-				this.subviewMaterials[index].mainTexture = this.subviewRenderTextures[index];
-			}
-			else
-			{
-				this.subviewMaterials[index].mainTexture = this.subviewTextureDefault;
-			}
+			this.subviewMaterials[index].mainTexture = this.subviewRenderTextures[index];
 
 			this.subviewImages[index].material = this.subviewMaterials[index];
+
+			this.subviewCameras[index].targetTexture = this.subviewRenderTextures[index];
 		}
 
 
@@ -134,17 +162,35 @@ namespace SIGVerse.Common
 		private void OnActiveSceneChanged( Scene i_preChangedScene, Scene i_postChangedScene )
 		{
 			this.UpdateCameraList();
-			
 		}
 
 		public void UpdateCameraList()
 		{
-			Camera[] cameras = GameObject.FindObjectsOfType<Camera>();
+			Camera[] savedCameras = new Camera[SubviewNum];
 
+			// Save cameras info
+			if(this.dropdownAllCameras!=null)
+			{
+				for(int i=0; i<SubviewNum; i++)
+				{
+					savedCameras[i] = this.dropdownAllCameras[this.subviewDropdowns[i].value];
+				}
+			}
+
+
+			// Recreate the camera list
+			Camera[] allCameras = GameObject.FindObjectsOfType<Camera>();
+
+			// Excluding subview cameras
+			Camera[] cameras = allCameras.Except(this.subviewCameras).ToArray();
+
+			// Recreate dropdownAllCameras
 			this.dropdownAllCameras = new Camera[cameras.Length + 1];
 			this.dropdownAllCameras[0] = null;
 			cameras.CopyTo(this.dropdownAllCameras, 1);
 
+
+			// Recreate the dropdown option list
 			List<Dropdown.OptionData> dropdownOptions = new List<Dropdown.OptionData>();
 
 			foreach(Camera camera in this.dropdownAllCameras)
@@ -163,8 +209,19 @@ namespace SIGVerse.Common
 				dropdownOptions.Add(optionData);
 			}
 
+			// Update Subviews info
 			for(int i=0; i<SubviewNum; i++)
 			{
+				// Update a linking of dropdown
+				for(int j=0; j<this.dropdownAllCameras.Length; j++)
+				{
+					if(savedCameras[i] == this.dropdownAllCameras[j])
+					{
+						this.subviewDropdowns[i].value = j;
+					}
+				}
+
+				// Update a options of dropdown
 				this.subviewDropdowns[i].options = dropdownOptions;
 			}
 		}
@@ -190,10 +247,9 @@ namespace SIGVerse.Common
 		void Start ()
 		{
 		}
-	
-		void Update ()
+
+		void Update()
 		{
-		
 		}
 
 
@@ -201,28 +257,34 @@ namespace SIGVerse.Common
 		{
 			for (int i = 0; i < SubviewNum; i++)
 			{
-				if (this.subviewCameras[i] != null)
+				if (this.subviewDropdowns[i].value != 0)
 				{
-					RenderTexture renderTextureTmp = this.subviewCameras[i].targetTexture;
-
-					// Resize
-					if(this.subviewRectTransforms[i].rect.width!=this.subviewRectSizes[i].x || this.subviewRectTransforms[i].rect.height!=this.subviewRectSizes[i].y)
+					// Resize panels
+					if (this.subviewRectTransforms[i].rect.width != this.subviewRectSizes[i].x || this.subviewRectTransforms[i].rect.height != this.subviewRectSizes[i].y)
 					{
 						this.UpdateRenderTexture(i);
 					}
 
-					// Render
-					this.subviewCameras[i].targetTexture = this.subviewRenderTextures[i];
-
-					this.subviewCameras[i].Render();
-
-					this.subviewCameras[i].targetTexture = renderTextureTmp;
+					// Move panels
+					if (this.dropdownAllCameras[this.subviewDropdowns[i].value] != null)
+					{
+						this.subviewCameras[i].CopyFrom(this.dropdownAllCameras[this.subviewDropdowns[i].value]);
+						this.subviewCameras[i].targetTexture = this.subviewRenderTextures[i];
+					}
 				}
 			}
 		}
 
 		public void OnUpdateCameraListButtonClick()
 		{
+			if((DateTime.Now - this.cameraListLastUpdateTime).TotalMilliseconds < MaxCameraListUpdateInterval)
+			{
+				SIGVerseLogger.Warn("The update time interval of the camera list is too short. (<" + MaxCameraListUpdateInterval + "[ms])");
+				return;
+			}
+
+			this.cameraListLastUpdateTime = DateTime.Now;
+
 			this.UpdateCameraList();
 		}
 
@@ -247,17 +309,38 @@ namespace SIGVerse.Common
 			}
 		}
 
-		public void OnSubviewDropdownValueChanged(Dropdown dropdown)
+		private void OnSubviewDropdownValueChanged(Dropdown dropdown)
 		{
 			for(int i=0; i<SubviewNum; i++)
 			{
 				if(this.subviewDropdowns[i] == dropdown)
 				{
-					this.subviewCameras[i] = this.dropdownAllCameras[dropdown.value];
-
-					this.UpdateRenderTexture(i);
+					this.ChangeCamera(i, this.dropdownAllCameras[dropdown.value]);
 					break;
 				}
+			}
+		}
+
+		private void ChangeCamera(int index, Camera camera)
+		{
+			// Update a linking of dropdown
+			for (int i = 0; i < this.dropdownAllCameras.Length; i++)
+			{
+				if (camera == this.dropdownAllCameras[i])
+				{
+					this.subviewDropdowns[index].value = i;
+					break;
+				}
+			}
+
+			// Update a material
+			if (this.subviewDropdowns[index].value != 0)
+			{
+				this.subviewImages[index].material = this.subviewMaterials[index];
+			}
+			else
+			{
+				this.subviewImages[index].material = null;
 			}
 		}
 
@@ -268,7 +351,7 @@ namespace SIGVerse.Common
 
 			if(subviewPanel.activeSelf)
 			{
-				button.GetComponentInChildren<Image>().color = new Color(200/255f, 255/255f, 175/255f, 255/255f); // Light green
+				button.GetComponentInChildren<Image>().color = ColorLightGreen;
 				buttonText.text = ButtonTextOn;
 			}
 			else
@@ -287,13 +370,37 @@ namespace SIGVerse.Common
 		}
 
 
-		public void OnUpdateSubviewCamera(int subviewNumber, Camera camera)
+		public static void SetSubviewCamera(int subviewNumber, Camera camera)
 		{
-			this.OnUpdateSubviewCamera(subviewNumber, camera, true);
+			SIGVerseMenu sigverseMenu = GameObject.FindObjectOfType<SIGVerseMenu>();
+
+			if(sigverseMenu == null)
+			{
+				SIGVerseLogger.Warn("SIGVerseMenu is not exists.");
+				return;
+			}
+
+			ExecuteEvents.Execute<ISubviewHandler>
+			(
+				target: sigverseMenu.gameObject,
+				eventData: null,
+				functor: (reciever, eventData) => reciever.OnSetSubviewCamera(subviewNumber, camera)
+			);
+		}
+
+		public static void SetSubviewCamera(SubviewType subviewType, Camera camera)
+		{
+			SetSubviewCamera((int)subviewType, camera);
 		}
 
 
-		public void OnUpdateSubviewCamera(int subviewNumber, Camera camera, bool isShowing)
+		public void OnSetSubviewCamera(int subviewNumber, Camera camera)
+		{
+			this.OnSetSubviewCamera(subviewNumber, camera, true);
+		}
+
+
+		public void OnSetSubviewCamera(int subviewNumber, Camera camera, bool isShowing)
 		{
 			if (subviewNumber <= 0)
 			{
@@ -302,16 +409,16 @@ namespace SIGVerse.Common
 
 			int index = subviewNumber - 1;
 
-			if((DateTime.Now - this.subviewLastUpdateTime[index]).TotalMilliseconds < 500)
+			if((DateTime.Now - this.subviewLastUpdateTime[index]).TotalMilliseconds < MaxCameraListUpdateInterval)
 			{
-				SIGVerseLogger.Warn("The update time interval of Subview is too short. (<500[ms])");
+				SIGVerseLogger.Warn("The update time interval of Subview is too short. (<" + MaxCameraListUpdateInterval + "[ms])");
 				return;
 			}
 
 			this.subviewLastUpdateTime[index] = DateTime.Now;
 
 			// Update button state
-			if(isShowing)
+			if (isShowing)
 			{
 				this.subviewPanels[index].SetActive(true);
 			}
@@ -322,22 +429,11 @@ namespace SIGVerse.Common
 
 			this.UpdateButtonState(this.subviewPanels[index], this.subviewButtons[index]);
 
-			// Update dropdown
-			for(int i=0; i<this.dropdownAllCameras.Length; i++)
-			{
-				if(camera == this.dropdownAllCameras[i])
-				{
-					this.subviewDropdowns[index].value = i;
-					break;
-				}
-			}
-
-			// Update camera information
-			this.subviewCameras[index] = camera;
-
-			// Update render texture
-			this.UpdateRenderTexture(index);
+			// Update a camera info
+			this.ChangeCamera(index, camera);
 		}
 	}
 }
+
+
 

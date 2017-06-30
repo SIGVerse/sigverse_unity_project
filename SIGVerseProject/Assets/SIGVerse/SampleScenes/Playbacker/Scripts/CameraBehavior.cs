@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using SIGVerse.Common;
 
-namespace SIGVerse.SampleScenes.SampleHouse
+namespace SIGVerse.SampleScenes.Playbacker
 {
-	public class AudienceCameraBehavior : MonoBehaviour
+	public class CameraBehavior : MonoBehaviour
 	{
 		public SubviewManager.SubviewType subviewType;
 
