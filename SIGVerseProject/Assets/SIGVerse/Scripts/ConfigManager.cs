@@ -42,7 +42,7 @@ namespace SIGVerse.Common
 //				Debug.Log("Read the config file.");
 
 				// File open
-				StreamReader srConfigReader = new StreamReader(configFilePath, Encoding.UTF8);
+				StreamReader srConfigReader = new StreamReader(configFilePath);
 
 				configInfo = JsonUtility.FromJson<ConfigInfo>(srConfigReader.ReadToEnd());
 
@@ -63,7 +63,7 @@ namespace SIGVerse.Common
 		{
 			string configFilePath   = Application.dataPath + FolderPath + FileName;
 
-			StreamWriter swConfigWriter = new StreamWriter(configFilePath, false, Encoding.UTF8);
+			StreamWriter swConfigWriter = new StreamWriter(configFilePath, false);
 
 			Debug.Log("SaveConfig : " + JsonUtility.ToJson(configInfo));
 

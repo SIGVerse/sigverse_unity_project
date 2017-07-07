@@ -227,7 +227,7 @@ namespace SIGVerse.Common
 			Debug.Log("outputFilePath=" + this.outputFilePath);
 
 			// File open
-			this.swMotionsDataWriter = new StreamWriter(this.outputFilePath, false, Encoding.UTF8);
+			this.swMotionsDataWriter = new StreamWriter(this.outputFilePath, false);
 
 			this.targetTransformInstances = new List<Transform>();
 
@@ -302,7 +302,7 @@ namespace SIGVerse.Common
 			}
 
 			// File open
-			StreamReader srMotionsDataReader = new StreamReader(inputFilePath.text, Encoding.UTF8);
+			StreamReader srMotionsDataReader = new StreamReader(inputFilePath.text);
 
 			this.timeSeriesMotionsQue = new Queue<TimeSeriesMotionsData>();
 

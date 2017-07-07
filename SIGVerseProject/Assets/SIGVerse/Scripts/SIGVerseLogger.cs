@@ -78,7 +78,7 @@ namespace SIGVerse.Common
 				this.LogLevel     = LogLevel.Info;
 				this.DataQueue    = new Queue<LogData>();
 				this.FilePath     = filePath;
-				this.LogWriter    = new StreamWriter(filePath, false, Encoding.UTF8);
+				this.LogWriter    = new StreamWriter(filePath, false);
 			}
 		}
 

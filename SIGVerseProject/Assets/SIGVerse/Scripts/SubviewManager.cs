@@ -77,63 +77,71 @@ namespace SIGVerse.Common
 
 		void Awake()
 		{
-			this.subviewCameras        = new Camera       [SubviewNum];
-			this.subviewButtons        = new Button       [SubviewNum];
-			this.subviewDropdowns      = new Dropdown     [SubviewNum];
-			this.subviewRectTransforms = new RectTransform[SubviewNum];
-			this.subviewRectSizes      = new Vector2      [SubviewNum];
-			this.subviewRenderTextures = new RenderTexture[SubviewNum];
-			this.subviewMaterials      = new Material     [SubviewNum];
-			this.subviewImages         = new Image        [SubviewNum];
-			this.subviewLastUpdateTime = new DateTime     [SubviewNum];
-
-			this.unlitTexturShader = Shader.Find("Unlit/Texture");
-
-			// Initialize Subviews
-			for(int i=0; i<this.subviewPanels.Length; i++)
+			try
 			{
-				this.subviewPanels[i].SetActive(false);
+				this.subviewCameras        = new Camera       [SubviewNum];
+				this.subviewButtons        = new Button       [SubviewNum];
+				this.subviewDropdowns      = new Dropdown     [SubviewNum];
+				this.subviewRectTransforms = new RectTransform[SubviewNum];
+				this.subviewRectSizes      = new Vector2      [SubviewNum];
+				this.subviewRenderTextures = new RenderTexture[SubviewNum];
+				this.subviewMaterials      = new Material     [SubviewNum];
+				this.subviewImages         = new Image        [SubviewNum];
+				this.subviewLastUpdateTime = new DateTime     [SubviewNum];
 
-				// Set subviews position (All panels are the same size)
-				RectTransform rectTransform = this.subviewPanels[i].GetComponent<RectTransform>();
+				this.unlitTexturShader = (Shader)Resources.Load(SIGVerseCommon.UnlitShaderResourcePath);
 
-				float posX = Screen.width - rectTransform.rect.width;
-				float posY = Screen.height - 15 - i * rectTransform.rect.height;
+				// Initialize Subviews
+				for(int i=0; i<this.subviewPanels.Length; i++)
+				{
+					this.subviewPanels[i].SetActive(false);
 
-				if(posY-rectTransform.rect.height < 0) { posY = rectTransform.rect.height; }
+					// Set subviews position (All panels are the same size)
+					RectTransform rectTransform = this.subviewPanels[i].GetComponent<RectTransform>();
+
+					float posX = Screen.width - 15 - rectTransform.rect.width;
+					float posY = Screen.height - 15 - i * rectTransform.rect.height;
+
+					if(posY-rectTransform.rect.height < 0) { posY = rectTransform.rect.height; }
 				
-				rectTransform.position = new Vector3(posX, posY, 0.0f);
+					rectTransform.position = new Vector3(posX, posY, 0.0f);
+				}
+
+				this.cameraListLastUpdateTime = DateTime.MinValue;
+
+				for (int i = 0; i < SubviewNum; i++)
+				{
+					this.subviewCameras[i] = this.subviewPanels[i].GetComponentInChildren<Camera>();
+
+					this.subviewButtons[i]     = this.subviewObjects[i].GetComponentInChildren<Button>();
+					this.subviewDropdowns[i]   = this.subviewObjects[i].GetComponentInChildren<Dropdown>();
+
+					Image[] subviewPanelImages = this.subviewPanels[i].GetComponentsInChildren<Image>().Where(image => this.subviewPanels[i] != image.gameObject).ToArray();
+
+					this.subviewRectTransforms[i] = subviewPanelImages[0].GetComponent<RectTransform>();
+
+					this.subviewImages[i] = subviewPanelImages[0].GetComponent<Image>();
+
+					this.subviewDropdowns[i].value = 0;
+
+					this.UpdateRenderTexture(i);
+
+					this.subviewImages[i].material = null;
+
+					this.subviewLastUpdateTime[i] = DateTime.MinValue;
+				}
+
+				this.OnActiveSceneChanged(SceneManager.GetActiveScene(), SceneManager.GetActiveScene());
+
+				this.UpdateButtonStates();
+
+				SceneManager.activeSceneChanged += OnActiveSceneChanged;
 			}
-
-			this.cameraListLastUpdateTime = DateTime.MinValue;
-
-			for (int i = 0; i < SubviewNum; i++)
+			catch(Exception ex)
 			{
-				this.subviewCameras[i] = this.subviewPanels[i].GetComponentInChildren<Camera>();
-
-				this.subviewButtons[i]     = this.subviewObjects[i].GetComponentInChildren<Button>();
-				this.subviewDropdowns[i]   = this.subviewObjects[i].GetComponentInChildren<Dropdown>();
-
-				Image[] subviewPanelImages = this.subviewPanels[i].GetComponentsInChildren<Image>().Where(image => this.subviewPanels[i] != image.gameObject).ToArray();
-
-				this.subviewRectTransforms[i] = subviewPanelImages[0].GetComponent<RectTransform>();
-
-				this.subviewImages[i] = subviewPanelImages[0].GetComponent<Image>();
-
-				this.subviewDropdowns[i].value = 0;
-
-				this.UpdateRenderTexture(i);
-
-				this.subviewImages[i].material = null;
-
-				this.subviewLastUpdateTime[i] = DateTime.MinValue;
+				SIGVerseLogger.Error(ex.Message);
+				SIGVerseLogger.Error(ex.StackTrace);
 			}
-
-			this.OnActiveSceneChanged(SceneManager.GetActiveScene(), SceneManager.GetActiveScene());
-
-			this.UpdateButtonStates();
-
-			SceneManager.activeSceneChanged += OnActiveSceneChanged;
 		}
 
 

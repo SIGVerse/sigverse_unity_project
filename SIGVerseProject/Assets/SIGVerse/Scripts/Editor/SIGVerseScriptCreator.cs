@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
+using SIGVerse.Common;
 
 /// <summary>
 /// SIGVerse Script Creator
 /// </summary>
-public static class SIGVerseScriptCreator
+public static class SIGVerseScriptCreator 
 {
 	private const string MenuItemName = "SIGVerse/Create Scripts"; 
 	public  const string ScriptName   = "EditorConstantsManager.cs";
@@ -67,12 +68,21 @@ public static class SIGVerseScriptCreator
 
 		string directoryName = Path.GetDirectoryName(ScriptPath);
 
-		if (!Directory.Exists(directoryName))
+		if(!Directory.Exists(directoryName))
 		{
-			Directory.CreateDirectory(directoryName);
+			try
+			{
+				Directory.CreateDirectory(directoryName);
+			}
+			catch(Exception ex)
+			{
+				SIGVerseLogger.Error(ex.Message);
+				EditorUtility.DisplayDialog("Exception occurred", "Couldn't create directory !", "OK");
+				return;
+			}
 		}
 
-		File.WriteAllText(ScriptPath, stringBuilder.ToString(), Encoding.UTF8);
+		File.WriteAllText(ScriptPath, stringBuilder.ToString());
 
 		AssetDatabase.Refresh(ImportAssetOptions.ImportRecursive);
 	}

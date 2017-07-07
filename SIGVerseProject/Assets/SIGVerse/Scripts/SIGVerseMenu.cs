@@ -81,9 +81,9 @@ namespace SIGVerse.Common
 
 			if(!ConfigManager.Instance.configInfo.displaySigverseMenu) { return; }
 
-			GameObject sigverseMenuObjPrefab = (GameObject)Resources.Load("SIGVerse/Prefabs/SIGVerseMenu");
+			GameObject sigverseMenuObjPrefab = (GameObject)Resources.Load(SIGVerseCommon.SIGVerseMenuResourcePath);
 
-			GameObject sigverseMenuObj = Instantiate(sigverseMenuObjPrefab, Vector3.zero, Quaternion.identity);
+			GameObject sigverseMenuObj = Instantiate(sigverseMenuObjPrefab);
 			sigverseMenuObj.name = SIGVerseMenuName;
 
 			SIGVerseLogger.Info("SIGVerseMenu Start");
@@ -118,6 +118,10 @@ namespace SIGVerse.Common
 			this.infoPanel   .SetActive(false);
 			this.messagePanel.SetActive(false);
 
+			this.sceneNameObj.GetComponent<Text>().text = SceneManager.GetActiveScene().name;
+
+			CreateEventSystem();
+
 			SceneManager.sceneLoaded += OnSceneLoaded;
 		}
 
@@ -128,9 +132,19 @@ namespace SIGVerse.Common
 
 			this.sceneNameObj.GetComponent<Text>().text = SceneManager.GetActiveScene().name;
 
-			if (loadedScene.buildIndex != 0)
+			CreateEventSystem();
+		}
+
+
+		private static void CreateEventSystem()
+		{
+			EventSystem eventSystem = GameObject.FindObjectOfType<EventSystem> ();
+
+			if(eventSystem==null)
 			{
-				this.canvas.SetActive(true);
+				GameObject sigverseEventSystemObjPrefab = (GameObject)Resources.Load(SIGVerseCommon.EventSystemResourcePath);
+
+				Instantiate(sigverseEventSystemObjPrefab);
 			}
 		}
 
