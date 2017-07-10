@@ -253,12 +253,12 @@ namespace SIGVerse.SampleScenes.Playbacker
 		{
 			SIGVerseLogger.Info("Player : Initialise");
 
-			this.DisableSettings();
-
 			if (!File.Exists(inputFilePathInputField.text))
 			{
 				throw new Exception("Input File NOT found. File path="+inputFilePathInputField.text);
 			}
+
+			this.DisableSettings();
 
 			this.statusText.text  = StatusTextReading;
 
@@ -287,7 +287,6 @@ namespace SIGVerse.SampleScenes.Playbacker
 
 			// Change Buttons
 			this.playButtonText.text = PlaybackerCommon.ButtonTextStop;
-			this.changeModeDropdown.interactable = false;
 
 
 			this.animatorEnableMap.Clear();
