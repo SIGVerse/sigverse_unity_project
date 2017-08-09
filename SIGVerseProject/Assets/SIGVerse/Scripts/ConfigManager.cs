@@ -85,7 +85,7 @@ namespace SIGVerse.Common
 		private const string DefaultRosbridgeIP         = "192.168.1.101";
 		private const int    DefaultRosbridgePort       = 9090;
 		private const int    DefaultSigverseBridgePort  = 50001;
-		private const bool   DefaultDisplaySigverseMenu = false;
+		private const bool   DefaultDisplaySigverseMenu = true;
 
 		public string rosbridgeIP;
 		public int    rosbridgePort;
