@@ -15,7 +15,9 @@ namespace SIGVerse.TurtleBot3
 		public Transform baseFootprint;
 
 		//--------------------------------------------------
-
+		float linearVelX;
+		float angularVelZ;
+		
 		// ROS bridge
 		private ROSBridgeWebSocketConnection webSocketConnection = null;
 
@@ -40,13 +42,8 @@ namespace SIGVerse.TurtleBot3
 
 		public void TwistCallback(SIGVerse.ROSBridge.geometry_msgs.Twist twist)
 		{
-			UnityEngine.Vector3 linearVel  = new UnityEngine.Vector3((float)twist.linear.x,  (float)twist.linear.y,  (float)twist.linear.z);
-			UnityEngine.Vector3 angularVel = new UnityEngine.Vector3((float)twist.angular.x, (float)twist.angular.y, (float)twist.angular.z);
-
-			UnityEngine.Vector3 robotLocalPosition = -this.baseFootprint.right * linearVel.x * UnityEngine.Time.fixedDeltaTime;
-
-			this.baseFootprint.position = this.baseFootprint.position + robotLocalPosition;
-			this.baseFootprint.Rotate(0.0f, 0.0f, -angularVel.z / Mathf.PI * 180 * UnityEngine.Time.fixedDeltaTime);
+			this.linearVelX  = (float)twist.linear.x;
+			this.angularVelZ = (float)twist.angular.z;
 		}
 
 		void OnApplicationQuit()
@@ -59,6 +56,11 @@ namespace SIGVerse.TurtleBot3
 
 		void Update()
 		{
+			UnityEngine.Vector3 robotLocalPosition = -this.baseFootprint.right * this.linearVelX * UnityEngine.Time.deltaTime;
+
+			this.baseFootprint.position = this.baseFootprint.position + robotLocalPosition;
+			this.baseFootprint.Rotate(0.0f, 0.0f, -this.angularVelZ / Mathf.PI * 180 * UnityEngine.Time.deltaTime);
+
 			this.webSocketConnection.Render();
 		}
 	}

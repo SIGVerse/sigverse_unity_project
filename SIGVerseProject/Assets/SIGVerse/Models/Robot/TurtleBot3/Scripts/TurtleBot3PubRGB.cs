@@ -12,12 +12,12 @@ namespace SIGVerse.TurtleBot3
 	public class TurtleBot3PubRGB : MonoBehaviour
 	{
 		public string rosBridgeIP;
-		public int sigverseBridgePort = 50001;
+		public int sigverseBridgePort;
 
 		public GameObject rgbCameraObj;
 
-		public string topicNameCameraInfo = "/turtlebot3/rgb/camera_info";
-		public string topicNameImage      = "/turtlebot3/rgb/image_raw";
+		public string topicNameCameraInfo = "/camera/rgb/camera_info";
+		public string topicNameImage      = "/camera/rgb/image_raw";
 
 		[TooltipAttribute("milliseconds")]
 		public float sendingInterval = 100;
@@ -49,6 +49,9 @@ namespace SIGVerse.TurtleBot3
 			if (!ConfigManager.Instance.configInfo.rosbridgeIP.Equals(string.Empty))
 			{
 				this.rosBridgeIP        = ConfigManager.Instance.configInfo.rosbridgeIP;
+			}
+			if (this.sigverseBridgePort==0)
+			{
 				this.sigverseBridgePort = ConfigManager.Instance.configInfo.sigverseBridgePort;
 			}
 
@@ -73,9 +76,9 @@ namespace SIGVerse.TurtleBot3
 			//  [camera/rgb/CameraInfo]
 			string distortionModel = "plumb_bob";
 			double[] D = { 0.0, 0.0, 0.0, 0.0, 0.0 };
-			double[] K = { 570.3422241210938, 0.0, 319.5, 0.0, 570.3422241210938, 239.5, 0.0, 0.0, 1.0 };
+			double[] K = { 618.6206665039062, 0.0, 310.1082458496094, 0.0, 624.5146484375, 230.0232696533203, 0.0, 0.0, 1.0 };
 			double[] R = { 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 };
-			double[] P = { 570.3422241210938, 0.0, 319.5, 0.0, 0.0, 570.3422241210938, 239.5, 0.0, 0.0, 0.0, 1.0, 0.0 };
+			double[] P = { 618.6206665039062, 0.0, 310.1082458496094, 0.0, 0.0, 624.5146484375, 230.0232696533203, 0.0, 0.0, 0.0, 1.0, 0.0 };
 			RegionOfInterest roi = new RegionOfInterest(0, 0, 0, 0, false);
 
 			this.cameraInfoData = new CameraInfoForSIGVerseBridge(null, (uint)imageHeight, (uint)imageWidth, distortionModel, D, K, R, P, 0, 0, roi);
