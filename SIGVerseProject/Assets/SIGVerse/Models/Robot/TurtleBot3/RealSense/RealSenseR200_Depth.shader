@@ -1,6 +1,6 @@
 // Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-Shader "SIGVerse/RealSenseDepth" 
+Shader "SIGVerse/RealSenseR200_Depth" 
 {
 	SubShader
 	{
@@ -40,13 +40,13 @@ Shader "SIGVerse/RealSenseDepth"
 
 				float depth_mm;
 
-				if (depthValue == 1.0f || depthValue < 0.05f)
+				if (depthValue == 1.0f || depthValue < 0.17f) // 0.4/(2.8-0.4)
 				{
 					depth_mm = 0;
 				}
 				else 
 				{
-					depth_mm = depthValue * 8000 /*+ 300*/;
+					depth_mm = depthValue * 2800;
 				}
 
 				float upperVal = trunc(depth_mm / 256);

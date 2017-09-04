@@ -4,12 +4,13 @@ using System.Collections;
 namespace SIGVerse.TurtleBot3
 {
 	[ExecuteInEditMode]
-	public class RealSenseRGB : MonoBehaviour
+	public class RealSenseR200_Depth : MonoBehaviour
 	{
 		public Material mat;
 
 		void Start()
 		{
+			GetComponent<Camera>().depthTextureMode = DepthTextureMode.Depth;
 		}
 
 		void OnRenderImage(RenderTexture source, RenderTexture destination)

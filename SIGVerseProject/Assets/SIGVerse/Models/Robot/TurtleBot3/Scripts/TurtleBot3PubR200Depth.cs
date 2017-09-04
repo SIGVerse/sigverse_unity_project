@@ -9,19 +9,18 @@ using SIGVerse.SIGVerseROSBridge;
 
 namespace SIGVerse.TurtleBot3
 {
-	public class TurtleBot3PubRGB : MonoBehaviour
+	public class TurtleBot3PubR200Depth : MonoBehaviour
 	{
 		public string rosBridgeIP;
 		public int sigverseBridgePort;
 
-		public GameObject rgbCameraObj;
+		public GameObject depthCameraObj;
 
-		public string topicNameCameraInfo = "/camera/rgb/camera_info";
-		public string topicNameImage      = "/camera/rgb/image_raw";
+		public string topicNameCameraInfo = "/camera/depth/camera_info";
+		public string topicNameImage      = "/camera/depth/image_raw";
 
 		[TooltipAttribute("milliseconds")]
 		public float sendingInterval = 100;
-
 
 		//--------------------------------------------------
 
@@ -31,9 +30,11 @@ namespace SIGVerse.TurtleBot3
 		SIGVerseROSBridgeMessage<CameraInfoForSIGVerseBridge> cameraInfoMsg = null;
 		SIGVerseROSBridgeMessage<ImageForSIGVerseBridge> imageMsg = null;
 
-		// RGB camera
-		private Camera    rgbCamera;
+		// Depth Camera
+		private Camera    depthCamera;
 		private Texture2D imageTexture;
+		byte[]  byteArray; 
+
 
 		// TimeStamp
 		private Header header;
@@ -64,37 +65,44 @@ namespace SIGVerse.TurtleBot3
 			this.networkStream.WriteTimeout = 100000;
 
 
-			// RGB Camera
-			this.rgbCamera = this.rgbCameraObj.GetComponentInChildren<Camera>();
+			// Depth Camera
+			this.depthCamera = this.depthCameraObj.GetComponentInChildren<Camera>();
 
-			int imageWidth  = this.rgbCamera.targetTexture.width;
-			int imageHeight = this.rgbCamera.targetTexture.height;
+			int imageWidth  = this.depthCamera.targetTexture.width;
+			int imageHeight = this.depthCamera.targetTexture.height;
+
+			this.byteArray = new byte[imageWidth * imageHeight * 2];
+
+			for (int i = 0; i < this.byteArray.Length; i++)
+			{
+				this.byteArray[i] = 0;
+			}
 
 			this.imageTexture = new Texture2D(imageWidth, imageHeight, TextureFormat.RGB24, false);
 
 
-			//  [camera/rgb/CameraInfo]
+			//  [camera/depth/CameraInfo]
 			string distortionModel = "plumb_bob";
 			double[] D = { 0.0, 0.0, 0.0, 0.0, 0.0 };
-			double[] K = { 618.6206665039062, 0.0, 310.1082458496094, 0.0, 624.5146484375, 230.0232696533203, 0.0, 0.0, 1.0 };
+			double[] K = { 455.84368896484375, 0.0, 225.90170288085938, 0.0, 455.84368896484375, 179.5, 0.0, 0.0, 1.0 };
 			double[] R = { 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 };
-			double[] P = { 618.6206665039062, 0.0, 310.1082458496094, 0.0, 0.0, 624.5146484375, 230.0232696533203, 0.0, 0.0, 0.0, 1.0, 0.0 };
+			double[] P = { 455.84368896484375, 0.0, 225.90170288085938, -0.058707427233457565, 0.0, 455.84368896484375, 179.5, -0.00020851753652095795, 0.0, 0.0, 1.0, -0.0005153142847120762 };
 			RegionOfInterest roi = new RegionOfInterest(0, 0, 0, 0, false);
 
 			this.cameraInfoData = new CameraInfoForSIGVerseBridge(null, (uint)imageHeight, (uint)imageWidth, distortionModel, D, K, R, P, 0, 0, roi);
-			
-			//  [camera/rgb/Image_raw]
-			string encoding = "rgb8";
+
+			//  [camera/depth/Image_raw]
+			string encoding = "16UC1";
 			byte isBigendian = 0;
-			uint step = (uint)imageWidth * 3;
+			uint step = (uint)imageWidth * 2;
 
 			this.imageData = new ImageForSIGVerseBridge(null, (uint)imageHeight, (uint)imageWidth, encoding, isBigendian, step, null);
 
-			this.header = new Header(0, new SIGVerse.ROSBridge.msg_helpers.Time(0, 0), this.rgbCameraObj.name);
+			this.header = new Header(0, new SIGVerse.ROSBridge.msg_helpers.Time(0, 0), this.depthCameraObj.name);
 
 
 			this.cameraInfoMsg = new SIGVerseROSBridgeMessage<CameraInfoForSIGVerseBridge>("publish", this.topicNameCameraInfo, CameraInfoForSIGVerseBridge.GetMessageType(), this.cameraInfoData);
-			this.imageMsg      = new SIGVerseROSBridgeMessage<ImageForSIGVerseBridge>     ("publish", this.topicNameImage,      ImageForSIGVerseBridge.GetMessageType(),      this.imageData);
+			this.imageMsg      = new SIGVerseROSBridgeMessage<ImageForSIGVerseBridge>     ("publish", this.topicNameImage     , ImageForSIGVerseBridge.GetMessageType(),      this.imageData);
 		}
 
 		void OnDestroy()
@@ -124,26 +132,45 @@ namespace SIGVerse.TurtleBot3
 //			sw.Start();
 
 			// Set a terget texture as a target of rendering
-			RenderTexture.active = this.rgbCamera.targetTexture;
+			RenderTexture.active = this.depthCamera.targetTexture;
 
-			// Apply rgb information to 2D texture
+			// Apply depth information to 2D texture
 			this.imageTexture.ReadPixels(new Rect(0, 0, this.imageTexture.width, this.imageTexture.height), 0, 0);
 
 			this.imageTexture.Apply();
 
 			// Convert pixel values to depth buffer for ROS message
-			byte[] rgbBytes = this.imageTexture.GetRawTextureData();
+			byte[] depthBytes = this.imageTexture.GetRawTextureData();
 
-
-			//  [camera/rgb/CameraInfo]
+			//  [camera/depth/CameraInfo]
 			this.cameraInfoData.header = this.header;
 			this.cameraInfoMsg.msg = this.cameraInfoData;
 
 			this.cameraInfoMsg.sendMsg(this.networkStream);
 
-			//  [camera/rgb/Image_raw]
+
+//			System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+//			sw.Start();
+
+			// [camera/depth/Image_raw]
+			int textureWidth = this.imageTexture.width;
+			int textureHeight = this.imageTexture.height;
+
+			for (int row = 0; row < textureHeight; row++)
+			{
+				for (int col = 0; col < textureWidth; col++)
+				{
+					int index = row * textureWidth + col;
+					this.byteArray[index * 2 + 0] = depthBytes[index * 3 + 0];
+					this.byteArray[index * 2 + 1] = depthBytes[index * 3 + 1];
+				}
+			}
+
+//			sw.Stop();
+//			UnityEngine.Debug.Log("time="+sw.Elapsed);
+
 			this.imageData.header = this.header;
-			this.imageData.data = rgbBytes;
+			this.imageData.data = this.byteArray;
 			this.imageMsg.msg = this.imageData;
 
 			this.imageMsg.sendMsg(this.networkStream);
@@ -153,4 +180,3 @@ namespace SIGVerse.TurtleBot3
 		}
 	}
 }
-

@@ -4,7 +4,7 @@ using System.Collections;
 namespace SIGVerse.TurtleBot3
 {
 	[ExecuteInEditMode]
-	public class RealSenseDepth : MonoBehaviour
+	public class RealSenseSR300_Depth : MonoBehaviour
 	{
 		public Material mat;
 
