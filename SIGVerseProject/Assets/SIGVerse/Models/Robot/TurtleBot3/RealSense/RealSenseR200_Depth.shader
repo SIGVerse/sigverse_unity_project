@@ -40,7 +40,7 @@ Shader "SIGVerse/RealSenseR200_Depth"
 
 				float depth_mm;
 
-				if (depthValue == 1.0f || depthValue < 0.17f) // 0.4/(2.8-0.4)
+				if (depthValue == 1.0f || depthValue < 0.167f) // 0.4/(2.8-0.4)
 				{
 					depth_mm = 0;
 				}
