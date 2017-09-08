@@ -79,7 +79,7 @@ namespace SIGVerse.Common
 		{
 			if(GameObject.FindObjectOfType<SIGVerseMenu>()!=null) { return; };
 
-			if(!ConfigManager.Instance.configInfo.displaySigverseMenu) { return; }
+			if(!ConfigManager.Instance.configInfo.useSigverseMenu) { return; }
 
 			GameObject sigverseMenuObjPrefab = (GameObject)Resources.Load(SIGVerseCommon.SIGVerseMenuResourcePath);
 

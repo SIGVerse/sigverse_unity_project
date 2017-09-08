@@ -85,20 +85,24 @@ namespace SIGVerse.Common
 		private const string DefaultRosbridgeIP         = "192.168.1.101";
 		private const int    DefaultRosbridgePort       = 9090;
 		private const int    DefaultSigverseBridgePort  = 50001;
-		private const bool   DefaultDisplaySigverseMenu = true;
+		private const bool   DefaultUseSigverseMenu     = true;
+		private const bool   DefaultSetUpRosTimestamp   = true;
+
 
 		public string rosbridgeIP;
 		public int    rosbridgePort;
 		public int    sigverseBridgePort;
 
-		public bool displaySigverseMenu;
+		public bool useSigverseMenu;
+		public bool setUpRosTimestamp;
 
 		public ConfigInfo()
 		{
 			this.rosbridgeIP         = DefaultRosbridgeIP;
 			this.rosbridgePort       = DefaultRosbridgePort;
 			this.sigverseBridgePort  = DefaultSigverseBridgePort;
-			this.displaySigverseMenu = DefaultDisplaySigverseMenu;
+			this.useSigverseMenu     = DefaultUseSigverseMenu;
+			this.setUpRosTimestamp   = DefaultSetUpRosTimestamp;
 		}
 	}
 }

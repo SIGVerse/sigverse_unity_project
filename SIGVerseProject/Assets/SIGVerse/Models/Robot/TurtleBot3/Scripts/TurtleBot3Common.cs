@@ -56,6 +56,9 @@ namespace SIGVerse.TurtleBot3
 			linkNameMap.Add(LinkType.CameraRgbOpticalFram,    "camera_rgb_optical_frame");
 			linkNameMap.Add(LinkType.CameraDepthOpticalFrame, "camera_depth_optical_frame");
 
+			// Laser Distance Sensor
+			linkNameMap.Add(LinkType.BaseScan, "base_scan");
+
 			// Links of Open-Manipulator
 			linkNameMap.Add(LinkType.Link1, "link1");
 			linkNameMap.Add(LinkType.Link2, "link2");
@@ -145,6 +148,8 @@ namespace SIGVerse.TurtleBot3
 			AddLink(linkList, FindGameObjectFromChild(root, LinkType.CameraDepthFrame));
 			AddLink(linkList, FindGameObjectFromChild(root, LinkType.CameraRgbOpticalFram));
 			AddLink(linkList, FindGameObjectFromChild(root, LinkType.CameraDepthOpticalFrame));
+
+			AddLink(linkList, FindGameObjectFromChild(root, LinkType.BaseScan));
 
 			AddLink(linkList, FindGameObjectFromChild(root, LinkType.Link1));
 			AddLink(linkList, FindGameObjectFromChild(root, LinkType.Link2));

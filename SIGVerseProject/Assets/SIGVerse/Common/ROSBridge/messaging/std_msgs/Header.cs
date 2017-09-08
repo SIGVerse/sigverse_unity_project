@@ -15,6 +15,8 @@ namespace SIGVerse.ROSBridge
 		[System.Serializable]
 		public class Header : ROSMessage
 		{
+			private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
 			public System.UInt32 seq;
 			public SIGVerse.ROSBridge.msg_helpers.Time stamp;
 			public string frame_id;
@@ -32,6 +34,19 @@ namespace SIGVerse.ROSBridge
 				this.seq = seq;
 				this.stamp = stamp;
 				this.frame_id = frame_id;
+			}
+
+			// Added by hand
+			public void Update()
+			{
+				this.seq++;
+
+				if(SIGVerse.Common.ConfigManager.Instance.configInfo.setUpRosTimestamp)
+				{
+					TimeSpan epochTime = DateTime.Now.ToUniversalTime() - UnixEpoch;
+					this.stamp.secs = (int)epochTime.TotalSeconds;
+					this.stamp.nsecs = epochTime.Milliseconds * 1000 * 1000;
+				}
 			}
 
 			new public static string GetMessageType()

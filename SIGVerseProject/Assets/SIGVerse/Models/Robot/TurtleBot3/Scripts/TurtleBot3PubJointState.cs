@@ -118,6 +118,7 @@ namespace SIGVerse.TurtleBot3
 			positions.Add(+this.gripJointSubLink.localEulerAngles.y * Mathf.Deg2Rad);
 
 //			Debug.Log("Pub JointState joint1="+positions[0]);
+			this.jointState.header.Update();
 			this.jointState.position = positions;
 
 //			float position = TurtleBot3Common.GetClampedPosition(value, name);

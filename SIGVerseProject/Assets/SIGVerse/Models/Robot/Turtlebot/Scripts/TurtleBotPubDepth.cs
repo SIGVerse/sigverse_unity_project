@@ -139,6 +139,8 @@ namespace SIGVerse.TurtleBot
 
 //			yield return null;
 
+			this.header.Update();
+
 			//  [camera/depth/CameraInfo]
 			this.cameraInfoData.header = this.header;
 			this.cameraInfoMsg.msg = this.cameraInfoData;

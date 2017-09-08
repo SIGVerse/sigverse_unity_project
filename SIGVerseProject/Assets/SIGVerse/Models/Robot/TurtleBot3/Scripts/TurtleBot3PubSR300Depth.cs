@@ -149,6 +149,9 @@ namespace SIGVerse.TurtleBot3
 			// Convert pixel values to depth buffer for ROS message
 			byte[] depthBytes = this.imageTexture.GetRawTextureData();
 
+
+			this.header.Update();
+
 			//  [camera/depth/CameraInfo]
 			this.cameraInfoData.header = this.header;
 			this.cameraInfoMsg.msg = this.cameraInfoData;

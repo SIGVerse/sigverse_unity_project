@@ -34,7 +34,8 @@ namespace SIGVerse.Common
 		private string rosbridgeIP;
 		private int    rosbridgePort;
 		private int    sigverseBridgePort;
-		private bool   displaySigverseMenu;
+		private bool   useSigverseMenu;
+		private bool   setUpRosTimestamp;
 
 		private bool   isUsingMySQL;
 
@@ -50,7 +51,8 @@ namespace SIGVerse.Common
 			this.rosbridgeIP         = configInfo.rosbridgeIP;
 			this.rosbridgePort       = configInfo.rosbridgePort;
 			this.sigverseBridgePort  = configInfo.sigverseBridgePort;
-			this.displaySigverseMenu = configInfo.displaySigverseMenu;
+			this.useSigverseMenu     = configInfo.useSigverseMenu;
+			this.setUpRosTimestamp   = configInfo.setUpRosTimestamp;
 
 			// Get the define symbol settings from EditorUserSettings
 			this.GetDefineSymbolSettings();
@@ -92,14 +94,15 @@ namespace SIGVerse.Common
 
 			EditorGUI.indentLevel++;
 
-			EditorGUIUtility.labelWidth = 180;
+			EditorGUIUtility.labelWidth = 240;
 
 			EditorGUI.BeginChangeCheck();
 
-			this.rosbridgeIP         = EditorGUILayout.TextField("Rosbridge IP",          this.rosbridgeIP,        GUILayout.Width(EditorGUIUtility.labelWidth + 120));
-			this.rosbridgePort       = EditorGUILayout.IntField ("Rosbridge Port",        this.rosbridgePort,      GUILayout.Width(EditorGUIUtility.labelWidth + 80));
-			this.sigverseBridgePort  = EditorGUILayout.IntField ("SIGVerse Bridge Port",  this.sigverseBridgePort, GUILayout.Width(EditorGUIUtility.labelWidth + 80));
-			this.displaySigverseMenu = EditorGUILayout.Toggle   ("Display SIGVerse menu", this.displaySigverseMenu);
+			this.rosbridgeIP         = EditorGUILayout.TextField("Rosbridge IP",                       this.rosbridgeIP,        GUILayout.Width(EditorGUIUtility.labelWidth + 120));
+			this.rosbridgePort       = EditorGUILayout.IntField ("Rosbridge Port",                     this.rosbridgePort,      GUILayout.Width(EditorGUIUtility.labelWidth + 80));
+			this.sigverseBridgePort  = EditorGUILayout.IntField ("SIGVerse Bridge Port",               this.sigverseBridgePort, GUILayout.Width(EditorGUIUtility.labelWidth + 80));
+			this.useSigverseMenu     = EditorGUILayout.Toggle   ("Use SIGVerse menu",                  this.useSigverseMenu);
+			this.setUpRosTimestamp   = EditorGUILayout.Toggle   ("Set up Time stamps of ROS message",  this.setUpRosTimestamp);
 
 			if (EditorGUI.EndChangeCheck())
 			{
@@ -108,7 +111,8 @@ namespace SIGVerse.Common
 				configInfo.rosbridgeIP         = this.rosbridgeIP;
 				configInfo.rosbridgePort       = this.rosbridgePort;
 				configInfo.sigverseBridgePort  = this.sigverseBridgePort;
-				configInfo.displaySigverseMenu = this.displaySigverseMenu;
+				configInfo.useSigverseMenu     = this.useSigverseMenu;
+				configInfo.setUpRosTimestamp   = this.setUpRosTimestamp;
 
 				ConfigManager.InitConfigFile(); // Create config file
 				ConfigManager.SaveConfig(configInfo);

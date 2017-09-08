@@ -34,7 +34,6 @@ namespace SIGVerse.SIGVerseROSBridge
 
 			byte[] msgBinary = memoryStream.ToArray();
 
-
 			// System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 			// sw.Start();
 

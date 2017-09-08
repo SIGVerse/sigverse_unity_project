@@ -125,12 +125,13 @@ namespace SIGVerse.TurtleBot3
 			{
 				localTfInfoList[i].UpdateTransformForLocal();
 
+				localTfInfoList[i].transformStamped.header.Update();
+
 				transformStampedArray[i] = localTfInfoList[i].transformStamped;
 			}
 
 			this.transformStampedMsg.msg = transformStampedArray;
 			
-
 			this.transformStampedMsg.sendMsg(this.networkStream);
 
 //			sw.Stop();

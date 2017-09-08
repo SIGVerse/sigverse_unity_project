@@ -142,6 +142,8 @@ namespace SIGVerse.TurtleBot3
 			byte[] rgbBytes = this.imageTexture.GetRawTextureData();
 
 
+			this.header.Update();
+
 			//  [camera/rgb/CameraInfo]
 			this.cameraInfoData.header = this.header;
 			this.cameraInfoMsg.msg = this.cameraInfoData;

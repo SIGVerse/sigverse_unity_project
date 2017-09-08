@@ -20,6 +20,9 @@ namespace SIGVerse.TurtleBot3
 			CameraDepthFrame,
 			CameraRgbOpticalFram,
 			CameraDepthOpticalFrame,
+
+			BaseScan,
+
 			Link1,
 			Link2,
 			Link3,
