@@ -9,8 +9,6 @@ namespace SIGVerse.TurtleBot3
 {
 	public class TurtleBot3PubLDS : MonoBehaviour
 	{
-		private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
 		private static readonly int SendingIntervalMin = 200;
 
 		public string rosBridgeIP;
@@ -115,11 +113,6 @@ namespace SIGVerse.TurtleBot3
 
 			// Set current time to the header
 			this.laserScan.header.Update();
-
-			TimeSpan epochTime = DateTime.Now.ToUniversalTime() - UnixEpoch;
-			this.laserScan.header.stamp.secs  = (int)epochTime.TotalSeconds;
-			this.laserScan.header.stamp.nsecs = epochTime.Milliseconds * 1000 * 1000;
-
 
 			for (int index = 0; index < NumLines; index++)
 			{

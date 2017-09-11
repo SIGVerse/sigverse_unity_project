@@ -3,8 +3,6 @@ using System.Net.Sockets;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 
-using SIGVerse.ROSBridge.sensor_msgs;
-
 namespace SIGVerse.SIGVerseROSBridge
 {
 	[System.Serializable]
