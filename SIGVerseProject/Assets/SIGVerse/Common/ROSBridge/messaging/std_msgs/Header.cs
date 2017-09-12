@@ -17,6 +17,9 @@ namespace SIGVerse.ROSBridge
 		{
 			private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
+			private static TimeSpan timeGap = TimeSpan.Zero;
+			private static object lockTimeGap = new object();
+
 			public System.UInt32 seq;
 			public SIGVerse.ROSBridge.msg_helpers.Time stamp;
 			public string frame_id;
@@ -43,9 +46,24 @@ namespace SIGVerse.ROSBridge
 
 				if(SIGVerse.Common.ConfigManager.Instance.configInfo.setUpRosTimestamp)
 				{
-					TimeSpan epochTime = DateTime.Now.ToUniversalTime() - UnixEpoch;
+					TimeSpan epochTime = (DateTime.Now.ToUniversalTime() - UnixEpoch);
+
+					lock (lockTimeGap)
+					{
+						epochTime = epochTime.Subtract(timeGap);
+					}
+
 					this.stamp.secs = (int)epochTime.TotalSeconds;
 					this.stamp.nsecs = epochTime.Milliseconds * 1000 * 1000;
+				}
+			}
+
+			// Added by hand
+			public static void SetTimeGap(int secs, int millisecs)
+			{
+				lock (lockTimeGap)
+				{
+					timeGap = new TimeSpan(0, 0, 0, secs, millisecs);
 				}
 			}
 
