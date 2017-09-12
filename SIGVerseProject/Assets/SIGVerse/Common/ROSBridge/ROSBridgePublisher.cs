@@ -7,9 +7,18 @@ namespace SIGVerse.ROSBridge
 {
 	public abstract class ROSBridgePublisher
 	{
+		private static readonly int SendingInterval = 3; //[ms]
+
 		protected string topic;
 		protected string type;
 		protected ROSBridgeWebSocketConnection webSocketConnection;
+
+		protected System.Threading.Thread publishingThread;
+		protected Object lockPublishQueue;
+
+		protected Queue<string> publishMsgQue;
+		protected uint queueSize;
+
 
 		public string Topic
 		{
@@ -21,9 +30,13 @@ namespace SIGVerse.ROSBridge
 			get { return type; }
 		}
 
-		public ROSBridgePublisher(string topicName)
+		public ROSBridgePublisher(string topicName, uint queueSize)
 		{
-			this.topic = topicName;
+			this.topic     = topicName;
+			this.queueSize = queueSize;
+
+			this.publishMsgQue = new Queue<string>();
+			this.lockPublishQueue = new object();
 		}
 
 		public void SetConnection(ROSBridgeWebSocketConnection webSocketConnection)
@@ -32,13 +45,6 @@ namespace SIGVerse.ROSBridge
 		}
 
 		public abstract string ToMessage(ROSMessage message);
-
-
-		protected System.Threading.Thread publishingThread;
-		protected Object lockPublishQueue;
-		protected bool isPublishing;
-
-		protected string publishMsg;
 
 
 		public void CreatePublishingThread()
@@ -50,30 +56,22 @@ namespace SIGVerse.ROSBridge
 
 		private void RunPublishing()
 		{
+			string message;
+
 			while (this.webSocketConnection.IsConnected)
 			{
-				lock (this.lockPublishQueue)
+				while(this.publishMsgQue.Count > 0)
 				{
-					if (this.publishMsg != null)
+					lock (this.lockPublishQueue)
 					{
-						this.isPublishing = true;
+						message = this.publishMsgQue.Dequeue();
 					}
-				}
 
-				if (this.isPublishing)
-				{
-					this.webSocketConnection.Publish(this.publishMsg);
-
-					this.publishMsg = null;
-					this.isPublishing = false;
+					this.webSocketConnection.Publish(message);
 				}
-				else
-				{
-					Thread.Sleep(10);
-				}
+				Thread.Sleep(SendingInterval);
 			}
 		}
-
 
 
 		/// <summary>
@@ -98,7 +96,7 @@ namespace SIGVerse.ROSBridge
 
 	public class ROSBridgePublisher<Tmsg> : ROSBridgePublisher where Tmsg : ROSMessage
 	{
-		public ROSBridgePublisher(string topicName) : base(topicName)
+		public ROSBridgePublisher(string topicName, uint queueSize = 0) : base(topicName, queueSize)
 		{
 			var getMessageType = typeof(Tmsg).GetMethod("GetMessageType");
 
@@ -107,6 +105,7 @@ namespace SIGVerse.ROSBridge
 				UnityEngine.Debug.LogError("Could not retrieve method GetMessageType() from " + typeof(Tmsg).ToString());
 				return;
 			}
+
 			string messageType = (string)getMessageType.Invoke(null, null);
 
 			if (messageType == null)
@@ -117,23 +116,19 @@ namespace SIGVerse.ROSBridge
 
 			base.type = messageType;
 
-			base.lockPublishQueue = new object();
-			this.isPublishing = false;
-
-			this.publishMsg = null;
+//			UnityEngine.Debug.LogError("rosbridge publisher("+topicName+") queue size="+queueSize);
 		}
 
 		public bool Publish(Tmsg message)
 		{
-
-			lock (this.lockPublishQueue)
+			lock (base.lockPublishQueue)
 			{
-				if (this.isPublishing)
-				{
-					return false;
-				}
+				base.publishMsgQue.Enqueue(this.ToMessage(message));
 
-				this.publishMsg = this.ToMessage(message);
+				if (base.publishMsgQue.Count > base.queueSize && base.queueSize > 0)
+				{
+					base.publishMsgQue.Dequeue();
+				}
 			}
 
 			return true;

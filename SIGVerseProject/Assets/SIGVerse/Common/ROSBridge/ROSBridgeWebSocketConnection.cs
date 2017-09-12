@@ -167,9 +167,9 @@ namespace SIGVerse.ROSBridge
 		/// <typeparam name="Tpub">Publisher type to advertise</typeparam>
 		/// <param name="topic">Topic to advertise on</param>
 		/// <returns>A publisher which can be used to broadcast data on the given topic</returns>
-		public ROSBridgePublisher<Tmsg> Advertise<Tmsg>(string topic) where Tmsg : ROSMessage
+		public ROSBridgePublisher<Tmsg> Advertise<Tmsg>(string topic, uint queueSize = 0) where Tmsg : ROSMessage
 		{
-			ROSBridgePublisher<Tmsg> publisher = (ROSBridgePublisher<Tmsg>)Activator.CreateInstance(typeof(ROSBridgePublisher<Tmsg>), new object[] { topic });
+			ROSBridgePublisher<Tmsg> publisher = (ROSBridgePublisher<Tmsg>)Activator.CreateInstance(typeof(ROSBridgePublisher<Tmsg>), new object[] { topic, queueSize });
 			publisher.SetConnection(this);
 
 			this.publishers.Add(publisher);
