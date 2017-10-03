@@ -91,8 +91,6 @@ namespace SIGVerse.TurtleBot3
 
 		void Update()
 		{
-			this.webSocketConnection.Render();
-
 			this.elapsedTime += UnityEngine.Time.deltaTime;
 
 			if (this.elapsedTime < this.sendingInterval * 0.001)

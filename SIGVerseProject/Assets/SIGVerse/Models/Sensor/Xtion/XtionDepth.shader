@@ -39,19 +39,22 @@ Shader "SIGVerse/XtionDepth"
 				float depthValue = Linear01Depth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv));
 
 				float depth_mm;
-				if (depthValue == 1.0f) {
+
+				if (depthValue == 1.0f) 
+				{
 					depth_mm = 0;
 				}
-				else {
-					depth_mm = depthValue * 4000 /*+ 300*/;
+				else 
+				{
+					depth_mm = depthValue * _ProjectionParams.z * 1000;
 				}
 
 				float upperVal = trunc(depth_mm / 256);
 				float lowerVal = depth_mm - upperVal * 256;
 
 				half4 depth;
-				depth.r = (float)lowerVal / 256.0f;
-				depth.g = (float)upperVal / 256.0f;
+				depth.r = (half)lowerVal / 256.0f;
+				depth.g = (half)upperVal / 256.0f;
 				depth.b = 0;
 				depth.a = 1;
 		

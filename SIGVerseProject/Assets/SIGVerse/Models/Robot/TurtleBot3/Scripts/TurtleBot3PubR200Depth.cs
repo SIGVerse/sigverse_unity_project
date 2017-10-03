@@ -163,7 +163,7 @@ namespace SIGVerse.TurtleBot3
 //			sw.Start();
 
 			// [camera/depth/Image_raw]
-			int textureWidth = this.imageTexture.width;
+			int textureWidth  = this.imageTexture.width;
 			int textureHeight = this.imageTexture.height;
 
 			for (int row = 0; row < textureHeight; row++)
@@ -176,8 +176,8 @@ namespace SIGVerse.TurtleBot3
 				}
 			}
 
-//			sw.Stop();
-//			UnityEngine.Debug.Log("time="+sw.Elapsed);
+			//			sw.Stop();
+			//			UnityEngine.Debug.Log("time="+sw.Elapsed);
 
 			this.imageData.header = this.header;
 			this.imageData.data = this.byteArray;

@@ -6537,19 +6537,18 @@ MonoBehaviour:
 --- !u!114 &1993264267
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114634025245810746, guid: 9fb95aa77a4c7e74bba5c1b6027a9321,
-    type: 2}
+  m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1993264262}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7acdbab4ebff858438ef04572856e199, type: 3}
+  m_Script: {fileID: 11500000, guid: bc3a50e9fea239b4ca7c589ad3b8f22c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rosBridgeIP: 
   rosBridgePort: 0
   topicName: /tb3omc/joint_state
-  sendingInterval: 50
+  sendingInterval: 100
 --- !u!114 &1993264268
 MonoBehaviour:
   m_ObjectHideFlags: 0
