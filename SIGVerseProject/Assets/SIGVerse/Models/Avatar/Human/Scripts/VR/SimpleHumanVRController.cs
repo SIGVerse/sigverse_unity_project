@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityStandardAssets_1_1_2.CrossPlatformInput;
 
-namespace SIGVerse.Common.VR
+namespace SIGVerse.Human.VR
 {
 	public class SimpleHumanVRController : MonoBehaviour
 	{

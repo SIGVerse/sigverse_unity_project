@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityStandardAssets_1_1_2.CrossPlatformInput;
 using UnityStandardAssets_1_1_2.Characters.ThirdPerson;
 
-namespace SIGVerse.EthanColor
+namespace SIGVerse.Human
 {
 	[RequireComponent(typeof (ThirdPersonCharacter))]
 	public class ThirdPersonUserControlWithWalkspeed : MonoBehaviour

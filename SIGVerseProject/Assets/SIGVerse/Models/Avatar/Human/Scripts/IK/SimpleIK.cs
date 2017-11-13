@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SIGVerse.Common.IK
+namespace SIGVerse.Human.IK
 {
 	[RequireComponent(typeof(Animator))]
 	public class SimpleIK : MonoBehaviour
