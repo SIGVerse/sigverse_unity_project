@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityStandardAssets_1_1_2.CrossPlatformInput;
 
+#pragma warning disable 618
+
 [RequireComponent(typeof (GUITexture))]
 public class ForcedReset : MonoBehaviour
 {

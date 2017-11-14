@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+#pragma warning disable 618
+
 namespace UnityStandardAssets_1_1_2.Utility
 {
     public class SimpleActivatorMenu : MonoBehaviour

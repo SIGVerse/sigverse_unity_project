@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
+#pragma warning disable 618
+
 namespace UnityStandardAssets_1_1_2.Utility
 {
 #if UNITY_EDITOR

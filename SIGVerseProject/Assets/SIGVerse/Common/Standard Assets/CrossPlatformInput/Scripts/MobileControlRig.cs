@@ -4,6 +4,7 @@ using UnityEditor;
 #endif
 using UnityEngine;
 
+#pragma warning disable 618
 
 namespace UnityStandardAssets_1_1_2.CrossPlatformInput
 {
