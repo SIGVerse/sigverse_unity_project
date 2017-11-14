@@ -14,7 +14,7 @@ namespace SIGVerse.Human
 		private Vector3 m_Move;
 		private bool m_Jump;                      // the world-relative desired move direction, calculated from the camForward and user input.
 
-		public float walk_speed;
+		public float walk_speed =  1.0f;
 		public bool useMainCamera = true;
 
 #if UNITY_ANDROID
