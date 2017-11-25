@@ -1,50 +1,48 @@
 fileFormatVersion: 2
-guid: 6fc64e6ef2e5c6f4a9cf4ea8e78f5396
-timeCreated: 1511260899
+guid: dcee533a1e32e1f42965b2b16423861f
+timeCreated: 1511628844
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: Cube
-    100002: Cube_001
-    100004: Cube_002
+    100002: Cube.001
+    100004: Cube.002
     100006: Keyboard
     100008: //RootNode
     100010: Plane
     100012: Screen
     400000: Cube
-    400002: Cube_001
-    400004: Cube_002
+    400002: Cube.001
+    400004: Cube.002
     400006: Keyboard
     400008: //RootNode
     400010: Plane
     400012: Screen
     2300000: Cube
-    2300002: Cube_001
-    2300004: Cube_002
+    2300002: Cube.001
+    2300004: Cube.002
     2300006: Keyboard
     2300008: Plane
     2300010: Screen
     3300000: Cube
-    3300002: Cube_001
-    3300004: Cube_002
+    3300002: Cube.001
+    3300004: Cube.002
     3300006: Keyboard
     3300008: Plane
     3300010: Screen
     4300000: Plane
     4300002: Keyboard
-    4300004: Cube_001
-    4300006: Cube_002
+    4300004: Cube.001
+    4300006: Cube.002
     4300008: Cube
     4300010: Screen
-    7400000: Default Take
-    9500000: //RootNode
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Black_Diffuse
-    second: {fileID: 2100000, guid: 3f48559206de31f43a991977d246ea7f, type: 2}
+    second: {fileID: 2100000, guid: 840fcb15e3ee6f74db8614592fe93c8a, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -68,13 +66,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Keys__sides_
-    second: {fileID: 2100000, guid: 3f48559206de31f43a991977d246ea7f, type: 2}
+      name: Keys (sides)
+    second: {fileID: 2100000, guid: 4342464e4b085f547aab52b4efdb8b48, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Keys__top___Laptop_referens_jpg
-    second: {fileID: 2100000, guid: 3f6766898c82edb40ae6b3dd0fdc6775, type: 2}
+      name: Keys (top)
+    second: {fileID: 2100000, guid: af825e35612dd1142b395463c4c0382d, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -88,8 +86,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: No Name
+    second: {fileID: 2100000, guid: 5049fce1ee9c6a94096496d834b34e33, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Plastic
-    second: {fileID: 2100000, guid: 3f48559206de31f43a991977d246ea7f, type: 2}
+    second: {fileID: 2100000, guid: 0a2a08b0e7961e844828d721570272e5, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -99,22 +102,17 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: USB_BlackDiffuse
-    second: {fileID: 2100000, guid: 3f48559206de31f43a991977d246ea7f, type: 2}
+    second: {fileID: 2100000, guid: 5cca784e3c8500a47910ae33423140aa, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: USB_WhiteDiffuse
-    second: {fileID: 2100000, guid: 3f48559206de31f43a991977d246ea7f, type: 2}
+    second: {fileID: 2100000, guid: 0fe86dbe8f1726146b7cf348ba06dde1, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: VGA
-    second: {fileID: 2100000, guid: 3f48559206de31f43a991977d246ea7f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: unnamed
-    second: {fileID: 2100000, guid: a54dd5bce1992c041a915d73f408edda, type: 2}
+    second: {fileID: 2100000, guid: 46d97cf12b63a4642ba75b2fa7632ccd, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -144,7 +142,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 100
     meshCompression: 0
     addColliders: 0
     importVisibility: 0
@@ -167,7 +165,7 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
-  importAnimation: 1
+  importAnimation: 0
   copyAvatar: 0
   humanDescription:
     serializedVersion: 2
@@ -186,7 +184,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

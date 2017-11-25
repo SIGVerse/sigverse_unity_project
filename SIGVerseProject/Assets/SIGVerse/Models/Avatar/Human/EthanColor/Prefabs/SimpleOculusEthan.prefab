@@ -100,6 +100,8 @@ GameObject:
   - component: {fileID: 95990482072399596}
   - component: {fileID: 114420806276860834}
   - component: {fileID: 114575506019108060}
+  - component: {fileID: 114169394712134332}
+  - component: {fileID: 114600615681950122}
   m_Layer: 0
   m_Name: Ethan
   m_TagString: Untagged
@@ -1861,7 +1863,7 @@ Transform:
   m_Children:
   - {fileID: 4364928531482322}
   m_Father: {fileID: 4235821592392164}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4169181132609508
 Transform:
@@ -1960,8 +1962,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4811903852231210}
   - {fileID: 4167622694774998}
+  - {fileID: 4811903852231210}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2650,7 +2652,7 @@ Transform:
   - {fileID: 4004063563893028}
   - {fileID: 4057997680153928}
   m_Father: {fileID: 4235821592392164}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4813028793718362
 Transform:
@@ -3129,6 +3131,19 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114169394712134332
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1111167225390430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af04224583ba9e44a9ca22999e73b465, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handType: 0
+  hand: {fileID: 4040812016999016}
 --- !u!114 &114189617569259934
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3253,6 +3268,19 @@ MonoBehaviour:
   rightFootWeightRotation: 1
   leftKneeWeight: 0.3
   rightKneeWeight: 0.3
+--- !u!114 &114600615681950122
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1111167225390430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af04224583ba9e44a9ca22999e73b465, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handType: 1
+  hand: {fileID: 4854212312680324}
 --- !u!114 &114660765727963474
 MonoBehaviour:
   m_ObjectHideFlags: 1
