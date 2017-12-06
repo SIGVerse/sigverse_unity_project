@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +8,7 @@ namespace SIGVerse.Human.VR
 {
 	public class EthanSimpleHandControllerForRift : MonoBehaviour
 	{
+#if SIGVERSE_USING_OCULUS_RIFT
 		public enum HandType
 		{
 			LeftHand,
@@ -118,6 +119,7 @@ namespace SIGVerse.Human.VR
 
 			return handTrigger1D = Mathf.Min(handTrigger1D, 0.9f); // Threshold is 0.9
 		}
+#endif
 	}
 }
 
