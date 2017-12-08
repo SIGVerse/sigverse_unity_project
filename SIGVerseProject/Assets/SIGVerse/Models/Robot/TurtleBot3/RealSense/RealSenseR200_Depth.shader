@@ -40,7 +40,7 @@ Shader "SIGVerse/RealSenseR200_Depth"
 
 				float depth_mm;
 
-				if (depthValue == 1.0f)
+				if (depthValue == 1.0f || depthValue < 0.3 / _ProjectionParams.z) // 0.3 means the Near. But the specification is 0.4.
 				{
 					depth_mm = 0;
 				}
