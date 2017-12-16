@@ -231,6 +231,8 @@ namespace SIGVerse.Common
 				buttonText.text = "Stop";
 				this.isRunning = true;
 			}
+
+			EventSystem.current.SetSelectedGameObject(null);
 		}
 
 		public void OnSubviewButtonClick()

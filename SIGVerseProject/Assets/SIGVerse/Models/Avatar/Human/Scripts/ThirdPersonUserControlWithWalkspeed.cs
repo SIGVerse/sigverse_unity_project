@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityStandardAssets_1_1_2.CrossPlatformInput;
 using UnityStandardAssets_1_1_2.Characters.ThirdPerson;
 
@@ -57,6 +58,8 @@ namespace SIGVerse.Human
 
 		private void Update()
 		{
+			if(EventSystem.current!=null && EventSystem.current.currentSelectedGameObject!=null) { return; }
+
 			// read inputs
 #if !UNITY_ANDROID
 			float h = CrossPlatformInputManager.GetAxis("Horizontal") * walk_speed;

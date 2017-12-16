@@ -91,7 +91,7 @@ namespace SIGVerse.Human.VR
 		// Update is called once per frame
 		void LateUpdate()
 		{
-			float handTrigger1D = this.GetHandTrigger1D();
+			float handTrigger1D = (this.handType == HandType.LeftHand)? OVRInput.Get(OVRInput.RawAxis1D.LHandTrigger) : OVRInput.Get(OVRInput.RawAxis1D.RHandTrigger);
 
 			// Change hand posture
 			this.thumb1 .localRotation = Quaternion.Slerp(this.thumb1Start , this.thumb1End , handTrigger1D);
@@ -110,14 +110,6 @@ namespace SIGVerse.Human.VR
 			this.ring3  .localRotation = this.ring3Start;
 			this.pinky2 .localRotation = this.pinky2Start;
 			this.pinky3 .localRotation = this.pinky3Start;
-		}
-
-
-		public float GetHandTrigger1D()
-		{
-			float handTrigger1D = (this.handType == HandType.LeftHand)? OVRInput.Get(OVRInput.RawAxis1D.LHandTrigger) : OVRInput.Get(OVRInput.RawAxis1D.RHandTrigger);
-
-			return handTrigger1D = Mathf.Min(handTrigger1D, 0.9f); // Threshold is 0.9
 		}
 #endif
 	}

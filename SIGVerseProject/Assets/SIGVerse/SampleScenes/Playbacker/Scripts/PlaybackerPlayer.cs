@@ -2,6 +2,7 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System;
 using System.IO;
 using System.Text;
@@ -242,6 +243,8 @@ namespace SIGVerse.SampleScenes.Playbacker
 				{
 					this.StopPlaying();
 				}
+
+				EventSystem.current.SetSelectedGameObject(null);
 			}
 			catch(Exception ex)
 			{
