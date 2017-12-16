@@ -4631,7 +4631,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 332981827}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -454.5, y: 231, z: 0}
+  m_LocalPosition: {x: -470, y: 255, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 237475999}
@@ -12678,23 +12678,11 @@ Prefab:
     - {fileID: 114000012306985470, guid: cd16f7aea3c00f34eb4d3cde9968707a, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: cd16f7aea3c00f34eb4d3cde9968707a, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &973474122 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1000012380255514, guid: cd16f7aea3c00f34eb4d3cde9968707a,
+--- !u!20 &973474127 stripped
+Camera:
+  m_PrefabParentObject: {fileID: 20000013006332368, guid: cd16f7aea3c00f34eb4d3cde9968707a,
     type: 2}
   m_PrefabInternal: {fileID: 972947754}
---- !u!114 &973474128
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 973474122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b479a64dae2962540af50dc391587a2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  subviewType: 1
 --- !u!1 &975149664
 GameObject:
   m_ObjectHideFlags: 0
@@ -15692,7 +15680,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1226092836}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 469.5, y: 306, z: 0}
+  m_LocalPosition: {x: 485, y: 330, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 332981828}
@@ -16529,6 +16517,22 @@ GameObject:
   m_PrefabParentObject: {fileID: 1000011757498360, guid: cd16f7aea3c00f34eb4d3cde9968707a,
     type: 2}
   m_PrefabInternal: {fileID: 972947754}
+--- !u!114 &1278631325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1278631324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b479a64dae2962540af50dc391587a2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  subviewCamera: {fileID: 973474127}
+  subviewType: 1
+  subviewPositionType: 1
+  offsetX: 30
+  offsetY: 30
 --- !u!1 &1281608832
 GameObject:
   m_ObjectHideFlags: 0
@@ -25779,7 +25783,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1867228059}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -449.5, y: 226, z: 0}
+  m_LocalPosition: {x: -465, y: 250, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 35770960}

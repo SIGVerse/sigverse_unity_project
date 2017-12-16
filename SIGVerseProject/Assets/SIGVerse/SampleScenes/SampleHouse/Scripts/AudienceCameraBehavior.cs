@@ -8,7 +8,7 @@ namespace SIGVerse.SampleScenes.SampleHouse
 {
 	public class AudienceCameraBehavior : MonoBehaviour
 	{
-		public SubviewManager.SubviewType subviewType;
+		public SIGVerse.Common.SubviewType subviewType;
 
 		// Use this for initialization
 		void Start ()

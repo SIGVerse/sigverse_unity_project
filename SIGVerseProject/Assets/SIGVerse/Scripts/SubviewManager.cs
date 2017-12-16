@@ -9,39 +9,57 @@ using System;
 
 namespace SIGVerse.Common
 {
+	public enum SubviewType
+	{
+		Subview1 = 1,
+		Subview2,
+		Subview3,
+		Subview4,
+	}
+
+	public enum SubviewPositionType
+	{
+		TopLeft,
+		TopRight,
+		BottomLeft,
+		BottomRight, 
+	}
+
 	public interface ISubviewHandler : IEventSystemHandler
 	{
 		/// <summary>
 		/// Update a camera information of a subview
 		/// </summary>
-		/// <param name="subviewNumber">subview number (this number is greater than 0)</param>
+		/// <param name="subviewType">subview type</param>
 		/// <param name="camera"></param>
-		void OnSetSubviewCamera(int subviewNumber, Camera camera);
+		void OnSetSubviewCamera(SubviewType subviewType, Camera camera);
 
 		/// <summary>
 		/// Update a camera information of a subview
 		/// </summary>
-		/// <param name="subviewNumber">subview number (this number is greater than 0)</param>
+		/// <param name="subviewType">subview type</param>
 		/// <param name="camera"></param>
 		/// <param name="isShowing"></param>
-		void OnSetSubviewCamera(int subviewNumber, Camera camera, bool isShowing);
+		void OnSetSubviewCamera(SubviewType subviewType, Camera camera, bool isShowing);
+
+		/// <summary>
+		/// Update position of a subview
+		/// </summary>
+		/// <param name="subviewType">subview type</param>
+		/// <param name="subviewPositionNumber">0: buttom right, 1: buttom left</param>
+		void OnSetSubviewPosition(SubviewType subviewType, SubviewPositionType subviewPositionType, float offsetX, float offsetY);
 	}
 
 
 	public class SubviewManager : MonoBehaviour, ISubviewHandler
 	{
-		public enum SubviewType
-		{
-			Subview1 = 1,
-			Subview2,
-			Subview3,
-			Subview4,
-		}
-
 		public const string ButtonTextOff = "OFF";
 		public const string ButtonTextOn  = "ON";
 
+		private const float DefaultPositionOffset = 15f;
+
 		private const int MaxCameraListUpdateInterval = 500;
+
 
 		private const int SubviewNum = 4;
 
@@ -99,8 +117,8 @@ namespace SIGVerse.Common
 					// Set subviews position (All panels are the same size)
 					RectTransform rectTransform = this.subviewPanels[i].GetComponent<RectTransform>();
 
-					float posX = Screen.width - 15 - rectTransform.rect.width;
-					float posY = Screen.height - 15 - i * rectTransform.rect.height;
+					float posX = Screen.width  - DefaultPositionOffset - rectTransform.rect.width;
+					float posY = Screen.height - DefaultPositionOffset - i * rectTransform.rect.height;
 
 					if(posY-rectTransform.rect.height < 0) { posY = rectTransform.rect.height; }
 				
@@ -378,7 +396,7 @@ namespace SIGVerse.Common
 		}
 
 
-		public static void SetSubviewCamera(int subviewNumber, Camera camera)
+		public static void SetSubviewCamera(SubviewType subviewType, Camera camera)
 		{
 			SIGVerseMenu sigverseMenu = GameObject.FindObjectOfType<SIGVerseMenu>();
 
@@ -392,30 +410,19 @@ namespace SIGVerse.Common
 			(
 				target: sigverseMenu.gameObject,
 				eventData: null,
-				functor: (reciever, eventData) => reciever.OnSetSubviewCamera(subviewNumber, camera)
+				functor: (reciever, eventData) => reciever.OnSetSubviewCamera(subviewType, camera)
 			);
 		}
 
-		public static void SetSubviewCamera(SubviewType subviewType, Camera camera)
+		public void OnSetSubviewCamera(SubviewType subviewType, Camera camera)
 		{
-			SetSubviewCamera((int)subviewType, camera);
+			this.OnSetSubviewCamera(subviewType, camera, true);
 		}
 
 
-		public void OnSetSubviewCamera(int subviewNumber, Camera camera)
+		public void OnSetSubviewCamera(SubviewType subviewType, Camera camera, bool isShowing)
 		{
-			this.OnSetSubviewCamera(subviewNumber, camera, true);
-		}
-
-
-		public void OnSetSubviewCamera(int subviewNumber, Camera camera, bool isShowing)
-		{
-			if (subviewNumber <= 0)
-			{
-				throw new ArgumentException("Subview number is not greater than 0", "subviewNumber");
-			}
-
-			int index = subviewNumber - 1;
+			int index = (int)subviewType - 1;
 
 			if((DateTime.Now - this.subviewLastUpdateTime[index]).TotalMilliseconds < MaxCameraListUpdateInterval)
 			{
@@ -439,6 +446,91 @@ namespace SIGVerse.Common
 
 			// Update a camera info
 			this.ChangeCamera(index, camera);
+		}
+
+		public void OnSetSubviewPosition(SubviewType subviewType, SubviewPositionType subviewPositionType, float offsetX, float offsetY)
+		{
+			int index = (int)subviewType - 1;
+
+			this.subviewLastUpdateTime[index] = DateTime.Now;
+
+			// Change subviews position
+			RectTransform rectTransform = this.subviewPanels[index].GetComponent<RectTransform>();
+
+			switch (subviewPositionType)
+			{
+				case SubviewPositionType.TopLeft:
+				{
+					rectTransform.anchorMin = new Vector2(0.0f, 1.0f);
+					rectTransform.anchorMax = new Vector2(0.0f, 1.0f);
+
+					float posX = + offsetX;
+					float posY = - offsetY + Screen.height;
+
+					rectTransform.position = new Vector3(posX, posY, 0.0f);
+
+					break;
+				}
+				case SubviewPositionType.TopRight:
+				{
+					rectTransform.anchorMin = new Vector2(1.0f, 1.0f);
+					rectTransform.anchorMax = new Vector2(1.0f, 1.0f);
+
+					float posX = - offsetX + Screen.width  - rectTransform.rect.width;
+					float posY = - offsetY + Screen.height;
+
+					rectTransform.position = new Vector3(posX, posY, 0.0f);
+
+					break;
+				}
+				case SubviewPositionType.BottomLeft:
+				{
+					rectTransform.anchorMin = new Vector2(0.0f, 0.0f);
+					rectTransform.anchorMax = new Vector2(0.0f, 0.0f);
+
+					float posX = + offsetX;
+					float posY = + offsetY + rectTransform.rect.height;
+
+					rectTransform.position = new Vector3(posX, posY, 0.0f);
+
+					break;
+				}
+				case SubviewPositionType.BottomRight:
+				{
+					rectTransform.anchorMin = new Vector2(1.0f, 0.0f);
+					rectTransform.anchorMax = new Vector2(1.0f, 0.0f);
+
+					float posX = - offsetX + Screen.width - rectTransform.rect.width;
+					float posY = + offsetY                + rectTransform.rect.height;
+
+					rectTransform.position = new Vector3(posX, posY, 0.0f);
+
+					break;
+				}
+			}
+		}
+
+		public static void SetSubviewPosition(SubviewType subviewType, SubviewPositionType subviewPositionType, float offsetX, float offsetY)
+		{
+			SIGVerseMenu sigverseMenu = GameObject.FindObjectOfType<SIGVerseMenu>();
+
+			if(sigverseMenu == null)
+			{
+				SIGVerseLogger.Warn("SIGVerseMenu is not exists.");
+				return;
+			}
+
+			ExecuteEvents.Execute<ISubviewHandler>
+			(
+				target: sigverseMenu.gameObject,
+				eventData: null,
+				functor: (reciever, eventData) => reciever.OnSetSubviewPosition(subviewType, subviewPositionType, offsetX, offsetY)
+			);
+		}
+
+		public static void SetSubviewPosition(SubviewType subviewType, SubviewPositionType subviewPositionType)
+		{
+			SetSubviewPosition(subviewType, subviewPositionType, DefaultPositionOffset, DefaultPositionOffset);
 		}
 	}
 }
