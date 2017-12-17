@@ -3142,8 +3142,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af04224583ba9e44a9ca22999e73b465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handType: 0
-  hand: {fileID: 4040812016999016}
 --- !u!114 &114189617569259934
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3176,6 +3174,8 @@ MonoBehaviour:
   vrRoot: {fileID: 4167622694774998}
   eyeAnchor: {fileID: 4852280407278190}
   bodyAnchor: {fileID: 4191071417446302}
+  fixedParts:
+  - {fileID: 4544515544334086}
 --- !u!114 &114473058967475062
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3279,8 +3279,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af04224583ba9e44a9ca22999e73b465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handType: 1
-  hand: {fileID: 4854212312680324}
 --- !u!114 &114660765727963474
 MonoBehaviour:
   m_ObjectHideFlags: 1

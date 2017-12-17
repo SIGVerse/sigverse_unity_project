@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets_1_1_2.CrossPlatformInput;
 
@@ -10,13 +11,34 @@ namespace SIGVerse.Human.VR
 		public Transform eyeAnchor;
 		public Transform bodyAnchor;
 
+		public List<Transform> fixedParts;
 		//////////////////////////////
 
 		private Animator animator;
 
+		private Transform[]  fixedTransforms;
+		private Quaternion[] fixedQuaternionsOrg;
+
 		private void Start()
 		{
 			this.animator = GetComponent<Animator>();
+
+
+			List<Transform> fixedTransformList = new List<Transform>();
+
+			foreach (Transform fixedPart in this.fixedParts)
+			{
+				fixedTransformList.AddRange(fixedPart.GetComponentsInChildren<Transform>());
+			}
+
+			this.fixedTransforms = fixedTransformList.ToArray();
+
+			this.fixedQuaternionsOrg = new Quaternion[this.fixedTransforms.Length];
+
+			for (int i=0; i<this.fixedTransforms.Length; i++)
+			{
+				this.fixedQuaternionsOrg[i] = this.fixedTransforms[i].localRotation;
+			}
 		}
 
 		private void Update()
@@ -66,6 +88,15 @@ namespace SIGVerse.Human.VR
 			this.animator.SetFloat("Turn",    move.x, 0.1f, Time.deltaTime);
 
 			this.animator.speed = animSpeedMultiplier;
+		}
+
+		// Update is called once per frame
+		void LateUpdate()
+		{
+			for (int i=0; i<this.fixedTransforms.Length; i++)
+			{
+				this.fixedTransforms[i].localRotation = this.fixedQuaternionsOrg[i];
+			}
 		}
 	}
 }
