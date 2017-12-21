@@ -6777,6 +6777,8 @@ MonoBehaviour:
   subviewPanel: {fileID: 1117810598306384}
   infoPanel: {fileID: 1619582483172438}
   messagePanel: {fileID: 1895186688101158}
+  targetsOfHiding: {fileID: 1789408718213942}
+  startButton: {fileID: 1962506100055066}
   subviewPanels:
   - {fileID: 1259123708080388}
   - {fileID: 1495139239503404}
@@ -7227,10 +7229,10 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 114832783555296154}
         m_MethodName: OnStartButtonClick
-        m_Mode: 2
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 114298055395201890}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Text, UnityEngine.UI
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

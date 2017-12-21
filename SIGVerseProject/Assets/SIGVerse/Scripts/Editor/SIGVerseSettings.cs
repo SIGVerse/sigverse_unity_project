@@ -35,6 +35,7 @@ namespace SIGVerse.Common
 		private int    rosbridgePort;
 		private int    sigverseBridgePort;
 		private bool   useSigverseMenu;
+		private bool   isAutoStartWithMenu;
 		private bool   setUpRosTimestamp;
 
 		private bool   isUsingMySQL;
@@ -52,6 +53,7 @@ namespace SIGVerse.Common
 			this.rosbridgePort       = configInfo.rosbridgePort;
 			this.sigverseBridgePort  = configInfo.sigverseBridgePort;
 			this.useSigverseMenu     = configInfo.useSigverseMenu;
+			this.isAutoStartWithMenu = configInfo.isAutoStartWithMenu;
 			this.setUpRosTimestamp   = configInfo.setUpRosTimestamp;
 
 			// Get the define symbol settings from EditorUserSettings
@@ -102,6 +104,7 @@ namespace SIGVerse.Common
 			this.rosbridgePort       = EditorGUILayout.IntField ("Rosbridge Port",                     this.rosbridgePort,      GUILayout.Width(EditorGUIUtility.labelWidth + 80));
 			this.sigverseBridgePort  = EditorGUILayout.IntField ("SIGVerse Bridge Port",               this.sigverseBridgePort, GUILayout.Width(EditorGUIUtility.labelWidth + 80));
 			this.useSigverseMenu     = EditorGUILayout.Toggle   ("Use SIGVerse menu",                  this.useSigverseMenu);
+			this.isAutoStartWithMenu = EditorGUILayout.Toggle   ("     (option)  Auto Start",          this.isAutoStartWithMenu);
 			this.setUpRosTimestamp   = EditorGUILayout.Toggle   ("Set up Time stamps of ROS message",  this.setUpRosTimestamp);
 
 			if (EditorGUI.EndChangeCheck())
@@ -112,6 +115,7 @@ namespace SIGVerse.Common
 				configInfo.rosbridgePort       = this.rosbridgePort;
 				configInfo.sigverseBridgePort  = this.sigverseBridgePort;
 				configInfo.useSigverseMenu     = this.useSigverseMenu;
+				configInfo.isAutoStartWithMenu = this.isAutoStartWithMenu;
 				configInfo.setUpRosTimestamp   = this.setUpRosTimestamp;
 
 				ConfigManager.InitConfigFile(); // Create config file

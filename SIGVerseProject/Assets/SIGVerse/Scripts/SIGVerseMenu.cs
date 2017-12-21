@@ -36,6 +36,10 @@ namespace SIGVerse.Common
 		public GameObject infoPanel;
 		public GameObject messagePanel;
 
+		[HeaderAttribute("Main Panel")]
+		public GameObject targetsOfHiding;
+		public GameObject startButton;
+
 		[HeaderAttribute("Subview Panels")]
 		public List<GameObject> subviewPanels;
 
@@ -54,20 +58,20 @@ namespace SIGVerse.Common
 		private Color backgroundBrightColor;
 
 		private Text timeValueText;
+		private Text startButtonText;
 
 		private PanelOperationType panelOperationType;
 		private GameObject draggingPanel;
 		private RectTransform   expandingRectTransform;
 
 		private Image mainPanelImage;
-		private GameObject targetsOfHiding;
 
 		private bool canSeeMainPanel;
 		private bool canSeeSubviewPanel;
 		private bool canSeeInfoPanel;
 		private bool canSeeMessagePanel;
 
-		private bool[] canSeeSubviewPanels;
+//		private bool[] canSeeSubviewPanels;
 
 		private bool isRunning = false;
 
@@ -108,9 +112,9 @@ namespace SIGVerse.Common
 
 			this.mainPanelImage = this.mainPanel.GetComponent<Image>();
 
-			this.targetsOfHiding = this.mainPanel.transform.Find("TargetsOfHiding").gameObject;
+			this.startButtonText = this.startButton.GetComponentInChildren<Text>();
 
-			this.canSeeSubviewPanels = new bool[SubviewNum];
+//			this.canSeeSubviewPanels = new bool[SubviewNum];
 
 			this.canvas      .SetActive(true);
 			this.mainPanel   .SetActive(true);
@@ -152,6 +156,11 @@ namespace SIGVerse.Common
 		// Use this for initialization
 		void Start()
 		{
+			if(ConfigManager.Instance.configInfo.isAutoStartWithMenu)
+			{
+				this.OnHiddingButtonClick();
+				this.OnStartButtonClick();
+			}
 		}
 
 
@@ -172,10 +181,10 @@ namespace SIGVerse.Common
 				this.canSeeInfoPanel    = this.infoPanel     .activeSelf;
 				this.canSeeMessagePanel = this.messagePanel  .activeSelf;
 
-				for(int i=0; i<SubviewNum; i++)
-				{
-					this.canSeeSubviewPanels[i] = this.subviewPanels[i].activeSelf;
-				}
+				//for(int i=0; i<SubviewNum; i++)
+				//{
+				//	this.canSeeSubviewPanels[i] = this.subviewPanels[i].activeSelf;
+				//}
 
 				this.mainPanelImage .enabled = false;
 				this.targetsOfHiding.SetActive(false);
@@ -183,10 +192,10 @@ namespace SIGVerse.Common
 				this.infoPanel      .SetActive(false);
 				this.messagePanel   .SetActive(false);
 
-				for(int i=0; i<SubviewNum; i++)
-				{
-					this.subviewPanels[i].SetActive(false);
-				}
+				//for(int i=0; i<SubviewNum; i++)
+				//{
+				//	this.subviewPanels[i].SetActive(false);
+				//}
 			}
 			else
 			{
@@ -207,28 +216,28 @@ namespace SIGVerse.Common
 				{
 					this.messagePanel.SetActive(true);
 				}
-				for(int i=0; i<SubviewNum; i++)
-				{
-					if (this.canSeeSubviewPanels[i])
-					{
-						this.subviewPanels[i].SetActive(true);
-					}
-				}
+				//for(int i=0; i<SubviewNum; i++)
+				//{
+				//	if (this.canSeeSubviewPanels[i])
+				//	{
+				//		this.subviewPanels[i].SetActive(true);
+				//	}
+				//}
 			}
 		}
 
-		public void OnStartButtonClick(Text buttonText)
+		public void OnStartButtonClick()
 		{
 			if (this.isRunning)
 			{
 				Time.timeScale = 0.0f;
-				buttonText.text = "Start";
+				this.startButtonText.text = "Start";
 				this.isRunning = false;
 			}
 			else
 			{
 				Time.timeScale = DefaultTimeScale;
-				buttonText.text = "Stop";
+				this.startButtonText.text = "Stop";
 				this.isRunning = true;
 			}
 

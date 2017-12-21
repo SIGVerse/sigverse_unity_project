@@ -86,15 +86,16 @@ namespace SIGVerse.Common
 		private const int    DefaultRosbridgePort       = 9090;
 		private const int    DefaultSigverseBridgePort  = 50001;
 		private const bool   DefaultUseSigverseMenu     = true;
+		private const bool   DefaultIsAutoStartWithMenu = true;
 		private const bool   DefaultSetUpRosTimestamp   = true;
 
 
 		public string rosbridgeIP;
 		public int    rosbridgePort;
 		public int    sigverseBridgePort;
-
-		public bool useSigverseMenu;
-		public bool setUpRosTimestamp;
+		public bool   useSigverseMenu;
+		public bool   isAutoStartWithMenu;
+		public bool   setUpRosTimestamp;
 
 		public ConfigInfo()
 		{
@@ -102,6 +103,7 @@ namespace SIGVerse.Common
 			this.rosbridgePort       = DefaultRosbridgePort;
 			this.sigverseBridgePort  = DefaultSigverseBridgePort;
 			this.useSigverseMenu     = DefaultUseSigverseMenu;
+			this.isAutoStartWithMenu = DefaultIsAutoStartWithMenu;
 			this.setUpRosTimestamp   = DefaultSetUpRosTimestamp;
 		}
 	}
