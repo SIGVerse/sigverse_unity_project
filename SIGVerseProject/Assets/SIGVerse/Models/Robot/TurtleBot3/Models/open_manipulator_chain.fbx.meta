@@ -3,7 +3,7 @@ guid: ed159b59b24635247998b4c513b688a9
 timeCreated: 1501746285
 licenseType: Free
 ModelImporter:
-  serializedVersion: 19
+  serializedVersion: 22
   fileIDToRecycleName:
     100000: Camera
     100002: grip_link
@@ -49,6 +49,8 @@ ModelImporter:
     2300014: link3_MeshPart2
     2300016: link4
     2300018: link5
+    2300020: link2
+    2300022: link3
     3300000: grip_link
     3300002: grip_link_sub
     3300004: link1
@@ -59,6 +61,8 @@ ModelImporter:
     3300014: link3_MeshPart2
     3300016: link4
     3300018: link5
+    3300020: link2
+    3300022: link3
     4300000: link1
     4300002: link2_MeshPart0
     4300004: link2_MeshPart1
@@ -69,10 +73,49 @@ ModelImporter:
     4300014: link5
     4300016: grip_link_sub
     4300018: grip_link
+    4300020: link2
+    4300022: link3
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_grip_link_geom0_mat.001
+    second: {fileID: 2100000, guid: 4a75aa62b8ce5a6438e1e041cec1b243, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_grip_link_sub_geom0_mat.001
+    second: {fileID: 2100000, guid: 1220793283f27d941bca2f926fa1d4d2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_link1_geom0_mat.001
+    second: {fileID: 2100000, guid: 631b21d5e40a7bc4a9f4e9ca7cfd042a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_link2_geom0_mat.001
+    second: {fileID: 2100000, guid: e4da35a5788d5cc4b8c31ccabf34d5e0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_link3_geom0_mat.001
+    second: {fileID: 2100000, guid: 688507c569b81434e9a2d7c0e3d9b0ba, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_link4_geom0_mat.001
+    second: {fileID: 2100000, guid: 6c3108c00fb2abe4fa6914d1f49f2dc4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_link5_geom0_mat.001
+    second: {fileID: 2100000, guid: fcd2e65f60a6658459d128adbcf5cf41, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -85,12 +128,14 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
+    extraUserProperties: []
     clipAnimations: []
     isReadable: 1
   meshes:
@@ -98,13 +143,18 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    importVisibility: 0
     importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 2
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
@@ -114,6 +164,7 @@ ModelImporter:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
+    normalCalculationMode: 0
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
