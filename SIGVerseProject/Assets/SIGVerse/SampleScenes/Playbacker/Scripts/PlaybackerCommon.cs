@@ -61,7 +61,7 @@ namespace SIGVerse.SampleScenes.Playbacker
 			// Save initial transforms of targets
 			foreach (GameObject targetObj in targetObjects)
 			{
-				Transform[] transforms = targetObj.transform.GetComponentsInChildren<Transform>();
+				Transform[] transforms = targetObj.transform.GetComponentsInChildren<Transform>(true);
 
 				foreach (Transform transform in transforms)
 				{

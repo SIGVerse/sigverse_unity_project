@@ -113,7 +113,7 @@ namespace SIGVerse.SampleScenes.Playbacker
 
 			foreach (GameObject targetObj in targetObjects)
 			{
-				Transform[] transforms = targetObj.transform.GetComponentsInChildren<Transform>();
+				Transform[] transforms = targetObj.transform.GetComponentsInChildren<Transform>(true);
 
 				foreach (Transform transform in transforms)
 				{

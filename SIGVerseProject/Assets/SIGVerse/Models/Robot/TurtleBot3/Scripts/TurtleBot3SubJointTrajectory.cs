@@ -103,12 +103,8 @@ namespace SIGVerse.TurtleBot3
 				float position = TurtleBot3Common.GetClampedPosition(name, (float)jointTrajectory.points[Zero].positions[i]);
 				float duration = (float)jointTrajectory.points[Zero].time_from_start.secs + (float)jointTrajectory.points[Zero].time_from_start.nsecs * 0.000000001f;
 
-//				Debug.Log("Duration="+ duration);
-
 				if(name == TurtleBot3Common.jointNameMap[JointType.Joint1])
 				{
-//					Debug.Log("0 goal="+(-position) + ", curr=" + TurtleBot3Common.GetCorrectedJointsEulerAngle(name, -this.joint1Link.localEulerAngles.z) * Mathf.Deg2Rad);
-
 					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, duration, -position, Time.time, TurtleBot3Common.GetCorrectedJointsEulerAngle(name, this.joint1Link.localEulerAngles.z) * Mathf.Deg2Rad);
 				}
 
@@ -244,14 +240,8 @@ namespace SIGVerse.TurtleBot3
 			float newPosition;
 			float movingDistance = speed * (Time.time - trajectoryInfo.CurrentTime);
 
-//			Debug.Log("movingDistance="+ movingDistance);
-
-//			Debug.Log("1 goal="+trajectoryInfo.GoalPosition + ", curr=" + trajectoryInfo.CurrentPosition);
-
 			if (movingDistance > Mathf.Abs(trajectoryInfo.GoalPosition - trajectoryInfo.CurrentPosition))
 			{
-//				Debug.Log("2 goal="+trajectoryInfo.GoalPosition + ", curr=" + trajectoryInfo.CurrentPosition);
-
 				newPosition = trajectoryInfo.GoalPosition;
 				trajectoryInfo = null;
 			}
@@ -272,8 +262,6 @@ namespace SIGVerse.TurtleBot3
 					newPosition = trajectoryInfo.CurrentPosition;
 				}
 			}
-
-//			Debug.Log("newPosition="+ newPosition);
 
 			return newPosition;
 		}
