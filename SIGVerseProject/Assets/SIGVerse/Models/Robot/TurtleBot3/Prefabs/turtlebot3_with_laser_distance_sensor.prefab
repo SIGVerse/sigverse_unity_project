@@ -249,6 +249,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4115508279222694}
+  - component: {fileID: 114527016147514288}
   - component: {fileID: 114710388064102106}
   - component: {fileID: 114381776901584592}
   - component: {fileID: 114005723213282064}
@@ -1003,6 +1004,21 @@ MonoBehaviour:
   sigverseBridgePort: 0
   topicName: /sigverse/TurtleBot3/tf
   sendingInterval: 100
+--- !u!114 &114527016147514288
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1907902716027538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6212a4b45d0425547b0e57ccea1d4dfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rosBridgeIP: 
+  sigverseBridgePort: 0
+  topicName: /sigverse/TimeSync
+  shouldSynchronize: 1
 --- !u!114 &114575333796504036
 MonoBehaviour:
   m_ObjectHideFlags: 1

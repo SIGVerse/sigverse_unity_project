@@ -171,6 +171,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4533016328629140}
+  - component: {fileID: 114281265144290446}
   - component: {fileID: 114293978635730214}
   - component: {fileID: 114054161729819010}
   - component: {fileID: 114248963183558780}
@@ -2397,6 +2398,21 @@ MonoBehaviour:
   rosBridgeIP: 
   rosBridgePort: 0
   topicName: /tb3omc/joint_trajectory
+--- !u!114 &114281265144290446
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1187580229078940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6212a4b45d0425547b0e57ccea1d4dfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rosBridgeIP: 
+  sigverseBridgePort: 0
+  topicName: /sigverse/TimeSync
+  shouldSynchronize: 1
 --- !u!114 &114293978635730214
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -145,7 +145,7 @@ namespace SIGVerse.TurtleBot
 			this.cameraInfoData.header = this.header;
 			this.cameraInfoMsg.msg = this.cameraInfoData;
 
-			this.cameraInfoMsg.sendMsg(this.networkStream);
+			this.cameraInfoMsg.SendMsg(this.networkStream);
 
 
 //			System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
@@ -174,7 +174,7 @@ namespace SIGVerse.TurtleBot
 
 //			yield return null;
 
-			this.imageMsg.sendMsg(this.networkStream);
+			this.imageMsg.SendMsg(this.networkStream);
 
 			this.canStartCoroutine = true;
 		}

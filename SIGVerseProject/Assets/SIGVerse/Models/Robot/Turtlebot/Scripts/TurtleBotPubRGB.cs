@@ -50,6 +50,8 @@ namespace SIGVerse.TurtleBot
 
 			this.tcpClient = new System.Net.Sockets.TcpClient(this.rosbridgeIP, this.sigverseBridgePort);
 
+			Debug.Log("Connected=" + this.tcpClient.Connected);
+
 			this.networkStream = this.tcpClient.GetStream();
 
 			this.networkStream.ReadTimeout  = 100000;
@@ -136,7 +138,7 @@ namespace SIGVerse.TurtleBot
 			this.cameraInfoData.header = this.header;
 			this.cameraInfoMsg.msg = this.cameraInfoData;
 
-			this.cameraInfoMsg.sendMsg(this.networkStream);
+			this.cameraInfoMsg.SendMsg(this.networkStream);
 
 //			yield return null;
 
@@ -145,7 +147,7 @@ namespace SIGVerse.TurtleBot
 			this.imageData.data = rgbBytes;
 			this.imageMsg.msg = this.imageData;
 
-			this.imageMsg.sendMsg(this.networkStream);
+			this.imageMsg.SendMsg(this.networkStream);
 
 //			sw.Stop();
 //			UnityEngine.Debug.Log("time5=" + sw.Elapsed);

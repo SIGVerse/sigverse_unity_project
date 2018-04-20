@@ -470,6 +470,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4564285488756832}
+  - component: {fileID: 114612460088540968}
   - component: {fileID: 114339526766352534}
   - component: {fileID: 114348537653811064}
   - component: {fileID: 114337857598562302}
@@ -2415,6 +2416,21 @@ MonoBehaviour:
   rosBridgePort: 0
   topicName: /tb3omc/joint_state
   sendingInterval: 100
+--- !u!114 &114612460088540968
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1667827538954908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6212a4b45d0425547b0e57ccea1d4dfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rosBridgeIP: 
+  sigverseBridgePort: 0
+  topicName: /sigverse/TimeSync
+  shouldSynchronize: 1
 --- !u!114 &114695674612430946
 MonoBehaviour:
   m_ObjectHideFlags: 1

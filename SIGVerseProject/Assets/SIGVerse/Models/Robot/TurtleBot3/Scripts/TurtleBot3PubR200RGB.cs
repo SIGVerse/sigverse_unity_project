@@ -148,14 +148,14 @@ namespace SIGVerse.TurtleBot3
 			this.cameraInfoData.header = this.header;
 			this.cameraInfoMsg.msg = this.cameraInfoData;
 
-			this.cameraInfoMsg.sendMsg(this.networkStream);
+			this.cameraInfoMsg.SendMsg(this.networkStream);
 
 			//  [camera/rgb/Image_raw]
 			this.imageData.header = this.header;
 			this.imageData.data = rgbBytes;
 			this.imageMsg.msg = this.imageData;
 
-			this.imageMsg.sendMsg(this.networkStream);
+			this.imageMsg.SendMsg(this.networkStream);
 
 //			sw.Stop();
 //			UnityEngine.Debug.Log("time=" + sw.Elapsed);

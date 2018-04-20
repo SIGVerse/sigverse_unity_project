@@ -132,7 +132,7 @@ namespace SIGVerse.TurtleBot3
 
 			this.transformStampedMsg.msg = transformStampedArray;
 			
-			this.transformStampedMsg.sendMsg(this.networkStream);
+			this.transformStampedMsg.SendMsg(this.networkStream);
 
 //			sw.Stop();
 //			Debug.Log("tf sending time="+sw.Elapsed);

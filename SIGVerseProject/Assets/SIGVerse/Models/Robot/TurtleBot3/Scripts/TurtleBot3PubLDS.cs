@@ -137,7 +137,7 @@ namespace SIGVerse.TurtleBot3
 
 			this.laserScanMsg.msg = this.laserScan;
 
-			this.laserScanMsg.sendMsg(this.networkStream);
+			this.laserScanMsg.SendMsg(this.networkStream);
 
 			//sw.Stop();
 			//Debug.Log("LDS sending time=" + sw.Elapsed);

@@ -156,7 +156,7 @@ namespace SIGVerse.TurtleBot3
 			this.cameraInfoData.header = this.header;
 			this.cameraInfoMsg.msg = this.cameraInfoData;
 
-			this.cameraInfoMsg.sendMsg(this.networkStream);
+			this.cameraInfoMsg.SendMsg(this.networkStream);
 
 
 //			System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
@@ -183,7 +183,7 @@ namespace SIGVerse.TurtleBot3
 			this.imageData.data = this.byteArray;
 			this.imageMsg.msg = this.imageData;
 
-			this.imageMsg.sendMsg(this.networkStream);
+			this.imageMsg.SendMsg(this.networkStream);
 
 //			sw.Stop();
 //			UnityEngine.Debug.Log("time=" + sw.Elapsed);
