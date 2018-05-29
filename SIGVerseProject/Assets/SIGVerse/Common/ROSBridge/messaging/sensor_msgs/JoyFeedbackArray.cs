@@ -4,17 +4,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.sensor_msgs;
+using SIGVerse.RosBridge.sensor_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace sensor_msgs 
 	{
 		[System.Serializable]
-		public class JoyFeedbackArray : ROSMessage
+		public class JoyFeedbackArray : RosMessage
 		{
 			public System.Collections.Generic.List<sensor_msgs.JoyFeedback>  array;
 

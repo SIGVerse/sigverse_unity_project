@@ -4,16 +4,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace sensor_msgs 
 	{
 		[System.Serializable]
-		public class LaserEcho : ROSMessage
+		public class LaserEcho : RosMessage
 		{
 			public System.Collections.Generic.List<float>  echoes;
 

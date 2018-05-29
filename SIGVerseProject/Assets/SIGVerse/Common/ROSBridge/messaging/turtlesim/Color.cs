@@ -4,16 +4,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace turtlesim 
 	{
 		[System.Serializable]
-		public class Color : ROSMessage
+		public class Color : RosMessage
 		{
 			public byte r;
 			public byte g;

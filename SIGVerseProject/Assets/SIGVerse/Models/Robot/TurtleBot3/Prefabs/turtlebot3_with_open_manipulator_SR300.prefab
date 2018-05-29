@@ -378,7 +378,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1522014545726464
 GameObject:
   m_ObjectHideFlags: 1
@@ -390,6 +390,8 @@ GameObject:
   - component: {fileID: 65351406762455810}
   - component: {fileID: 65848776779224888}
   - component: {fileID: 65005789489971896}
+  - component: {fileID: 65163510564037838}
+  - component: {fileID: 65463328774914230}
   m_Layer: 0
   m_Name: base_footprint
   m_TagString: Untagged
@@ -595,7 +597,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1799006017087086
 GameObject:
   m_ObjectHideFlags: 1
@@ -864,7 +866,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1073499299705724}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.532, y: 0, z: 0.641}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4447837584487436}
@@ -1945,7 +1947,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -2033,6 +2035,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.07, y: 0.005, z: 0.02}
   m_Center: {x: -0.04, y: -0.037, z: -0.002}
+--- !u!65 &65163510564037838
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1522014545726464}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.021489501, y: 0.014444858, z: 0.02027163}
+  m_Center: {x: 0.17743802, y: -0.06462614, z: 0.010635816}
 --- !u!65 &65182620280634810
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -2129,6 +2143,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.01, y: 0.105, z: 0.06}
   m_Center: {x: -0.062, y: -0, z: 0}
+--- !u!65 &65463328774914230
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1522014545726464}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.021489501, y: 0.015974492, z: 0.02027163}
+  m_Center: {x: 0.17743802, y: 0.06389068, z: 0.010635816}
 --- !u!65 &65480037312609836
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -2424,7 +2450,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1667827538954908}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6212a4b45d0425547b0e57ccea1d4dfe, type: 3}
+  m_Script: {fileID: 11500000, guid: 41a92fc61ffcbe7449e00679dc800976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rosBridgeIP: 

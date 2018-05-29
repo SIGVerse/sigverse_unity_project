@@ -4,16 +4,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace sensor_msgs 
 	{
 		[System.Serializable]
-		public class NavSatStatus : ROSMessage
+		public class NavSatStatus : RosMessage
 		{
 			public sbyte status;
 			public System.UInt16 service;

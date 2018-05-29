@@ -4,18 +4,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.shape_msgs;
-using SIGVerse.ROSBridge.geometry_msgs;
+using SIGVerse.RosBridge.shape_msgs;
+using SIGVerse.RosBridge.geometry_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace shape_msgs 
 	{
 		[System.Serializable]
-		public class Mesh : ROSMessage
+		public class Mesh : RosMessage
 		{
 			public System.Collections.Generic.List<shape_msgs.MeshTriangle>  triangles;
 			public System.Collections.Generic.List<UnityEngine.Vector3>  vertices;

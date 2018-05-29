@@ -4,17 +4,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.std_msgs;
+using SIGVerse.RosBridge.std_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace sensor_msgs 
 	{
 		[System.Serializable]
-		public class LaserScanForSIGVerseBridge : ROSMessage
+		public class LaserScanForSIGVerseBridge : RosMessage
 		{
 			public std_msgs.Header header;
 			public double angle_min;

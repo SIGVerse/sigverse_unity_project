@@ -117,7 +117,7 @@ namespace SIGVerse.SampleScenes.Playbacker
 
 				foreach (Transform transform in transforms)
 				{
-					this.targetObjectsPathMap.Add(PlaybackerCommon.GetLinkPath(transform), transform);
+					this.targetObjectsPathMap.Add(SIGVerseUtils.GetHierarchyPath(transform), transform);
 				}
 			}
 		}
@@ -299,7 +299,7 @@ namespace SIGVerse.SampleScenes.Playbacker
 			foreach (GameObject targetObj in targetObjects)
 			{
 				// Disable animators
-				Animator[] animators = targetObj.transform.GetComponentsInChildren<Animator>();
+				Animator[] animators = targetObj.transform.GetComponentsInChildren<Animator>(true);
 
 				foreach (Animator animator in animators)
 				{
@@ -308,7 +308,7 @@ namespace SIGVerse.SampleScenes.Playbacker
 				}
 
 				// Disable rigidbodies
-				Rigidbody[] rigidbodies = targetObj.transform.GetComponentsInChildren<Rigidbody>();
+				Rigidbody[] rigidbodies = targetObj.transform.GetComponentsInChildren<Rigidbody>(true);
 
 				foreach (Rigidbody rigidbody in rigidbodies)
 				{
@@ -397,7 +397,7 @@ namespace SIGVerse.SampleScenes.Playbacker
 			SIGVerseLogger.Error(ex.Message);
 			SIGVerseLogger.Error(ex.StackTrace);
 
-			GameObject warningWindow = (GameObject)Resources.Load(SIGVerseCommon.WarningWindowResourcePath);
+			GameObject warningWindow = (GameObject)Resources.Load(SIGVerseUtils.WarningWindowResourcePath);
 
 			warningWindow.GetComponent<SIGVerseWarningWindow>().message.text = "Please check SIGVerse log.\n" + ex.Message;
 
@@ -510,7 +510,7 @@ namespace SIGVerse.SampleScenes.Playbacker
 				{
 					transformOrder.Clear();
 
-					//				Debug.Log("data num=" + dataArray.Length);
+	//				Debug.Log("data num=" + dataArray.Length);
 
 					foreach (string transformPath in dataArray)
 					{

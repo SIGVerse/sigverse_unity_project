@@ -14,17 +14,27 @@ namespace SIGVerse.Common
 		public float offsetX = 15.0f;
 		public float offsetY = 15.0f;
 
+		private SubviewPositionType preSubviewPositionType;
+
 		// Use this for initialization
 		void Start ()
 		{
 			SubviewManager.SetSubviewCamera(this.subviewType, this.subviewCamera);
 
 			SubviewManager.SetSubviewPosition(this.subviewType, this.subviewPositionType, this.offsetX, this.offsetY);
+
+			this.preSubviewPositionType = this.subviewPositionType;
 		}
 	
 		// Update is called once per frame
 		void Update ()
 		{
+			if(this.subviewPositionType != this.preSubviewPositionType)
+			{
+				SubviewManager.SetSubviewPosition(this.subviewType, this.subviewPositionType, this.offsetX, this.offsetY);
+
+				this.preSubviewPositionType = this.subviewPositionType;
+			}
 		}
 	}
 }

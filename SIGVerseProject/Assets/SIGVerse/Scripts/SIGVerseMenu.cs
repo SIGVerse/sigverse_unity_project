@@ -85,7 +85,7 @@ namespace SIGVerse.Common
 
 			if(!ConfigManager.Instance.configInfo.useSigverseMenu) { return; }
 
-			GameObject sigverseMenuObjPrefab = (GameObject)Resources.Load(SIGVerseCommon.SIGVerseMenuResourcePath);
+			GameObject sigverseMenuObjPrefab = (GameObject)Resources.Load(SIGVerseUtils.SIGVerseMenuResourcePath);
 
 			GameObject sigverseMenuObj = Instantiate(sigverseMenuObjPrefab);
 			sigverseMenuObj.name = SIGVerseMenuName;
@@ -126,6 +126,12 @@ namespace SIGVerse.Common
 
 			CreateEventSystem();
 
+			if(ConfigManager.Instance.configInfo.isAutoStartWithMenu)
+			{
+				this.OnHiddingButtonClick();
+				this.OnStartButtonClick();
+			}
+
 			SceneManager.sceneLoaded += OnSceneLoaded;
 		}
 
@@ -146,7 +152,7 @@ namespace SIGVerse.Common
 
 			if(eventSystem==null)
 			{
-				GameObject sigverseEventSystemObjPrefab = (GameObject)Resources.Load(SIGVerseCommon.EventSystemResourcePath);
+				GameObject sigverseEventSystemObjPrefab = (GameObject)Resources.Load(SIGVerseUtils.EventSystemResourcePath);
 
 				Instantiate(sigverseEventSystemObjPrefab);
 			}
@@ -154,14 +160,9 @@ namespace SIGVerse.Common
 
 
 		// Use this for initialization
-		void Start()
-		{
-			if(ConfigManager.Instance.configInfo.isAutoStartWithMenu)
-			{
-				this.OnHiddingButtonClick();
-				this.OnStartButtonClick();
-			}
-		}
+		//void Start()
+		//{
+		//}
 
 
 		// Update is called once per frame

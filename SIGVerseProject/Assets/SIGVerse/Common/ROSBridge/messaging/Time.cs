@@ -1,4 +1,4 @@
-namespace SIGVerse.ROSBridge
+namespace SIGVerse.RosBridge
 {
 	namespace msg_helpers
 	{

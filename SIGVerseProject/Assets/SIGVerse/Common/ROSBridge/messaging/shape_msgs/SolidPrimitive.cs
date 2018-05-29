@@ -4,16 +4,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace shape_msgs 
 	{
 		[System.Serializable]
-		public class SolidPrimitive : ROSMessage
+		public class SolidPrimitive : RosMessage
 		{
 			public byte type;
 			public System.Collections.Generic.List<double>  dimensions;

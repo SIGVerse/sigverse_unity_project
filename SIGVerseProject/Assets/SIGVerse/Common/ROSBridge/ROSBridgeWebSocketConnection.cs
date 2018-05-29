@@ -4,15 +4,15 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using WebSocketSharp;
 using UnityEngine;
+using SIGVerse.Common;
 
-
-namespace SIGVerse.ROSBridge
+namespace SIGVerse.RosBridge
 {
-	public delegate void ROSMessageCallback<in Tmsg>(Tmsg msg);
-	public delegate bool ROSServiceCallback<in Targs, Tresp>(Targs args, out Tresp resp);
+	public delegate void RosMessageCallback<in Tmsg>(Tmsg msg);
+	public delegate bool RosServiceCallback<in Targs, Tresp>(Targs args, out Tresp resp);
 	
-	delegate void MessageCallback(ROSMessage msg);                                 // internal; used to wrap ROSMessageCallbacks
-	delegate bool ServiceCallback(ServiceArgs args, out ServiceResponse response); // internal; used to wrap ROSServiceCallbacks
+	delegate void MessageCallback(RosMessage msg);                                 // internal; used to wrap RosMessageCallbacks
+	delegate bool ServiceCallback(ServiceArgs args, out ServiceResponse response); // internal; used to wrap RosServiceCallbacks
 
 	[System.Serializable]
 	public class Topper
@@ -41,7 +41,7 @@ namespace SIGVerse.ROSBridge
 		}
 	}
 
-	public class ROSBridgeWebSocketConnection
+	public class RosBridgeWebSocketConnection
 	{
 		/// <summary>
 		/// A queue with a limited maximum size. If an object added to the queue causes the queue
@@ -72,21 +72,21 @@ namespace SIGVerse.ROSBridge
 
 		private class MessageTask
 		{
-			private ROSBridgeSubscriber subscriber;
-			private ROSMessage msg;
+			private RosBridgeSubscriber subscriber;
+			private RosMessage msg;
 
-			public MessageTask(ROSBridgeSubscriber subscriber, ROSMessage msg)
+			public MessageTask(RosBridgeSubscriber subscriber, RosMessage msg)
 			{
 				this.subscriber = subscriber;
 				this.msg = msg;
 			}
 
-			public ROSBridgeSubscriber getSubscriber()
+			public RosBridgeSubscriber getSubscriber()
 			{
 				return this.subscriber;
 			}
 
-			public ROSMessage getMsg()
+			public RosMessage getMsg()
 			{
 				return this.msg;
 			}
@@ -94,19 +94,19 @@ namespace SIGVerse.ROSBridge
 
 		private class ServiceTask
 		{
-			private ROSBridgeServiceProvider service;
+			private RosBridgeServiceProvider service;
 			private ServiceArgs serviceArgs;
 			private ServiceResponse serviceResponse;
 			private string id;
 
-			public ServiceTask(ROSBridgeServiceProvider service, ServiceArgs serviceArgs, string id)
+			public ServiceTask(RosBridgeServiceProvider service, ServiceArgs serviceArgs, string id)
 			{
 				this.service = service;
 				this.serviceArgs = serviceArgs;
 				this.id = id;
 			}
 
-			public ROSBridgeServiceProvider Service
+			public RosBridgeServiceProvider Service
 			{
 				get { return this.service; }
 			}
@@ -128,14 +128,37 @@ namespace SIGVerse.ROSBridge
 			}
 		}
 
+		private const int ConnectionTimeOut = 5000;
+
+		private static HashSet<string> cannotConnectUrlList = new HashSet<string>();
+
+		private static object cannotConnectLockObj = new object();
+
+		private static void AddCannotConnectUrlList(string url)
+		{
+			lock(cannotConnectLockObj)
+			{
+				cannotConnectUrlList.Add(url);
+			}
+		}
+
+		private static bool CanConnect(string url)
+		{
+			lock(cannotConnectLockObj)
+			{
+				return !cannotConnectUrlList.Contains(url);
+			}
+		}
+
+
 		private string host;
 		private int port;
 		private WebSocket webSocket;
 		private bool isConnected = false;
 
-		private Dictionary<ROSBridgeSubscriber, MessageCallback> subscribers;
-		private List<ROSBridgePublisher> publishers; 
-		private Dictionary<ROSBridgeServiceProvider, ServiceCallback> serviceProviders;
+		private Dictionary<RosBridgeSubscriber, MessageCallback> subscribers;
+		private List<RosBridgePublisher> publishers; 
+		private Dictionary<RosBridgeServiceProvider, ServiceCallback> serviceProviders;
 
 		private Dictionary<string, RenderQueue<MessageTask>> msgQueue = new Dictionary<string, RenderQueue<MessageTask>>();
 		private Dictionary<string, RenderQueue<ServiceTask>> svcQueue = new Dictionary<string, RenderQueue<ServiceTask>>();
@@ -149,14 +172,14 @@ namespace SIGVerse.ROSBridge
 			get { return this.isConnected; }
 		}
 
-		public ROSBridgeWebSocketConnection(string host, int port)
+		public RosBridgeWebSocketConnection(string host, int port)
 		{
 			this.host = host;
 			this.port = port;
 
-			this.publishers = new List<ROSBridgePublisher>();
-			this.subscribers = new Dictionary<ROSBridgeSubscriber, MessageCallback>();
-			this.serviceProviders = new Dictionary<ROSBridgeServiceProvider, ServiceCallback>();
+			this.publishers = new List<RosBridgePublisher>();
+			this.subscribers = new Dictionary<RosBridgeSubscriber, MessageCallback>();
+			this.serviceProviders = new Dictionary<RosBridgeServiceProvider, ServiceCallback>();
 
 			this.lockMsgQueue = new object();
 		}
@@ -167,16 +190,17 @@ namespace SIGVerse.ROSBridge
 		/// <typeparam name="Tpub">Publisher type to advertise</typeparam>
 		/// <param name="topic">Topic to advertise on</param>
 		/// <returns>A publisher which can be used to broadcast data on the given topic</returns>
-		public ROSBridgePublisher<Tmsg> Advertise<Tmsg>(string topic, uint queueSize = 0) where Tmsg : ROSMessage
+		public RosBridgePublisher<Tmsg> Advertise<Tmsg>(string topic, uint queueSize = 0) where Tmsg : RosMessage
 		{
-			ROSBridgePublisher<Tmsg> publisher = (ROSBridgePublisher<Tmsg>)Activator.CreateInstance(typeof(ROSBridgePublisher<Tmsg>), new object[] { topic, queueSize });
+			RosBridgePublisher<Tmsg> publisher = (RosBridgePublisher<Tmsg>)Activator.CreateInstance(typeof(RosBridgePublisher<Tmsg>), new object[] { topic, queueSize });
 			publisher.SetConnection(this);
+			publisher.CreatePublishingThread();
 
 			this.publishers.Add(publisher);
 
 			if (this.IsConnected)
 			{
-				this.webSocket.Send(ROSBridgeMsg.AdvertiseTopic(publisher.Topic, publisher.Type));
+				this.webSocket.Send(RosBridgeMsg.AdvertiseTopic(publisher.Topic, publisher.Type));
 			}
 
 			return publisher;
@@ -186,13 +210,14 @@ namespace SIGVerse.ROSBridge
 		/// Remove a publisher from this connection
 		/// </summary>
 		/// <param name="publisher"></param>
-		public void Unadvertise(ROSBridgePublisher publisher)
+		public void Unadvertise(RosBridgePublisher publisher)
 		{
 			if (this.IsConnected)
 			{
-				this.webSocket.Send(ROSBridgeMsg.UnAdvertiseTopic(publisher.Topic));
+				this.webSocket.Send(RosBridgeMsg.UnAdvertiseTopic(publisher.Topic));
 			}
 
+			publisher.Unadvertise();
 			this.publishers.Remove(publisher);
 		}
 
@@ -202,9 +227,9 @@ namespace SIGVerse.ROSBridge
 		/// <typeparam name="Tmsg">Message type used in the callback</typeparam>
 		/// <param name="sub">Subscriber</param>
 		/// <param name="callback">Method to call when a message matching the given subscriber is received</param>
-		public ROSBridgeSubscriber<Tmsg> Subscribe<Tmsg>(string topic, ROSMessageCallback<Tmsg> callback, uint queueSize = 0) where Tmsg : ROSMessage, new()
+		public RosBridgeSubscriber<Tmsg> Subscribe<Tmsg>(string topic, RosMessageCallback<Tmsg> callback, uint queueSize = 0) where Tmsg : RosMessage, new()
 		{
-			MessageCallback MessageCallback = (ROSMessage msg) =>
+			MessageCallback MessageCallback = (RosMessage msg) =>
 			{
 				Tmsg message = msg as Tmsg;
 				callback(message);
@@ -225,14 +250,14 @@ namespace SIGVerse.ROSBridge
 				return null;
 			}
 
-			ROSBridgeSubscriber<Tmsg> subscriber = new ROSBridgeSubscriber<Tmsg>(topic, messageType);
+			RosBridgeSubscriber<Tmsg> subscriber = new RosBridgeSubscriber<Tmsg>(topic, messageType);
 
 			this.subscribers.Add(subscriber, MessageCallback);
 			this.msgQueue.Add(subscriber.Topic, new RenderQueue<MessageTask>(queueSize));
 
 			if (this.IsConnected)
 			{
-				this.webSocket.Send(ROSBridgeMsg.Subscribe(subscriber.Topic, subscriber.Type));
+				this.webSocket.Send(RosBridgeMsg.Subscribe(subscriber.Topic, subscriber.Type));
 			}
 
 			return subscriber;
@@ -243,7 +268,7 @@ namespace SIGVerse.ROSBridge
 		/// Remove a subscriber callback from this connection.
 		/// </summary>
 		/// <param name="subscriber"></param>
-		public void Unsubscribe(ROSBridgeSubscriber subscriber)
+		public void Unsubscribe(RosBridgeSubscriber subscriber)
 		{
 			if (subscriber == null)
 			{
@@ -255,7 +280,7 @@ namespace SIGVerse.ROSBridge
 
 			if (this.IsConnected)
 			{
-				this.webSocket.Send(ROSBridgeMsg.UnSubscribe(subscriber.Topic));
+				this.webSocket.Send(RosBridgeMsg.UnSubscribe(subscriber.Topic));
 			}
 		}
 
@@ -267,7 +292,7 @@ namespace SIGVerse.ROSBridge
 		/// <typeparam name="Tres">Message type containing response data returned by this service</typeparam>
 		/// <param name="srv">The service to advertise</param>
 		/// <param name="callback">Method to invoke when the service is called</param>
-		public ROSBridgeServiceProvider<Targ> Advertise<Tsrv, Targ, Tres>(string service, ROSServiceCallback<Targ, Tres> callback) where Tsrv : ROSBridgeServiceProvider<Targ> where Targ : ServiceArgs where Tres : ServiceResponse, new()
+		public RosBridgeServiceProvider<Targ> Advertise<Tsrv, Targ, Tres>(string service, RosServiceCallback<Targ, Tres> callback) where Tsrv : RosBridgeServiceProvider<Targ> where Targ : ServiceArgs where Tres : ServiceResponse, new()
 		{
 			ServiceCallback ServiceCallback = (ServiceArgs args, out ServiceResponse response) =>
 			{
@@ -284,7 +309,7 @@ namespace SIGVerse.ROSBridge
 
 			if (this.IsConnected)
 			{
-				this.webSocket.Send(ROSBridgeMsg.AdvertiseService(srv.Name, srv.Type));
+				this.webSocket.Send(RosBridgeMsg.AdvertiseService(srv.Name, srv.Type));
 			}
 
 			return srv;
@@ -294,11 +319,11 @@ namespace SIGVerse.ROSBridge
 		/// Remove a Service server from this connection
 		/// </summary>
 		/// <param name="serviceProvider"></param>
-		public void Unadvertise(ROSBridgeServiceProvider serviceProvider)
+		public void Unadvertise(RosBridgeServiceProvider serviceProvider)
 		{
 			if (this.IsConnected)
 			{
-				this.webSocket.Send(ROSBridgeMsg.UnadvertiseService(serviceProvider.Name));
+				this.webSocket.Send(RosBridgeMsg.UnadvertiseService(serviceProvider.Name));
 			}
 
 			this.serviceProviders.Remove(serviceProvider);
@@ -316,14 +341,35 @@ namespace SIGVerse.ROSBridge
 
 			string url = "ws://" + this.host + ":" + this.port;
 
+			if(!CanConnect(url))
+			{
+				throw new Exception("Cannot connect. url=" + url);
+			}
+
 			this.webSocket = new WebSocket(url);
 
 			this.webSocket.OnOpen    += (sender, eventArgs) => { Debug.Log("WebSocket Open  url=" + url); };
 			this.webSocket.OnMessage += (sender, eventArgs) => this.OnMessage(eventArgs.Data);
 			this.webSocket.OnError   += (sender, eventArgs) => { Debug.Log("WebSocket Error Message: " + eventArgs.Message); };
-			this.webSocket.OnClose   += (sender, eventArgs) => { Debug.Log("WebSocket Close"); };
+			this.webSocket.OnClose   += (sender, eventArgs) => this.OnClose();
 
-			this.webSocket.Connect();
+//			this.webSocket.Connect();
+			this.webSocket.ConnectAsync();
+
+			DateTime startTime = DateTime.Now;
+
+			while (this.webSocket.ReadyState != WebSocketState.Open)
+			{
+				if((DateTime.Now - startTime).TotalMilliseconds > ConnectionTimeOut)
+				{
+					AddCannotConnectUrlList(url);
+
+					SIGVerseLogger.Error("Failed to connect. IP="+this.host + ", Port="+this.port + "  (Time out)");
+					throw new Exception("Failed to connect. IP="+this.host + ", Port="+this.port + "  (Time out)");
+				}
+
+				Thread.Sleep(100);
+			}
 
 			if (!this.webSocket.IsAlive)
 			{
@@ -335,26 +381,26 @@ namespace SIGVerse.ROSBridge
 
 				foreach (var sub in this.subscribers)
 				{
-					this.webSocket.Send(ROSBridgeMsg.Subscribe(sub.Key.Topic, sub.Key.Type));
-					Debug.Log("Sending: " + ROSBridgeMsg.Subscribe(sub.Key.Topic, sub.Key.Type));
+					this.webSocket.Send(RosBridgeMsg.Subscribe(sub.Key.Topic, sub.Key.Type));
+					Debug.Log("Sending: " + RosBridgeMsg.Subscribe(sub.Key.Topic, sub.Key.Type));
 				}
-				foreach (ROSBridgePublisher pub in this.publishers)
+				foreach (RosBridgePublisher pub in this.publishers)
 				{
-					this.webSocket.Send(ROSBridgeMsg.AdvertiseTopic(pub.Topic, pub.Type));
-					Debug.Log("Sending " + ROSBridgeMsg.AdvertiseTopic(pub.Topic, pub.Type));
+					this.webSocket.Send(RosBridgeMsg.AdvertiseTopic(pub.Topic, pub.Type));
+					Debug.Log("Sending " + RosBridgeMsg.AdvertiseTopic(pub.Topic, pub.Type));
 				}
 				foreach (var srv in this.serviceProviders)
 				{
-					this.webSocket.Send(ROSBridgeMsg.AdvertiseService(srv.Key.Name, srv.Key.Type));
-					Debug.Log("Sending: " + ROSBridgeMsg.AdvertiseService(srv.Key.Name, srv.Key.Type));
+					this.webSocket.Send(RosBridgeMsg.AdvertiseService(srv.Key.Name, srv.Key.Type));
+					Debug.Log("Sending: " + RosBridgeMsg.AdvertiseService(srv.Key.Name, srv.Key.Type));
 				}
 
 				this.isConnected = true;
 
-				foreach (ROSBridgePublisher pub in this.publishers)
-				{
-					pub.CreatePublishingThread();
-				}
+				//foreach (RosBridgePublisher pub in this.publishers)
+				//{
+				//	pub.CreatePublishingThread();
+				//}
 			}
 		}
 
@@ -372,15 +418,16 @@ namespace SIGVerse.ROSBridge
 
 			foreach (var sub in this.subscribers)
 			{
-				this.webSocket.Send(ROSBridgeMsg.UnSubscribe(sub.Key.Topic));
+				this.webSocket.Send(RosBridgeMsg.UnSubscribe(sub.Key.Topic));
 			}
 			foreach (var pub in this.publishers)
 			{
-				this.webSocket.Send(ROSBridgeMsg.UnAdvertiseTopic(pub.Topic));
+				this.webSocket.Send(RosBridgeMsg.UnAdvertiseTopic(pub.Topic));
+				pub.Unadvertise();
 			}
 			foreach (var srv in this.serviceProviders)
 			{
-				this.webSocket.Send(ROSBridgeMsg.UnadvertiseService(srv.Key.Name));
+				this.webSocket.Send(RosBridgeMsg.UnadvertiseService(srv.Key.Name));
 			}
 
 			this.webSocket.Close();
@@ -402,7 +449,7 @@ namespace SIGVerse.ROSBridge
 
 					// if we have message parameters, parse them
 					Match match = Regex.Match(message, @"""msg""\s*:\s*({.*}),");
-					ROSMessage msg = null;
+					RosMessage msg = null;
 
 					if (match.Success)
 					{
@@ -463,6 +510,12 @@ namespace SIGVerse.ROSBridge
 			}
 		}
 
+		public void OnClose()
+		{
+			Debug.Log("WebSocket Close");
+			this.Disconnect();
+		}
+
 		/// <summary>
 		/// Should be called at least once each frame. Calls any available callbacks for received messages.
 		/// Note: MUST be called from Unity's main thread!
@@ -499,10 +552,10 @@ namespace SIGVerse.ROSBridge
 					// invoke service handler
 					bool success =this.serviceProviders[svcTask.Service](svcTask.ServiceArgs, out response);
 
-					Debug.Log("Sending service response: \n" + ROSBridgeMsg.ServiceResponse(success, svcTask.Service.Name, svcTask.Id, JsonUtility.ToJson(response)));
+					Debug.Log("Sending service response: \n" + RosBridgeMsg.ServiceResponse(success, svcTask.Service.Name, svcTask.Id, JsonUtility.ToJson(response)));
 					// send response
 //					this.webSocket.SendAsync(ROSBridgeMsg.ServiceResponse(success, svcTask.Service.Name, svcTask.Id, JsonUtility.ToJson(response)), null);
-					this.webSocket.Send(ROSBridgeMsg.ServiceResponse(success, svcTask.Service.Name, svcTask.Id, JsonUtility.ToJson(response)));
+					this.webSocket.Send(RosBridgeMsg.ServiceResponse(success, svcTask.Service.Name, svcTask.Id, JsonUtility.ToJson(response)));
 				}
 
 				elapsedTime = Time.realtimeSinceStartup - startTime;

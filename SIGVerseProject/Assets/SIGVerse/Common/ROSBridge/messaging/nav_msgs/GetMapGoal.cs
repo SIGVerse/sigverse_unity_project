@@ -4,16 +4,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace nav_msgs 
 	{
 		[System.Serializable]
-		public class GetMapGoal : ROSMessage
+		public class GetMapGoal : RosMessage
 		{
 
 

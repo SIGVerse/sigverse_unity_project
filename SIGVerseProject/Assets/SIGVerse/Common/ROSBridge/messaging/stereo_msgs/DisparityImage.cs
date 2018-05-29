@@ -4,18 +4,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.std_msgs;
-using SIGVerse.ROSBridge.sensor_msgs;
+using SIGVerse.RosBridge.std_msgs;
+using SIGVerse.RosBridge.sensor_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace stereo_msgs 
 	{
 		[System.Serializable]
-		public class DisparityImage : ROSMessage
+		public class DisparityImage : RosMessage
 		{
 			public std_msgs.Header header;
 			public sensor_msgs.Image image;

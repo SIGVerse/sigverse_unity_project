@@ -1,5 +1,5 @@
 using UnityEngine;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using SIGVerse.Common;
 
 
@@ -15,7 +15,7 @@ namespace SIGVerse.TurtleBot
 		//--------------------------------------------------
 
 		// ROS bridge
-		private ROSBridgeWebSocketConnection webSocketConnection = null;
+		private RosBridgeWebSocketConnection webSocketConnection = null;
 
 		void Start()
 		{
@@ -28,15 +28,15 @@ namespace SIGVerse.TurtleBot
 				this.rosbridgePort = ConfigManager.Instance.configInfo.rosbridgePort;
 			}
 
-			this.webSocketConnection = new SIGVerse.ROSBridge.ROSBridgeWebSocketConnection(this.rosbridgeIP, this.rosbridgePort);
+			this.webSocketConnection = new SIGVerse.RosBridge.RosBridgeWebSocketConnection(this.rosbridgeIP, this.rosbridgePort);
 
-			this.webSocketConnection.Subscribe<SIGVerse.ROSBridge.geometry_msgs.Twist>(topicName, this.TwistCallback);
+			this.webSocketConnection.Subscribe<SIGVerse.RosBridge.geometry_msgs.Twist>(topicName, this.TwistCallback);
 
 			// Connect to ROSbridge server
 			this.webSocketConnection.Connect();
 		}
 
-		public void TwistCallback(SIGVerse.ROSBridge.geometry_msgs.Twist twist)
+		public void TwistCallback(SIGVerse.RosBridge.geometry_msgs.Twist twist)
 		{
 			UnityEngine.Vector3 linearVel  = new UnityEngine.Vector3((float)twist.linear.x,  (float)twist.linear.y,  (float)twist.linear.z);
 			UnityEngine.Vector3 angularVel = new UnityEngine.Vector3((float)twist.angular.x, (float)twist.angular.y, (float)twist.angular.z);

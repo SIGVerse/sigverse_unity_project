@@ -7,8 +7,8 @@ namespace SIGVerse.Common
 {
 	public class ConfigManager : Singleton<ConfigManager>
 	{
-		private const string FolderPath = "/../SIGVerseConfig/";
-		private const string FileName = "SIGVerseConfig.json";
+		public const string FolderPath = "/../SIGVerseConfig/";
+		public const string FileName = "SIGVerseConfig.json";
 
 		protected ConfigManager() { } // guarantee this will be always a singleton only - can't use the constructor!
 

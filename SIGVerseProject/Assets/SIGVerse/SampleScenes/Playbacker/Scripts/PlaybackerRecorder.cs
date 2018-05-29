@@ -232,14 +232,14 @@ namespace SIGVerse.SampleScenes.Playbacker
 				// Create targets transform list
 				foreach (GameObject targetObj in targetObjects)
 				{
-					Transform[] transforms = targetObj.transform.GetComponentsInChildren<Transform>(true);
+					Transform[] transforms = targetObj.transform.GetComponentsInChildren<Transform>();
 
 					foreach (Transform transform in transforms)
 					{
 						// Save Transform instance list
 						this.targetTransformInstances.Add(transform);
 
-						string linkPath = PlaybackerCommon.GetLinkPath(transform);
+						string linkPath = SIGVerseUtils.GetHierarchyPath(transform);
 
 						// Make a header line
 						this.savedHeaderStrings += "\t" + linkPath;
@@ -362,7 +362,7 @@ namespace SIGVerse.SampleScenes.Playbacker
 			SIGVerseLogger.Error(ex.Message);
 			SIGVerseLogger.Error(ex.StackTrace);
 
-			GameObject warningWindow = (GameObject)Resources.Load(SIGVerseCommon.WarningWindowResourcePath);
+			GameObject warningWindow = (GameObject)Resources.Load(SIGVerseUtils.WarningWindowResourcePath);
 
 			warningWindow.GetComponent<SIGVerseWarningWindow>().message.text = "Please check SIGVerse log.\n" + ex.Message;
 

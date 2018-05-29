@@ -4,17 +4,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.nav_msgs;
+using SIGVerse.RosBridge.nav_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace nav_msgs 
 	{
 		[System.Serializable]
-		public class GetMapResult : ROSMessage
+		public class GetMapResult : RosMessage
 		{
 			public nav_msgs.OccupancyGrid map;
 

@@ -4,17 +4,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.std_msgs;
+using SIGVerse.RosBridge.std_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace std_msgs 
 	{
 		[System.Serializable]
-		public class MultiArrayLayout : ROSMessage
+		public class MultiArrayLayout : RosMessage
 		{
 			public System.Collections.Generic.List<std_msgs.MultiArrayDimension>  dim;
 			public System.UInt32 data_offset;

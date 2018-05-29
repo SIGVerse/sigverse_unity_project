@@ -36,6 +36,7 @@ GameObject:
   - component: {fileID: 4324668580828112}
   - component: {fileID: 33778712709251554}
   - component: {fileID: 23811528627195554}
+  - component: {fileID: 64705589582539114}
   m_Layer: 0
   m_Name: Cat_Cube.000
   m_TagString: Untagged
@@ -110,4 +111,18 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1594965715739342}
+  m_Mesh: {fileID: 4300000, guid: cb3ea2130b2581440a99a099c642fe01, type: 3}
+--- !u!64 &64705589582539114
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1594965715739342}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: cb3ea2130b2581440a99a099c642fe01, type: 3}

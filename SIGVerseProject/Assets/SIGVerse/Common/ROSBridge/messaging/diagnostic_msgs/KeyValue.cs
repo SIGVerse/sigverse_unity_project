@@ -4,16 +4,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace diagnostic_msgs 
 	{
 		[System.Serializable]
-		public class KeyValue : ROSMessage
+		public class KeyValue : RosMessage
 		{
 			public string key;
 			public string value;

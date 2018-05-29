@@ -4,17 +4,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.geometry_msgs;
+using SIGVerse.RosBridge.geometry_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace geometry_msgs 
 	{
 		[System.Serializable]
-		public class Twist : ROSMessage
+		public class Twist : RosMessage
 		{
 			public UnityEngine.Vector3 linear;
 			public UnityEngine.Vector3 angular;

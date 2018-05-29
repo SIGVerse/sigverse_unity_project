@@ -4,16 +4,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace std_msgs 
 	{
 		[System.Serializable]
-		public class MultiArrayDimension : ROSMessage
+		public class MultiArrayDimension : RosMessage
 		{
 			public string label;
 			public System.UInt32 size;

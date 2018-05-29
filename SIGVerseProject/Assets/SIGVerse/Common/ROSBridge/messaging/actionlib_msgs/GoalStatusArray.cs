@@ -4,18 +4,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.std_msgs;
-using SIGVerse.ROSBridge.actionlib_msgs;
+using SIGVerse.RosBridge.std_msgs;
+using SIGVerse.RosBridge.actionlib_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace actionlib_msgs 
 	{
 		[System.Serializable]
-		public class GoalStatusArray : ROSMessage
+		public class GoalStatusArray : RosMessage
 		{
 			public std_msgs.Header header;
 			public System.Collections.Generic.List<actionlib_msgs.GoalStatus>  status_list;

@@ -4,18 +4,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.std_msgs;
-using SIGVerse.ROSBridge.diagnostic_msgs;
+using SIGVerse.RosBridge.std_msgs;
+using SIGVerse.RosBridge.diagnostic_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace diagnostic_msgs 
 	{
 		[System.Serializable]
-		public class DiagnosticArray : ROSMessage
+		public class DiagnosticArray : RosMessage
 		{
 			public std_msgs.Header header;
 			public System.Collections.Generic.List<diagnostic_msgs.DiagnosticStatus>  status;

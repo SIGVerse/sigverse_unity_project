@@ -4,18 +4,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.std_msgs;
-using SIGVerse.ROSBridge.geometry_msgs;
+using SIGVerse.RosBridge.std_msgs;
+using SIGVerse.RosBridge.geometry_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace nav_msgs 
 	{
 		[System.Serializable]
-		public class GridCells : ROSMessage
+		public class GridCells : RosMessage
 		{
 			public std_msgs.Header header;
 			public float cell_width;

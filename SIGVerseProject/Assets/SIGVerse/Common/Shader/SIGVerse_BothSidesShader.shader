@@ -1,4 +1,4 @@
-Shader "Custom/SIGVerse_BothSidesShader"
+Shader "SIGVerse/SIGVerse_BothSidesShader"
 {
 	Properties
 	{

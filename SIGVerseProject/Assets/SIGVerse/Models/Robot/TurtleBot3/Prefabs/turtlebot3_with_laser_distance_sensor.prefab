@@ -190,7 +190,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1796107482047736
 GameObject:
   m_ObjectHideFlags: 1
@@ -222,7 +222,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1844880897471100
 GameObject:
   m_ObjectHideFlags: 1
@@ -234,6 +234,8 @@ GameObject:
   - component: {fileID: 65677948155752704}
   - component: {fileID: 65609950363083620}
   - component: {fileID: 65764625443582526}
+  - component: {fileID: 65550698350368620}
+  - component: {fileID: 65381296291659740}
   m_Layer: 0
   m_Name: base_footprint
   m_TagString: Untagged
@@ -902,10 +904,34 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &65381296291659740
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1844880897471100}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.021489501, y: 0.015974492, z: 0.02027163}
+  m_Center: {x: 0.17743802, y: 0.06389068, z: 0.010635816}
+--- !u!65 &65550698350368620
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1844880897471100}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.021489501, y: 0.014444858, z: 0.02027163}
+  m_Center: {x: 0.17743802, y: -0.06462614, z: 0.010635816}
 --- !u!65 &65609950363083620
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -1012,7 +1038,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1907902716027538}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6212a4b45d0425547b0e57ccea1d4dfe, type: 3}
+  m_Script: {fileID: 11500000, guid: 41a92fc61ffcbe7449e00679dc800976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rosBridgeIP: 

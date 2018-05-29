@@ -6,10 +6,10 @@ using Newtonsoft.Json.Bson;
 using UnityEngine;
 using SIGVerse.Common;
 
-namespace SIGVerse.SIGVerseROSBridge
+namespace SIGVerse.SIGVerseRosBridge
 {
 	[System.Serializable]
-	public class SIGVerseRosbridgeTimeSynchronizer : MonoBehaviour
+	public class SIGVerseRosBridgeTimeSynchronizer : MonoBehaviour
 	{
 		private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -25,7 +25,7 @@ namespace SIGVerse.SIGVerseROSBridge
 		private System.Net.Sockets.TcpClient tcpClient = null;
 		private System.Net.Sockets.NetworkStream networkStream = null;
 
-		private SIGVerseROSBridgeMessage<SIGVerse.ROSBridge.std_msgs.Time> timeSyncMsg = null;
+		private SIGVerseRosBridgeMessage<SIGVerse.RosBridge.std_msgs.Time> timeSyncMsg = null;
 
 		private void Start()
 		{
@@ -45,7 +45,7 @@ namespace SIGVerse.SIGVerseROSBridge
 			this.networkStream.ReadTimeout  = 100000;
 			this.networkStream.WriteTimeout = 100000;
 
-			this.timeSyncMsg = new SIGVerseROSBridgeMessage<SIGVerse.ROSBridge.std_msgs.Time>("publish", this.topicName, "sigverse/TimeSync", null);
+			this.timeSyncMsg = new SIGVerseRosBridgeMessage<SIGVerse.RosBridge.std_msgs.Time>("publish", this.topicName, "sigverse/TimeSync", null);
 		}
 
 
@@ -70,7 +70,7 @@ namespace SIGVerse.SIGVerseROSBridge
 					{
 						SIGVerseLogger.Info("Time gap sec="+messageArray[1]+", msec="+ messageArray[2]);
 
-						SIGVerse.ROSBridge.std_msgs.Header.SetTimeGap(Int32.Parse(messageArray[1]), Int32.Parse(messageArray[2]));
+						SIGVerse.RosBridge.std_msgs.Header.SetTimeGap(Int32.Parse(messageArray[1]), Int32.Parse(messageArray[2]));
 					}
 					else
 					{
@@ -95,7 +95,7 @@ namespace SIGVerse.SIGVerseROSBridge
 				 */
 				TimeSpan epochTime = (DateTime.Now.ToUniversalTime() - UnixEpoch);
 
-				SIGVerse.ROSBridge.std_msgs.Time time = new ROSBridge.std_msgs.Time();
+				SIGVerse.RosBridge.std_msgs.Time time = new RosBridge.std_msgs.Time();
 				time.data.secs  = (int)epochTime.TotalSeconds;
 				time.data.nsecs = epochTime.Milliseconds * 1000 * 1000;
 

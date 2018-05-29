@@ -4,16 +4,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace std_msgs 
 	{
 		[System.Serializable]
-		public class Header : ROSMessage
+		public class Header : RosMessage
 		{
 			private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -21,18 +21,18 @@ namespace SIGVerse.ROSBridge
 			private static object lockTimeGap = new object();
 
 			public System.UInt32 seq;
-			public SIGVerse.ROSBridge.msg_helpers.Time stamp;
+			public SIGVerse.RosBridge.msg_helpers.Time stamp;
 			public string frame_id;
 
 
 			public Header()
 			{
 				this.seq = 0;
-				this.stamp = new SIGVerse.ROSBridge.msg_helpers.Time();
+				this.stamp = new SIGVerse.RosBridge.msg_helpers.Time();
 				this.frame_id = "";
 			}
 
-			public Header(System.UInt32 seq, SIGVerse.ROSBridge.msg_helpers.Time stamp, string frame_id)
+			public Header(System.UInt32 seq, SIGVerse.RosBridge.msg_helpers.Time stamp, string frame_id)
 			{
 				this.seq = seq;
 				this.stamp = stamp;

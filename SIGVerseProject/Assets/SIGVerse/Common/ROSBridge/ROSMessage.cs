@@ -1,7 +1,7 @@
-namespace SIGVerse.ROSBridge
+namespace SIGVerse.RosBridge
 {
 	[System.Serializable]
-	public abstract class ROSMessage
+	public class RosMessage
 	{
 		public virtual string GetMessageType()
 		{

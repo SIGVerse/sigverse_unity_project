@@ -4,22 +4,22 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.geometry_msgs;
+using SIGVerse.RosBridge.geometry_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace trajectory_msgs 
 	{
 		[System.Serializable]
-		public class MultiDOFJointTrajectoryPoint : ROSMessage
+		public class MultiDOFJointTrajectoryPoint : RosMessage
 		{
 			public System.Collections.Generic.List<geometry_msgs.Transform>  transforms;
 			public System.Collections.Generic.List<geometry_msgs.Twist>  velocities;
 			public System.Collections.Generic.List<geometry_msgs.Twist>  accelerations;
-			public SIGVerse.ROSBridge.msg_helpers.Duration time_from_start;
+			public SIGVerse.RosBridge.msg_helpers.Duration time_from_start;
 
 
 			public MultiDOFJointTrajectoryPoint()
@@ -27,10 +27,10 @@ namespace SIGVerse.ROSBridge
 				this.transforms = new System.Collections.Generic.List<geometry_msgs.Transform>();
 				this.velocities = new System.Collections.Generic.List<geometry_msgs.Twist>();
 				this.accelerations = new System.Collections.Generic.List<geometry_msgs.Twist>();
-				this.time_from_start = new SIGVerse.ROSBridge.msg_helpers.Duration();
+				this.time_from_start = new SIGVerse.RosBridge.msg_helpers.Duration();
 			}
 
-			public MultiDOFJointTrajectoryPoint(System.Collections.Generic.List<geometry_msgs.Transform>  transforms, System.Collections.Generic.List<geometry_msgs.Twist>  velocities, System.Collections.Generic.List<geometry_msgs.Twist>  accelerations, SIGVerse.ROSBridge.msg_helpers.Duration time_from_start)
+			public MultiDOFJointTrajectoryPoint(System.Collections.Generic.List<geometry_msgs.Transform>  transforms, System.Collections.Generic.List<geometry_msgs.Twist>  velocities, System.Collections.Generic.List<geometry_msgs.Twist>  accelerations, SIGVerse.RosBridge.msg_helpers.Duration time_from_start)
 			{
 				this.transforms = transforms;
 				this.velocities = velocities;

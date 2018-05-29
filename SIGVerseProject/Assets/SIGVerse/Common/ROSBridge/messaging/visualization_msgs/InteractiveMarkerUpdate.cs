@@ -4,17 +4,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.visualization_msgs;
+using SIGVerse.RosBridge.visualization_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace visualization_msgs 
 	{
 		[System.Serializable]
-		public class InteractiveMarkerUpdate : ROSMessage
+		public class InteractiveMarkerUpdate : RosMessage
 		{
 			public string server_id;
 			public System.UInt64 seq_num;

@@ -1,9 +1,9 @@
 using UnityEngine;
 using System;
-using SIGVerse.ROSBridge.sensor_msgs;
-using SIGVerse.ROSBridge.std_msgs;
+using SIGVerse.RosBridge.sensor_msgs;
+using SIGVerse.RosBridge.std_msgs;
 using SIGVerse.Common;
-using SIGVerse.SIGVerseROSBridge;
+using SIGVerse.SIGVerseRosBridge;
 
 namespace SIGVerse.TurtleBot3
 {
@@ -39,7 +39,7 @@ namespace SIGVerse.TurtleBot3
 		private System.Net.Sockets.TcpClient tcpClient = null;
 		private System.Net.Sockets.NetworkStream networkStream = null;
 
-		SIGVerseROSBridgeMessage<LaserScanForSIGVerseBridge> laserScanMsg = null;
+		SIGVerseRosBridgeMessage<LaserScanForSIGVerseBridge> laserScanMsg = null;
 
 		private LaserScanForSIGVerseBridge laserScan;
 
@@ -71,7 +71,7 @@ namespace SIGVerse.TurtleBot3
 			this.networkStream.ReadTimeout  = 100000;
 			this.networkStream.WriteTimeout = 100000;
 
-			this.header = new Header(0, new SIGVerse.ROSBridge.msg_helpers.Time(0, 0), this.sensorLink.name);
+			this.header = new Header(0, new SIGVerse.RosBridge.msg_helpers.Time(0, 0), this.sensorLink.name);
 
 			this.laserScan = new LaserScanForSIGVerseBridge();
 
@@ -87,7 +87,7 @@ namespace SIGVerse.TurtleBot3
 			this.laserScan.ranges      = new double[NumLines];
 			this.laserScan.intensities = new double[NumLines];
 
-			this.laserScanMsg = new SIGVerseROSBridgeMessage<LaserScanForSIGVerseBridge>("publish", this.topicName, LaserScanForSIGVerseBridge.GetMessageType(), this.laserScan);
+			this.laserScanMsg = new SIGVerseRosBridgeMessage<LaserScanForSIGVerseBridge>("publish", this.topicName, LaserScanForSIGVerseBridge.GetMessageType(), this.laserScan);
 		}
 
 		void OnDestroy()

@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace SIGVerse.ROSBridge
+namespace SIGVerse.RosBridge
 {
-	public abstract class ROSBridgeSubscriber
+	public abstract class RosBridgeSubscriber
 	{
 		protected string topic;
 		protected string type;
@@ -17,31 +17,31 @@ namespace SIGVerse.ROSBridge
 			get { return type; }
 		}
 
-		public ROSBridgeSubscriber(string topicName)
+		public RosBridgeSubscriber(string topicName)
 		{
 			this.topic = topicName;
 		}
 
-		public ROSBridgeSubscriber(string topicName, string typeName)
+		public RosBridgeSubscriber(string topicName, string typeName)
 		{
 			this.topic = topicName;
 			this.type = typeName;
 		}
 
-		public abstract ROSMessage ParseMessage(string message);
+		public abstract RosMessage ParseMessage(string message);
 	}
 
-	public class ROSBridgeSubscriber<Tmsg> : ROSBridgeSubscriber where Tmsg : ROSMessage
+	public class RosBridgeSubscriber<Tmsg> : RosBridgeSubscriber where Tmsg : RosMessage
 	{
-		public ROSBridgeSubscriber(string topicName) : base(topicName)
+		public RosBridgeSubscriber(string topicName) : base(topicName)
 		{
 		}
 
-		public ROSBridgeSubscriber(string topicName, string typeName) : base(topicName, typeName)
+		public RosBridgeSubscriber(string topicName, string typeName) : base(topicName, typeName)
 		{
 		}
 
-		public override ROSMessage ParseMessage(string message)
+		public override RosMessage ParseMessage(string message)
 		{
 			return JsonUtility.FromJson<Tmsg>(message);
 		}

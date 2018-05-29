@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace SIGVerse.ROSBridge
+namespace SIGVerse.RosBridge
 {
 	/// <summary>
 	/// Base class for all Parameters passed to ServiceProviders
@@ -10,7 +10,7 @@ namespace SIGVerse.ROSBridge
 	/// Can be used as-is for services which do not take parameters.
 	/// </summary>
 	[Serializable]
-	public class ServiceArgs : ROSMessage
+	public class ServiceArgs : RosMessage
 	{
 	}
 
@@ -21,14 +21,14 @@ namespace SIGVerse.ROSBridge
 	/// Can be used as-is for services which do not generate responses.
 	/// </summary>
 	[Serializable]
-	public class ServiceResponse : ROSMessage
+	public class ServiceResponse : RosMessage
 	{
 	}
 
 	/// <summary>
 	/// Base for all ServiceProviders.
 	/// </summary>
-	public abstract class ROSBridgeServiceProvider
+	public abstract class RosBridgeServiceProvider
 	{
 		protected string name;
 		protected string type;
@@ -43,12 +43,12 @@ namespace SIGVerse.ROSBridge
 			get { return type; }
 		}
 
-		public ROSBridgeServiceProvider(string serviceName)
+		public RosBridgeServiceProvider(string serviceName)
 		{
 			this.name = serviceName;
 		}
 
-		public ROSBridgeServiceProvider(string serviceName, string typeName)
+		public RosBridgeServiceProvider(string serviceName, string typeName)
 		{
 			this.name = serviceName;
 			this.type = typeName;
@@ -61,13 +61,13 @@ namespace SIGVerse.ROSBridge
 	/// 
 	/// </summary>
 	/// <typeparam name="TArgs">The ServiceArgs class you intend to use with this Service</typeparam>
-	public class ROSBridgeServiceProvider<TArgs> : ROSBridgeServiceProvider where TArgs : ServiceArgs
+	public class RosBridgeServiceProvider<TArgs> : RosBridgeServiceProvider where TArgs : ServiceArgs
 	{
-		public ROSBridgeServiceProvider(string serviceName) : base(serviceName)
+		public RosBridgeServiceProvider(string serviceName) : base(serviceName)
 		{
 		}
 
-		public ROSBridgeServiceProvider(string serviceName, string typeName) : base(serviceName, typeName)
+		public RosBridgeServiceProvider(string serviceName, string typeName) : base(serviceName, typeName)
 		{
 		}
 

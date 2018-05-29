@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4713785172682860}
   - component: {fileID: 33805737615837362}
   - component: {fileID: 23795567574823720}
+  - component: {fileID: 64438021554468220}
   m_Layer: 0
   m_Name: nursingbottle
   m_TagString: Untagged
@@ -82,4 +83,18 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1465174045544606}
+  m_Mesh: {fileID: 4300000, guid: 6ecbd40a0f71a5a438214df93077a012, type: 3}
+--- !u!64 &64438021554468220
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1465174045544606}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: 6ecbd40a0f71a5a438214df93077a012, type: 3}

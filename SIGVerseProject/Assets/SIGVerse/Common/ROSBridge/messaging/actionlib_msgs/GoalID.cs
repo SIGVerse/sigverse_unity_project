@@ -4,28 +4,28 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace actionlib_msgs 
 	{
 		[System.Serializable]
-		public class GoalID : ROSMessage
+		public class GoalID : RosMessage
 		{
-			public SIGVerse.ROSBridge.msg_helpers.Time stamp;
+			public SIGVerse.RosBridge.msg_helpers.Time stamp;
 			public string id;
 
 
 			public GoalID()
 			{
-				this.stamp = new SIGVerse.ROSBridge.msg_helpers.Time();
+				this.stamp = new SIGVerse.RosBridge.msg_helpers.Time();
 				this.id = "";
 			}
 
-			public GoalID(SIGVerse.ROSBridge.msg_helpers.Time stamp, string id)
+			public GoalID(SIGVerse.RosBridge.msg_helpers.Time stamp, string id)
 			{
 				this.stamp = stamp;
 				this.id = id;

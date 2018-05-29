@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
-using SIGVerse.ROSBridge.std_msgs;
-using SIGVerse.ROSBridge.sensor_msgs;
+using SIGVerse.RosBridge;
+using SIGVerse.RosBridge.std_msgs;
+using SIGVerse.RosBridge.sensor_msgs;
 using SIGVerse.Common;
 
 using JointType = SIGVerse.TurtleBot3.TurtleBot3JointInfo.JointType;
@@ -30,9 +30,9 @@ namespace SIGVerse.TurtleBot3
 		private JointState jointState;
 
 		// ROS bridge
-		private ROSBridgeWebSocketConnection webSocketConnection = null;
+		private RosBridgeWebSocketConnection webSocketConnection = null;
 
-		private ROSBridgePublisher<JointState> jointStatePublisher;
+		private RosBridgePublisher<JointState> jointStatePublisher;
 
 		private float elapsedTime;
 
@@ -56,7 +56,7 @@ namespace SIGVerse.TurtleBot3
 				this.rosBridgePort = ConfigManager.Instance.configInfo.rosbridgePort;
 			}
 			
-			this.webSocketConnection = new SIGVerse.ROSBridge.ROSBridgeWebSocketConnection(rosBridgeIP, rosBridgePort);
+			this.webSocketConnection = new SIGVerse.RosBridge.RosBridgeWebSocketConnection(rosBridgeIP, rosBridgePort);
 
 			this.jointStatePublisher = this.webSocketConnection.Advertise<JointState>(topicName);
 
@@ -64,7 +64,7 @@ namespace SIGVerse.TurtleBot3
 			this.webSocketConnection.Connect();
 
 			this.jointState = new JointState();
-			this.jointState.header = new Header(0, new SIGVerse.ROSBridge.msg_helpers.Time(0, 0), "tb3_omc_joint_state");
+			this.jointState.header = new Header(0, new SIGVerse.RosBridge.msg_helpers.Time(0, 0), "tb3_omc_joint_state");
 
 			this.jointState.name = new List<string>();
 			this.jointState.name.Add(TurtleBot3Common.jointNameMap[JointType.Joint1]);

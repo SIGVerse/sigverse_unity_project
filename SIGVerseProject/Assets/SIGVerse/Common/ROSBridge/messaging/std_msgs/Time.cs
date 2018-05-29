@@ -4,26 +4,26 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace std_msgs 
 	{
 		[System.Serializable]
-		public class Time : ROSMessage
+		public class Time : RosMessage
 		{
-			public SIGVerse.ROSBridge.msg_helpers.Time data;
+			public SIGVerse.RosBridge.msg_helpers.Time data;
 
 
 			public Time()
 			{
-				this.data = new SIGVerse.ROSBridge.msg_helpers.Time();
+				this.data = new SIGVerse.RosBridge.msg_helpers.Time();
 			}
 
-			public Time(SIGVerse.ROSBridge.msg_helpers.Time data)
+			public Time(SIGVerse.RosBridge.msg_helpers.Time data)
 			{
 				this.data = data;
 			}

@@ -4,17 +4,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.geometry_msgs;
+using SIGVerse.RosBridge.geometry_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace geometry_msgs 
 	{
 		[System.Serializable]
-		public class AccelWithCovariance : ROSMessage
+		public class AccelWithCovariance : RosMessage
 		{
 			public geometry_msgs.Accel accel;
 			public double[]  covariance;

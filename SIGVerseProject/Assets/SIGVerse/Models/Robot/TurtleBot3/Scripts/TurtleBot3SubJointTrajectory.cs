@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using SIGVerse.Common;
 
 using JointType = SIGVerse.TurtleBot3.TurtleBot3JointInfo.JointType;
@@ -45,9 +45,9 @@ namespace SIGVerse.TurtleBot3
 		private GameObject graspedObject;
 
 		// ROS bridge
-		private ROSBridgeWebSocketConnection webSocketConnection = null;
+		private RosBridgeWebSocketConnection webSocketConnection = null;
 
-		private ROSBridgeSubscriber<SIGVerse.ROSBridge.trajectory_msgs.JointTrajectory> subscriber = null;
+		private RosBridgeSubscriber<SIGVerse.RosBridge.trajectory_msgs.JointTrajectory> subscriber = null;
 
 		void Awake()
 		{
@@ -79,15 +79,15 @@ namespace SIGVerse.TurtleBot3
 			
 			this.graspedObject = null;
 
-			this.webSocketConnection = new SIGVerse.ROSBridge.ROSBridgeWebSocketConnection(rosBridgeIP, rosBridgePort);
+			this.webSocketConnection = new SIGVerse.RosBridge.RosBridgeWebSocketConnection(rosBridgeIP, rosBridgePort);
 
-			this.subscriber = this.webSocketConnection.Subscribe<SIGVerse.ROSBridge.trajectory_msgs.JointTrajectory>(topicName, this.JointTrajectoryCallback);
+			this.subscriber = this.webSocketConnection.Subscribe<SIGVerse.RosBridge.trajectory_msgs.JointTrajectory>(topicName, this.JointTrajectoryCallback);
 
 			// Connect to ROSbridge server
 			this.webSocketConnection.Connect();
 		}
 
-		public void JointTrajectoryCallback(SIGVerse.ROSBridge.trajectory_msgs.JointTrajectory jointTrajectory)
+		public void JointTrajectoryCallback(SIGVerse.RosBridge.trajectory_msgs.JointTrajectory jointTrajectory)
 		{
 			if(jointTrajectory.joint_names.Count != jointTrajectory.points[0].positions.Count)
 			{

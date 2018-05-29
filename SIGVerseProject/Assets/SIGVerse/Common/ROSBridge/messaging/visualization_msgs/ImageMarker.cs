@@ -4,18 +4,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.std_msgs;
-using SIGVerse.ROSBridge.geometry_msgs;
+using SIGVerse.RosBridge.std_msgs;
+using SIGVerse.RosBridge.geometry_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace visualization_msgs 
 	{
 		[System.Serializable]
-		public class ImageMarker : ROSMessage
+		public class ImageMarker : RosMessage
 		{
 			public std_msgs.Header header;
 			public string ns;
@@ -27,7 +27,7 @@ namespace SIGVerse.ROSBridge
 			public std_msgs.ColorRGBA outline_color;
 			public byte filled;
 			public std_msgs.ColorRGBA fill_color;
-			public SIGVerse.ROSBridge.msg_helpers.Duration lifetime;
+			public SIGVerse.RosBridge.msg_helpers.Duration lifetime;
 			public System.Collections.Generic.List<UnityEngine.Vector3>  points;
 			public System.Collections.Generic.List<std_msgs.ColorRGBA>  outline_colors;
 
@@ -51,12 +51,12 @@ namespace SIGVerse.ROSBridge
 				this.outline_color = new std_msgs.ColorRGBA();
 				this.filled = 0;
 				this.fill_color = new std_msgs.ColorRGBA();
-				this.lifetime = new SIGVerse.ROSBridge.msg_helpers.Duration();
+				this.lifetime = new SIGVerse.RosBridge.msg_helpers.Duration();
 				this.points = new System.Collections.Generic.List<UnityEngine.Vector3>();
 				this.outline_colors = new System.Collections.Generic.List<std_msgs.ColorRGBA>();
 			}
 
-			public ImageMarker(std_msgs.Header header, string ns, System.Int32 id, System.Int32 type, System.Int32 action, UnityEngine.Vector3 position, float scale, std_msgs.ColorRGBA outline_color, byte filled, std_msgs.ColorRGBA fill_color, SIGVerse.ROSBridge.msg_helpers.Duration lifetime, System.Collections.Generic.List<UnityEngine.Vector3>  points, System.Collections.Generic.List<std_msgs.ColorRGBA>  outline_colors)
+			public ImageMarker(std_msgs.Header header, string ns, System.Int32 id, System.Int32 type, System.Int32 action, UnityEngine.Vector3 position, float scale, std_msgs.ColorRGBA outline_color, byte filled, std_msgs.ColorRGBA fill_color, SIGVerse.RosBridge.msg_helpers.Duration lifetime, System.Collections.Generic.List<UnityEngine.Vector3>  points, System.Collections.Generic.List<std_msgs.ColorRGBA>  outline_colors)
 			{
 				this.header = header;
 				this.ns = ns;

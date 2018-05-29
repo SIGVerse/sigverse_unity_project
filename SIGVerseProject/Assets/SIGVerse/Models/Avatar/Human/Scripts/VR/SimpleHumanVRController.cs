@@ -12,6 +12,9 @@ namespace SIGVerse.Human.VR
 		public Transform bodyAnchor;
 
 		public List<Transform> fixedParts;
+
+		public float moveSpeedByController = 1.0f;
+		public float moveSpeedByHmd        = 2.0f;
 		//////////////////////////////
 
 		private Animator animator;
@@ -19,10 +22,9 @@ namespace SIGVerse.Human.VR
 		private Transform[]  fixedTransforms;
 		private Quaternion[] fixedQuaternionsOrg;
 
-		private void Start()
+		private void Awake()
 		{
 			this.animator = GetComponent<Animator>();
-
 
 			List<Transform> fixedTransformList = new List<Transform>();
 
@@ -32,7 +34,10 @@ namespace SIGVerse.Human.VR
 			}
 
 			this.fixedTransforms = fixedTransformList.ToArray();
+		}
 
+		private void Start()
+		{
 			this.fixedQuaternionsOrg = new Quaternion[this.fixedTransforms.Length];
 
 			for (int i=0; i<this.fixedTransforms.Length; i++)
@@ -56,11 +61,11 @@ namespace SIGVerse.Human.VR
 			float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
 			float vertical   = CrossPlatformInputManager.GetAxis("Vertical");
 
-			if(Mathf.Abs(horizontal) > 0.1 || Mathf.Abs(vertical) > 0.1)
+			if(Mathf.Abs(horizontal) > 0.01 || Mathf.Abs(vertical) > 0.01)
 			{
 				Vector3 destination = vertical * this.transform.forward + horizontal * this.transform.right;
 
-				this.Move(destination, 1.0f);
+				this.Move(destination  * this.moveSpeedByController, this.moveSpeedByController);
 
 				Vector3 newVrRoot = this.animator.rootPosition - (this.bodyAnchor.position - this.vrRoot.transform.position);
 
@@ -70,7 +75,7 @@ namespace SIGVerse.Human.VR
 			{
 				Vector3 destination = new Vector3(this.bodyAnchor.position.x - this.transform.position.x, 0, this.bodyAnchor.position.z - this.transform.position.z);
 
-				this.Move(destination, 4.0f);
+				this.Move(destination, this.moveSpeedByHmd);
 				
 				this.transform.rotation = this.bodyAnchor.rotation;
 			}
@@ -84,8 +89,8 @@ namespace SIGVerse.Human.VR
 
 			move = Vector3.ProjectOnPlane(move, Vector3.up);
 
-			this.animator.SetFloat("Forward", move.z, 0.1f, Time.deltaTime);
-			this.animator.SetFloat("Turn",    move.x, 0.1f, Time.deltaTime);
+			this.animator.SetFloat("Forward", move.z, 0.01f, Time.deltaTime);
+			this.animator.SetFloat("Turn",    move.x, 0.01f, Time.deltaTime);
 
 			this.animator.speed = animSpeedMultiplier;
 		}

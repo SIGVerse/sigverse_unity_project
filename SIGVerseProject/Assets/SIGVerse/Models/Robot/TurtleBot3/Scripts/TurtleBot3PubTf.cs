@@ -1,11 +1,11 @@
 using UnityEngine;
 
 using System.Collections;
-using SIGVerse.ROSBridge.sensor_msgs;
-using SIGVerse.ROSBridge.std_msgs;
+using SIGVerse.RosBridge.sensor_msgs;
+using SIGVerse.RosBridge.std_msgs;
 using SIGVerse.Common;
-using SIGVerse.SIGVerseROSBridge;
-using SIGVerse.ROSBridge.geometry_msgs;
+using SIGVerse.SIGVerseRosBridge;
+using SIGVerse.RosBridge.geometry_msgs;
 using System.Collections.Generic;
 
 namespace SIGVerse.TurtleBot3
@@ -54,7 +54,7 @@ namespace SIGVerse.TurtleBot3
 		private System.Net.Sockets.TcpClient tcpClient = null;
 		private System.Net.Sockets.NetworkStream networkStream = null;
 
-		private SIGVerseROSBridgeMessage<TransformStamped[]> transformStampedMsg = null;
+		private SIGVerseRosBridgeMessage<TransformStamped[]> transformStampedMsg = null;
 
 		private List<TfInfo> localTfInfoList = new List<TfInfo>();
 
@@ -95,7 +95,7 @@ namespace SIGVerse.TurtleBot3
 			this.networkStream.WriteTimeout = 100000;
 
 
-			this.transformStampedMsg = new SIGVerseROSBridgeMessage<TransformStamped[]>("publish", this.topicName, "sigverse/TfList", null);
+			this.transformStampedMsg = new SIGVerseRosBridgeMessage<TransformStamped[]>("publish", this.topicName, "sigverse/TfList", null);
 		}
 
 		void OnDestroy()

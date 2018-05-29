@@ -75,7 +75,7 @@ namespace SIGVerse.SampleScenes.Playbacker
 					this.initialTransforms.Add(initialTransform);
 				}
 
-				Rigidbody[] rigidbodies = targetObj.transform.GetComponentsInChildren<Rigidbody>();
+				Rigidbody[] rigidbodies = targetObj.transform.GetComponentsInChildren<Rigidbody>(true);
 
 				foreach (Rigidbody rigidbody in rigidbodies)
 				{
@@ -151,20 +151,6 @@ namespace SIGVerse.SampleScenes.Playbacker
 				rigidbody.velocity        = Vector3.zero;
 				rigidbody.angularVelocity = Vector3.zero;
 			}
-		}
-
-
-		public static string GetLinkPath(Transform transform)
-		{
-			string path = transform.name;
-
-			while (transform.parent != null)
-			{
-				transform = transform.parent;
-				path = transform.name + "/" + path;
-			}
-
-			return path;
 		}
 	}
 }

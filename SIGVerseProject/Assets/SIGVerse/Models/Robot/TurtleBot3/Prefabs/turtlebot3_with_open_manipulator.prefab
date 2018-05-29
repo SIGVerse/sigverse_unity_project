@@ -59,7 +59,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1058814795627030
 GameObject:
   m_ObjectHideFlags: 1
@@ -251,7 +251,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1416598720403126
 GameObject:
   m_ObjectHideFlags: 1
@@ -476,6 +476,8 @@ GameObject:
   - component: {fileID: 65914251156528202}
   - component: {fileID: 65558092082848560}
   - component: {fileID: 65279173518236564}
+  - component: {fileID: 65870729191639072}
+  - component: {fileID: 65850651132439658}
   m_Layer: 0
   m_Name: base_footprint
   m_TagString: Untagged
@@ -1945,7 +1947,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -2273,6 +2275,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.076, y: 0.005, z: 0.02}
   m_Center: {x: -0.04, y: -0.037, z: -0.002}
+--- !u!65 &65850651132439658
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1710922188545426}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.021489501, y: 0.015974492, z: 0.02027163}
+  m_Center: {x: 0.17743802, y: 0.06389068, z: 0.010635816}
 --- !u!65 &65858696864960658
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -2297,6 +2311,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.07, y: 0.005, z: 0.02}
   m_Center: {x: -0.04, y: -0.037, z: -0.002}
+--- !u!65 &65870729191639072
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1710922188545426}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.021489501, y: 0.014444858, z: 0.02027163}
+  m_Center: {x: 0.17743802, y: -0.06462614, z: 0.010635816}
 --- !u!65 &65875391886136594
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -2406,7 +2432,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1187580229078940}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6212a4b45d0425547b0e57ccea1d4dfe, type: 3}
+  m_Script: {fileID: 11500000, guid: 41a92fc61ffcbe7449e00679dc800976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rosBridgeIP: 

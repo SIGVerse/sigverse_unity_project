@@ -4,18 +4,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.std_msgs;
-using SIGVerse.ROSBridge.geometry_msgs;
+using SIGVerse.RosBridge.std_msgs;
+using SIGVerse.RosBridge.geometry_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace visualization_msgs 
 	{
 		[System.Serializable]
-		public class Marker : ROSMessage
+		public class Marker : RosMessage
 		{
 			public std_msgs.Header header;
 			public string ns;
@@ -25,7 +25,7 @@ namespace SIGVerse.ROSBridge
 			public geometry_msgs.Pose pose;
 			public UnityEngine.Vector3 scale;
 			public std_msgs.ColorRGBA color;
-			public SIGVerse.ROSBridge.msg_helpers.Duration lifetime;
+			public SIGVerse.RosBridge.msg_helpers.Duration lifetime;
 			public bool frame_locked;
 			public System.Collections.Generic.List<UnityEngine.Vector3>  points;
 			public System.Collections.Generic.List<std_msgs.ColorRGBA>  colors;
@@ -60,7 +60,7 @@ namespace SIGVerse.ROSBridge
 				this.pose = new geometry_msgs.Pose();
 				this.scale = new UnityEngine.Vector3();
 				this.color = new std_msgs.ColorRGBA();
-				this.lifetime = new SIGVerse.ROSBridge.msg_helpers.Duration();
+				this.lifetime = new SIGVerse.RosBridge.msg_helpers.Duration();
 				this.frame_locked = false;
 				this.points = new System.Collections.Generic.List<UnityEngine.Vector3>();
 				this.colors = new System.Collections.Generic.List<std_msgs.ColorRGBA>();
@@ -69,7 +69,7 @@ namespace SIGVerse.ROSBridge
 				this.mesh_use_embedded_materials = false;
 			}
 
-			public Marker(std_msgs.Header header, string ns, System.Int32 id, System.Int32 type, System.Int32 action, geometry_msgs.Pose pose, UnityEngine.Vector3 scale, std_msgs.ColorRGBA color, SIGVerse.ROSBridge.msg_helpers.Duration lifetime, bool frame_locked, System.Collections.Generic.List<UnityEngine.Vector3>  points, System.Collections.Generic.List<std_msgs.ColorRGBA>  colors, string text, string mesh_resource, bool mesh_use_embedded_materials)
+			public Marker(std_msgs.Header header, string ns, System.Int32 id, System.Int32 type, System.Int32 action, geometry_msgs.Pose pose, UnityEngine.Vector3 scale, std_msgs.ColorRGBA color, SIGVerse.RosBridge.msg_helpers.Duration lifetime, bool frame_locked, System.Collections.Generic.List<UnityEngine.Vector3>  points, System.Collections.Generic.List<std_msgs.ColorRGBA>  colors, string text, string mesh_resource, bool mesh_use_embedded_materials)
 			{
 				this.header = header;
 				this.ns = ns;

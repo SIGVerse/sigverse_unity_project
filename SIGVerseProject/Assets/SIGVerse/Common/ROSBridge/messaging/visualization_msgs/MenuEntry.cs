@@ -4,16 +4,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace visualization_msgs 
 	{
 		[System.Serializable]
-		public class MenuEntry : ROSMessage
+		public class MenuEntry : RosMessage
 		{
 			public System.UInt32 id;
 			public System.UInt32 parent_id;

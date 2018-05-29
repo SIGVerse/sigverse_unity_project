@@ -4,19 +4,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.std_msgs;
-using SIGVerse.ROSBridge.geometry_msgs;
-using SIGVerse.ROSBridge.visualization_msgs;
+using SIGVerse.RosBridge.std_msgs;
+using SIGVerse.RosBridge.geometry_msgs;
+using SIGVerse.RosBridge.visualization_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace visualization_msgs 
 	{
 		[System.Serializable]
-		public class InteractiveMarker : ROSMessage
+		public class InteractiveMarker : RosMessage
 		{
 			public std_msgs.Header header;
 			public geometry_msgs.Pose pose;

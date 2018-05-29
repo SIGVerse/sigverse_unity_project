@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4076525853398792}
   - component: {fileID: 33620227715072524}
   - component: {fileID: 23433752018415148}
-  - component: {fileID: 95279837071629608}
+  - component: {fileID: 64487430371025168}
   m_Layer: 0
   m_Name: tumblerglass_c01
   m_TagString: Untagged
@@ -83,20 +83,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1402254535764958}
   m_Mesh: {fileID: 4300000, guid: 7ec49d2896ca9b144bc7c68958855a45, type: 3}
---- !u!95 &95279837071629608
-Animator:
-  serializedVersion: 3
+--- !u!64 &64487430371025168
+MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1402254535764958}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 7ec49d2896ca9b144bc7c68958855a45, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300000, guid: 7ec49d2896ca9b144bc7c68958855a45, type: 3}

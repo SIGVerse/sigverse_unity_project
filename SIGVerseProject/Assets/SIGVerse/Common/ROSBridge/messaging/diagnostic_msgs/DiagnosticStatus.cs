@@ -4,17 +4,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.diagnostic_msgs;
+using SIGVerse.RosBridge.diagnostic_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace diagnostic_msgs 
 	{
 		[System.Serializable]
-		public class DiagnosticStatus : ROSMessage
+		public class DiagnosticStatus : RosMessage
 		{
 			public sbyte level;
 			public string name;

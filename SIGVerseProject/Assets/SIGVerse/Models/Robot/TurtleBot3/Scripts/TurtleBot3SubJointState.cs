@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using SIGVerse.Common;
 
 namespace SIGVerse.TurtleBot3
@@ -16,7 +16,7 @@ namespace SIGVerse.TurtleBot3
 		//--------------------------------------------------
 
 		// ROS bridge
-		private ROSBridgeWebSocketConnection webSocketConnection = null;
+		private RosBridgeWebSocketConnection webSocketConnection = null;
 
 		private Dictionary<string, Transform> transformMap;  // key:joint name, value:link transform
 
@@ -34,15 +34,15 @@ namespace SIGVerse.TurtleBot3
 
 			this.transformMap = TurtleBot3Common.GetJointNameToLinkMap(this.transform);
 
-			this.webSocketConnection = new SIGVerse.ROSBridge.ROSBridgeWebSocketConnection(this.rosbridgeIP, this.rosbridgePort);
+			this.webSocketConnection = new SIGVerse.RosBridge.RosBridgeWebSocketConnection(this.rosbridgeIP, this.rosbridgePort);
 
-			this.webSocketConnection.Subscribe<SIGVerse.ROSBridge.sensor_msgs.JointState>(topicName, this.JointStateCallback);
+			this.webSocketConnection.Subscribe<SIGVerse.RosBridge.sensor_msgs.JointState>(topicName, this.JointStateCallback);
 
 			// Connect to ROSbridge server
 			this.webSocketConnection.Connect();
 		}
 	
-		public void JointStateCallback(SIGVerse.ROSBridge.sensor_msgs.JointState jointState)
+		public void JointStateCallback(SIGVerse.RosBridge.sensor_msgs.JointState jointState)
 		{
 			for(int i=0; i<jointState.name.Count; i++)
 			{

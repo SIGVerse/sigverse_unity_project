@@ -4,19 +4,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.geometry_msgs;
+using SIGVerse.RosBridge.geometry_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace nav_msgs 
 	{
 		[System.Serializable]
-		public class MapMetaData : ROSMessage
+		public class MapMetaData : RosMessage
 		{
-			public SIGVerse.ROSBridge.msg_helpers.Time map_load_time;
+			public SIGVerse.RosBridge.msg_helpers.Time map_load_time;
 			public float resolution;
 			public System.UInt32 width;
 			public System.UInt32 height;
@@ -25,14 +25,14 @@ namespace SIGVerse.ROSBridge
 
 			public MapMetaData()
 			{
-				this.map_load_time = new SIGVerse.ROSBridge.msg_helpers.Time();
+				this.map_load_time = new SIGVerse.RosBridge.msg_helpers.Time();
 				this.resolution = 0.0f;
 				this.width = 0;
 				this.height = 0;
 				this.origin = new geometry_msgs.Pose();
 			}
 
-			public MapMetaData(SIGVerse.ROSBridge.msg_helpers.Time map_load_time, float resolution, System.UInt32 width, System.UInt32 height, geometry_msgs.Pose origin)
+			public MapMetaData(SIGVerse.RosBridge.msg_helpers.Time map_load_time, float resolution, System.UInt32 width, System.UInt32 height, geometry_msgs.Pose origin)
 			{
 				this.map_load_time = map_load_time;
 				this.resolution = resolution;

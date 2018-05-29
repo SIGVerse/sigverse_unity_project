@@ -4,22 +4,22 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace trajectory_msgs 
 	{
 		[System.Serializable]
-		public class JointTrajectoryPoint : ROSMessage
+		public class JointTrajectoryPoint : RosMessage
 		{
 			public System.Collections.Generic.List<double>  positions;
 			public System.Collections.Generic.List<double>  velocities;
 			public System.Collections.Generic.List<double>  accelerations;
 			public System.Collections.Generic.List<double>  effort;
-			public SIGVerse.ROSBridge.msg_helpers.Duration time_from_start;
+			public SIGVerse.RosBridge.msg_helpers.Duration time_from_start;
 
 
 			public JointTrajectoryPoint()
@@ -28,10 +28,10 @@ namespace SIGVerse.ROSBridge
 				this.velocities = new System.Collections.Generic.List<double>();
 				this.accelerations = new System.Collections.Generic.List<double>();
 				this.effort = new System.Collections.Generic.List<double>();
-				this.time_from_start = new SIGVerse.ROSBridge.msg_helpers.Duration();
+				this.time_from_start = new SIGVerse.RosBridge.msg_helpers.Duration();
 			}
 
-			public JointTrajectoryPoint(System.Collections.Generic.List<double>  positions, System.Collections.Generic.List<double>  velocities, System.Collections.Generic.List<double>  accelerations, System.Collections.Generic.List<double>  effort, SIGVerse.ROSBridge.msg_helpers.Duration time_from_start)
+			public JointTrajectoryPoint(System.Collections.Generic.List<double>  positions, System.Collections.Generic.List<double>  velocities, System.Collections.Generic.List<double>  accelerations, System.Collections.Generic.List<double>  effort, SIGVerse.RosBridge.msg_helpers.Duration time_from_start)
 			{
 				this.positions = positions;
 				this.velocities = velocities;

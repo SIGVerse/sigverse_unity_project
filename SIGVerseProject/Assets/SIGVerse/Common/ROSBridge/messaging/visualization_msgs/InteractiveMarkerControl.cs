@@ -4,18 +4,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.geometry_msgs;
-using SIGVerse.ROSBridge.visualization_msgs;
+using SIGVerse.RosBridge.geometry_msgs;
+using SIGVerse.RosBridge.visualization_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace visualization_msgs 
 	{
 		[System.Serializable]
-		public class InteractiveMarkerControl : ROSMessage
+		public class InteractiveMarkerControl : RosMessage
 		{
 			public string name;
 			public UnityEngine.Quaternion orientation;

@@ -12,7 +12,7 @@ namespace SIGVerse.Common
 		{
 			get
 			{
-				if (applicationIsQuitting)
+				if (isApplicationQuitting)
 				{
 					Debug.LogWarning("[Singleton] Instance '" + typeof(T) +
 						"' already destroyed on application quit." +
@@ -58,11 +58,11 @@ namespace SIGVerse.Common
 			}
 		}
 
-		private static bool applicationIsQuitting = false;
+		private static bool isApplicationQuitting = false;
 
 		public void OnDestroy()
 		{
-			applicationIsQuitting = true;
+			isApplicationQuitting = true;
 		}
 	}
 }

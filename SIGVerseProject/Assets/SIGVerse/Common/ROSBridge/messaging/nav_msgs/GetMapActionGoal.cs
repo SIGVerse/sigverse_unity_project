@@ -4,19 +4,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.std_msgs;
-using SIGVerse.ROSBridge.actionlib_msgs;
-using SIGVerse.ROSBridge.nav_msgs;
+using SIGVerse.RosBridge.std_msgs;
+using SIGVerse.RosBridge.actionlib_msgs;
+using SIGVerse.RosBridge.nav_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace nav_msgs 
 	{
 		[System.Serializable]
-		public class GetMapActionGoal : ROSMessage
+		public class GetMapActionGoal : RosMessage
 		{
 			public std_msgs.Header header;
 			public actionlib_msgs.GoalID goal_id;

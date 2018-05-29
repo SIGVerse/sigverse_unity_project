@@ -1,10 +1,10 @@
 using UnityEngine;
 
 using System.Collections;
-using SIGVerse.ROSBridge.sensor_msgs;
-using SIGVerse.ROSBridge.std_msgs;
+using SIGVerse.RosBridge.sensor_msgs;
+using SIGVerse.RosBridge.std_msgs;
 using SIGVerse.Common;
-using SIGVerse.SIGVerseROSBridge;
+using SIGVerse.SIGVerseRosBridge;
 
 
 namespace SIGVerse.TurtleBot
@@ -22,8 +22,8 @@ namespace SIGVerse.TurtleBot
 		System.Net.Sockets.TcpClient tcpClient = null;
 		private System.Net.Sockets.NetworkStream networkStream = null;
 
-		SIGVerseROSBridgeMessage<CameraInfoForSIGVerseBridge> cameraInfoMsg = null;
-		SIGVerseROSBridgeMessage<ImageForSIGVerseBridge> imageMsg = null;
+		SIGVerseRosBridgeMessage<CameraInfoForSIGVerseBridge> cameraInfoMsg = null;
+		SIGVerseRosBridgeMessage<ImageForSIGVerseBridge> imageMsg = null;
 
 		// Xtion
 		private Camera xtionRGBCamera;
@@ -84,11 +84,11 @@ namespace SIGVerse.TurtleBot
 
 			this.imageData = new ImageForSIGVerseBridge(null, (uint)imageHeight, (uint)imageWidth, encoding, isBigendian, step, null);
 
-			this.header = new Header(0, new SIGVerse.ROSBridge.msg_helpers.Time(0, 0), "camera_rgb_optical_frame");
+			this.header = new Header(0, new SIGVerse.RosBridge.msg_helpers.Time(0, 0), "camera_rgb_optical_frame");
 
 
-			this.cameraInfoMsg = new SIGVerseROSBridgeMessage<CameraInfoForSIGVerseBridge>("publish", this.topicNameCameraInfo, CameraInfoForSIGVerseBridge.GetMessageType(), this.cameraInfoData);
-			this.imageMsg      = new SIGVerseROSBridgeMessage<ImageForSIGVerseBridge>     ("publish", this.topicNameImage,      ImageForSIGVerseBridge.GetMessageType(),      this.imageData);
+			this.cameraInfoMsg = new SIGVerseRosBridgeMessage<CameraInfoForSIGVerseBridge>("publish", this.topicNameCameraInfo, CameraInfoForSIGVerseBridge.GetMessageType(), this.cameraInfoData);
+			this.imageMsg      = new SIGVerseRosBridgeMessage<ImageForSIGVerseBridge>     ("publish", this.topicNameImage,      ImageForSIGVerseBridge.GetMessageType(),      this.imageData);
 		}
 
 		void OnApplicationQuit()

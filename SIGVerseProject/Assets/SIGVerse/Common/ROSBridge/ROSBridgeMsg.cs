@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Text;
 
-namespace SIGVerse.ROSBridge
+namespace SIGVerse.RosBridge
 {
-	public class ROSBridgeMsg
+	public class RosBridgeMsg
 	{
 		public static string AdvertiseTopic(string messageTopic, string messageType)
 		{

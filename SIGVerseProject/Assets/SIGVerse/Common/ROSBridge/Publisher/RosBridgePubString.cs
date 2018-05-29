@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using SIGVerse.Common;
 
-namespace SIGVerse.ROSBridge
+namespace SIGVerse.RosBridge
 {
 	public interface IRosBridgeStringHandler : IEventSystemHandler
 	{
@@ -20,9 +20,9 @@ namespace SIGVerse.ROSBridge
 		private std_msgs.String stringMessage;
 
 		// ROS bridge
-		private ROSBridgeWebSocketConnection webSocketConnection = null;
+		private RosBridgeWebSocketConnection webSocketConnection = null;
 
-		private ROSBridgePublisher<std_msgs.String> stringPublisher;
+		private RosBridgePublisher<std_msgs.String> stringPublisher;
 
 
 		void Start()
@@ -33,7 +33,7 @@ namespace SIGVerse.ROSBridge
 				this.rosBridgePort = ConfigManager.Instance.configInfo.rosbridgePort;
 			}
 			
-			this.webSocketConnection = new ROSBridgeWebSocketConnection(rosBridgeIP, rosBridgePort);
+			this.webSocketConnection = new RosBridgeWebSocketConnection(rosBridgeIP, rosBridgePort);
 
 			this.stringPublisher = this.webSocketConnection.Advertise<std_msgs.String>(topicName);
 

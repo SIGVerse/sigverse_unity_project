@@ -4,16 +4,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace geometry_msgs 
 	{
 		[System.Serializable]
-		public class Vector3 : ROSMessage
+		public class Vector3 : RosMessage
 		{
 			public double x;
 			public double y;

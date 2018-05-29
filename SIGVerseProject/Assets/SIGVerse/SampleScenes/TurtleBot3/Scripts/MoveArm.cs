@@ -40,7 +40,7 @@ namespace SIGVerse.SampleScenes.TurtleBot3
 			// Send the instruction message
 			if (Input.GetKeyDown(KeyCode.Space))
 			{
-				ExecuteEvents.Execute<SIGVerse.ROSBridge.IRosBridgeStringHandler>
+				ExecuteEvents.Execute<SIGVerse.RosBridge.IRosBridgeStringHandler>
 				(
 					target: this.destinationOfRosMessage, 
 					eventData: null, 

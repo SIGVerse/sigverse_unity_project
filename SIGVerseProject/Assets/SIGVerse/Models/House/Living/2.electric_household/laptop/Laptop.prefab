@@ -36,6 +36,7 @@ GameObject:
   - component: {fileID: 4983228745785674}
   - component: {fileID: 33071554991617736}
   - component: {fileID: 23355223341107138}
+  - component: {fileID: 65576034687138522}
   m_Layer: 0
   m_Name: Screen
   m_TagString: Untagged
@@ -68,6 +69,7 @@ GameObject:
   - component: {fileID: 4482734415965306}
   - component: {fileID: 33440660242217008}
   - component: {fileID: 23524932650543060}
+  - component: {fileID: 65775249111989926}
   m_Layer: 0
   m_Name: Keyboard
   m_TagString: Untagged
@@ -225,3 +227,27 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1976942320035112}
   m_Mesh: {fileID: 4300002, guid: dcee533a1e32e1f42965b2b16423861f, type: 3}
+--- !u!65 &65576034687138522
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1618030889347042}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.9999849, y: 0.053609286, z: 0.8521875}
+  m_Center: {x: -0.00000007450583, y: 0.0002572109, z: 0.111064814}
+--- !u!65 &65775249111989926
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1976942320035112}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.0000012, y: 1.2542905, z: 0.03957027}
+  m_Center: {x: -0.06517672, y: 0.12012585, z: -0.0065119583}

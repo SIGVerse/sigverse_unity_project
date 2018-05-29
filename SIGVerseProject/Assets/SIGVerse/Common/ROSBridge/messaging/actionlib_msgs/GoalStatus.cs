@@ -4,17 +4,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.actionlib_msgs;
+using SIGVerse.RosBridge.actionlib_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace actionlib_msgs 
 	{
 		[System.Serializable]
-		public class GoalStatus : ROSMessage
+		public class GoalStatus : RosMessage
 		{
 			public actionlib_msgs.GoalID goal_id;
 			public byte status;

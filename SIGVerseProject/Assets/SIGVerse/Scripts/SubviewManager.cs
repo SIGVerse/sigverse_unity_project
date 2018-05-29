@@ -107,7 +107,7 @@ namespace SIGVerse.Common
 				this.subviewImages         = new Image        [SubviewNum];
 				this.subviewLastUpdateTime = new DateTime     [SubviewNum];
 
-				this.unlitTexturShader = (Shader)Resources.Load(SIGVerseCommon.UnlitShaderResourcePath);
+				this.unlitTexturShader = (Shader)Resources.Load(SIGVerseUtils.UnlitShaderResourcePath);
 
 				// Initialize Subviews
 				for(int i=0; i<this.subviewPanels.Length; i++)
@@ -463,6 +463,7 @@ namespace SIGVerse.Common
 				{
 					rectTransform.anchorMin = new Vector2(0.0f, 1.0f);
 					rectTransform.anchorMax = new Vector2(0.0f, 1.0f);
+					rectTransform.pivot     = new Vector2(0.0f, 1.0f);
 
 					float posX = + offsetX;
 					float posY = - offsetY + Screen.height;
@@ -475,8 +476,9 @@ namespace SIGVerse.Common
 				{
 					rectTransform.anchorMin = new Vector2(1.0f, 1.0f);
 					rectTransform.anchorMax = new Vector2(1.0f, 1.0f);
+					rectTransform.pivot     = new Vector2(1.0f, 1.0f);
 
-					float posX = - offsetX + Screen.width  - rectTransform.rect.width;
+					float posX = - offsetX + Screen.width;
 					float posY = - offsetY + Screen.height;
 
 					rectTransform.position = new Vector3(posX, posY, 0.0f);
@@ -487,9 +489,10 @@ namespace SIGVerse.Common
 				{
 					rectTransform.anchorMin = new Vector2(0.0f, 0.0f);
 					rectTransform.anchorMax = new Vector2(0.0f, 0.0f);
+					rectTransform.pivot     = new Vector2(0.0f, 0.0f);
 
 					float posX = + offsetX;
-					float posY = + offsetY + rectTransform.rect.height;
+					float posY = + offsetY;
 
 					rectTransform.position = new Vector3(posX, posY, 0.0f);
 
@@ -499,9 +502,10 @@ namespace SIGVerse.Common
 				{
 					rectTransform.anchorMin = new Vector2(1.0f, 0.0f);
 					rectTransform.anchorMax = new Vector2(1.0f, 0.0f);
+					rectTransform.pivot     = new Vector2(1.0f, 0.0f);
 
-					float posX = - offsetX + Screen.width - rectTransform.rect.width;
-					float posY = + offsetY                + rectTransform.rect.height;
+					float posX = - offsetX + Screen.width;
+					float posY = + offsetY;
 
 					rectTransform.position = new Vector3(posX, posY, 0.0f);
 

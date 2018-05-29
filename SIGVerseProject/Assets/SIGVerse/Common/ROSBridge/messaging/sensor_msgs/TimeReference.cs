@@ -4,31 +4,31 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using SIGVerse.ROSBridge;
+using SIGVerse.RosBridge;
 using UnityEngine;
 
-using SIGVerse.ROSBridge.std_msgs;
+using SIGVerse.RosBridge.std_msgs;
 
-namespace SIGVerse.ROSBridge 
+namespace SIGVerse.RosBridge 
 {
 	namespace sensor_msgs 
 	{
 		[System.Serializable]
-		public class TimeReference : ROSMessage
+		public class TimeReference : RosMessage
 		{
 			public std_msgs.Header header;
-			public SIGVerse.ROSBridge.msg_helpers.Time time_ref;
+			public SIGVerse.RosBridge.msg_helpers.Time time_ref;
 			public string source;
 
 
 			public TimeReference()
 			{
 				this.header = new std_msgs.Header();
-				this.time_ref = new SIGVerse.ROSBridge.msg_helpers.Time();
+				this.time_ref = new SIGVerse.RosBridge.msg_helpers.Time();
 				this.source = "";
 			}
 
-			public TimeReference(std_msgs.Header header, SIGVerse.ROSBridge.msg_helpers.Time time_ref, string source)
+			public TimeReference(std_msgs.Header header, SIGVerse.RosBridge.msg_helpers.Time time_ref, string source)
 			{
 				this.header = header;
 				this.time_ref = time_ref;
