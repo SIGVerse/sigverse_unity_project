@@ -60,11 +60,11 @@ namespace SIGVerse.TurtleBot3
 			linkNameMap.Add(LinkType.BaseScan, "base_scan");
 
 			// Links of Open-Manipulator
-			linkNameMap.Add(LinkType.Link1, "link1");
-			linkNameMap.Add(LinkType.Link2, "link2");
-			linkNameMap.Add(LinkType.Link3, "link3");
-			linkNameMap.Add(LinkType.Link4, "link4");
-			linkNameMap.Add(LinkType.Link5, "link5");
+			linkNameMap.Add(LinkType.Link1,       "link1");
+			linkNameMap.Add(LinkType.Link2,       "link2");
+			linkNameMap.Add(LinkType.Link3,       "link3");
+			linkNameMap.Add(LinkType.Link4,       "link4");
+			linkNameMap.Add(LinkType.Link5,       "link5");
 			linkNameMap.Add(LinkType.GripLink,    "grip_link");
 			linkNameMap.Add(LinkType.GripLinkSub, "grip_link_sub");
 		}
@@ -79,10 +79,10 @@ namespace SIGVerse.TurtleBot3
 			jointNameMap.Add(JointType.WheelRightJoint,"wheel_right_joint");
 
 			// Joints of Open-Manipulator
-			jointNameMap.Add(JointType.Joint1,"joint1"); 
-			jointNameMap.Add(JointType.Joint2,"joint2"); 
-			jointNameMap.Add(JointType.Joint3,"joint3"); 
-			jointNameMap.Add(JointType.Joint4,"joint4"); 
+			jointNameMap.Add(JointType.Joint1,      "joint1"); 
+			jointNameMap.Add(JointType.Joint2,      "joint2"); 
+			jointNameMap.Add(JointType.Joint3,      "joint3"); 
+			jointNameMap.Add(JointType.Joint4,      "joint4"); 
 			jointNameMap.Add(JointType.GripJoint,   "grip_joint");
 			jointNameMap.Add(JointType.GripJointSub,"grip_joint_sub");
 
@@ -94,12 +94,12 @@ namespace SIGVerse.TurtleBot3
 			jointInfoMap.Add(jointNameMap[JointType.WheelRightJoint], new TurtleBot3JointInfo(JointType.WheelRightJoint, LinkType.WheelRightLink, MovementType.Angular, MovementAxis.MinusY, -180.0f, +180.0f)); // rad=3.14
 
 			// Joints of Open-Manipulator
-			jointInfoMap.Add(jointNameMap[JointType.Joint1], new TurtleBot3JointInfo(JointType.Joint1, LinkType.Link2, MovementType.Angular, MovementAxis.MinusZ, -162.15f,  +162.15f)); // rad=2.83
-			jointInfoMap.Add(jointNameMap[JointType.Joint2], new TurtleBot3JointInfo(JointType.Joint2, LinkType.Link3, MovementType.Angular, MovementAxis.MinusY, -162.15f,  +162.15f)); // rad=2.83
-			jointInfoMap.Add(jointNameMap[JointType.Joint3], new TurtleBot3JointInfo(JointType.Joint3, LinkType.Link4, MovementType.Angular, MovementAxis.MinusY, -162.15f,  +162.15f)); // rad=2.83
-			jointInfoMap.Add(jointNameMap[JointType.Joint4], new TurtleBot3JointInfo(JointType.Joint4, LinkType.Link5, MovementType.Angular, MovementAxis.MinusY, -162.15f,  +162.15f)); // rad=2.83
-			jointInfoMap.Add(jointNameMap[JointType.GripJoint],    new TurtleBot3JointInfo(JointType.GripJoint,    LinkType.GripLink,    MovementType.Linear,  MovementAxis.MinusY, -  0.01f, +  0.04f));
-			jointInfoMap.Add(jointNameMap[JointType.GripJointSub], new TurtleBot3JointInfo(JointType.GripJointSub, LinkType.GripLinkSub, MovementType.Linear,  MovementAxis.PlusY,  -  0.01f, +  0.04f));
+			jointInfoMap.Add(jointNameMap[JointType.Joint1],       new TurtleBot3JointInfo(JointType.Joint1,       LinkType.Link2,       MovementType.Angular, MovementAxis.MinusZ, -162.15f, +162.15f)); // rad=2.83
+			jointInfoMap.Add(jointNameMap[JointType.Joint2],       new TurtleBot3JointInfo(JointType.Joint2,       LinkType.Link3,       MovementType.Angular, MovementAxis.MinusY, -110.00f, +110.00f)); // rad=1.92
+			jointInfoMap.Add(jointNameMap[JointType.Joint3],       new TurtleBot3JointInfo(JointType.Joint3,       LinkType.Link4,       MovementType.Angular, MovementAxis.MinusY, -162.15f, +162.15f)); // rad=2.83
+			jointInfoMap.Add(jointNameMap[JointType.Joint4],       new TurtleBot3JointInfo(JointType.Joint4,       LinkType.Link5,       MovementType.Angular, MovementAxis.MinusY, -162.15f, +162.15f)); // rad=2.83
+			jointInfoMap.Add(jointNameMap[JointType.GripJoint],    new TurtleBot3JointInfo(JointType.GripJoint,    LinkType.GripLink,    MovementType.Linear,  MovementAxis.MinusY, -  0.01f, +  0.035f));
+			jointInfoMap.Add(jointNameMap[JointType.GripJointSub], new TurtleBot3JointInfo(JointType.GripJointSub, LinkType.GripLinkSub, MovementType.Linear,  MovementAxis.PlusY,  -  0.01f, +  0.035f));
 		}
 
 		public static TurtleBot3JointInfo GetJointInfo(string name)
@@ -184,7 +184,14 @@ namespace SIGVerse.TurtleBot3
 
 		public static float GetClampedPosition(string name, float value)
 		{
-			return Mathf.Clamp(value, jointInfoMap[name].minVal, jointInfoMap[name].maxVal);
+			if (jointInfoMap[name].movementType == MovementType.Angular)
+			{
+				return Mathf.Clamp(value, jointInfoMap[name].minVal * Mathf.Deg2Rad, jointInfoMap[name].maxVal * Mathf.Deg2Rad);
+			}
+			else
+			{
+				return Mathf.Clamp(value, jointInfoMap[name].minVal, jointInfoMap[name].maxVal);
+			}
 		}
 
 		public static void UpdateJoint(string name, Transform transform, float val)
@@ -279,15 +286,15 @@ namespace SIGVerse.TurtleBot3
 			return GetCorrectedEulerAngle(value, minValue, maxValue, 0.0f);
 		}
 
-		public static Vector3 ConvertPositionRosToUnity(Vector3 position)
-		{
-			return new Vector3(-position.y, position.z, position.x);
-		}
+		//public static Vector3 ConvertPositionRosToUnity(Vector3 position)
+		//{
+		//	return new Vector3(-position.y, position.z, position.x);
+		//}
 
-		public static Vector3 ConvertPositionUnityToRos(Vector3 position)
-		{
-			return new Vector3(position.z, -position.x, position.y);
-		}
+		//public static Vector3 ConvertPositionUnityToRos(Vector3 position)
+		//{
+		//	return new Vector3(position.z, -position.x, position.y);
+		//}
 	}
 }
 

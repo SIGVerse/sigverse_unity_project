@@ -9,7 +9,7 @@ using SIGVerse.SIGVerseRosBridge;
 
 namespace SIGVerse.TurtleBot
 {
-	public class TurtleBotPubDepth : MonoBehaviour
+	public class TurtleBot2PubDepth : MonoBehaviour
 	{
 		public string rosbridgeIP;
 		public int sigverseBridgePort;

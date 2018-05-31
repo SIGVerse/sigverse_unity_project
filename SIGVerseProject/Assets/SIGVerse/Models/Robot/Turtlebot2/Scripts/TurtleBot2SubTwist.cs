@@ -5,7 +5,7 @@ using SIGVerse.Common;
 
 namespace SIGVerse.TurtleBot
 {
-	public class TurtleBotSubTwist : MonoBehaviour
+	public class TurtleBot2SubTwist : MonoBehaviour
 	{
 		public string rosbridgeIP;
 		public int    rosbridgePort;

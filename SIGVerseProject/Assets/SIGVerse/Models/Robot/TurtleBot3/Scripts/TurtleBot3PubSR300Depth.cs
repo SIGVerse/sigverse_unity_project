@@ -5,32 +5,27 @@ using SIGVerse.RosBridge.sensor_msgs;
 using SIGVerse.RosBridge.std_msgs;
 using SIGVerse.Common;
 using SIGVerse.SIGVerseRosBridge;
-
+using System.Threading;
+using SIGVerse.RosBridge;
 
 namespace SIGVerse.TurtleBot3
 {
 	public class TurtleBot3PubSR300Depth : MonoBehaviour
 	{
-		public string rosBridgeIP;
-		public int sigverseBridgePort;
-
-		public GameObject depthCameraObj;
-
-		public string topicNameCameraInfo = "/camera/depth/camera_info";
-		public string topicNameImage      = "/camera/depth/image_raw";
-
-		[TooltipAttribute("milliseconds")]
-		public float sendingInterval = 100;
-
 		//--------------------------------------------------
 
-		System.Net.Sockets.TcpClient tcpClient = null;
-		private System.Net.Sockets.NetworkStream networkStream = null;
+		private System.Net.Sockets.TcpClient tcpClientCameraInfo = null;
+		private System.Net.Sockets.TcpClient tcpClientImage      = null;
 
-		SIGVerseRosBridgeMessage<CameraInfoForSIGVerseBridge> cameraInfoMsg = null;
-		SIGVerseRosBridgeMessage<ImageForSIGVerseBridge> imageMsg = null;
+		private System.Net.Sockets.NetworkStream networkStreamCameraInfo = null;
+		private System.Net.Sockets.NetworkStream networkStreamImage      = null;
 
-		// Depth Camera
+		private SIGVerseRosBridgeMessage<CameraInfoForSIGVerseBridge> cameraInfoMsg = null;
+		private SIGVerseRosBridgeMessage<ImageForSIGVerseBridge>      imageMsg      = null;
+
+		private GameObject cameraFrameObj;
+
+		// Xtion
 		private Camera    depthCamera;
 		private Texture2D imageTexture;
 		byte[]  byteArray; 
@@ -42,31 +37,56 @@ namespace SIGVerse.TurtleBot3
 		private CameraInfoForSIGVerseBridge cameraInfoData;
 		private ImageForSIGVerseBridge imageData;
 
-		private float elapsedTime = 0.0f;
+		private float elapsedTime;
+
+		private bool isPublishingCameraInfo = false;
+		private bool isPublishingImage      = false;
+
+		private bool shouldSendMessage = false;
+
+		private bool isUsingThread;
 
 
-		void Start()
+		void Awake()
 		{
-			if (!ConfigManager.Instance.configInfo.rosbridgeIP.Equals(string.Empty))
+			this.cameraFrameObj = this.transform.parent.gameObject;
+		}
+
+		public void Initialize(string rosBridgeIP, int sigverseBridgePort, string topicNameCameraInfo, string topicNameImage, bool isUsingThread)
+		{
+			if(!RosConnectionManager.Instance.rosConnections.sigverseRosBridgeTcpClientMap.ContainsKey(topicNameCameraInfo))
 			{
-				this.rosBridgeIP        = ConfigManager.Instance.configInfo.rosbridgeIP;
+				this.tcpClientCameraInfo = SIGVerseRosBridgeConnection.GetConnection(rosBridgeIP, sigverseBridgePort);
+
+				RosConnectionManager.Instance.rosConnections.sigverseRosBridgeTcpClientMap.Add(topicNameCameraInfo, this.tcpClientCameraInfo);
 			}
-			if (this.sigverseBridgePort==0)
+			else
 			{
-				this.sigverseBridgePort = ConfigManager.Instance.configInfo.sigverseBridgePort;
+				this.tcpClientCameraInfo = RosConnectionManager.Instance.rosConnections.sigverseRosBridgeTcpClientMap[topicNameCameraInfo];
+			}
+			
+			if(!RosConnectionManager.Instance.rosConnections.sigverseRosBridgeTcpClientMap.ContainsKey(topicNameImage))
+			{
+				this.tcpClientImage = SIGVerseRosBridgeConnection.GetConnection(rosBridgeIP, sigverseBridgePort);
+
+				RosConnectionManager.Instance.rosConnections.sigverseRosBridgeTcpClientMap.Add(topicNameImage, this.tcpClientImage);
+			}
+			else
+			{
+				this.tcpClientImage = RosConnectionManager.Instance.rosConnections.sigverseRosBridgeTcpClientMap[topicNameImage];
 			}
 
+			this.networkStreamCameraInfo = this.tcpClientCameraInfo.GetStream();
+			this.networkStreamCameraInfo.ReadTimeout  = 100000;
+			this.networkStreamCameraInfo.WriteTimeout = 100000;
 
-			this.tcpClient = new System.Net.Sockets.TcpClient(rosBridgeIP, sigverseBridgePort);
-
-			this.networkStream = this.tcpClient.GetStream();
-
-			this.networkStream.ReadTimeout  = 100000;
-			this.networkStream.WriteTimeout = 100000;
+			this.networkStreamImage = this.tcpClientImage.GetStream();
+			this.networkStreamImage.ReadTimeout  = 100000;
+			this.networkStreamImage.WriteTimeout = 100000;
 
 
 			// Depth Camera
-			this.depthCamera = this.depthCameraObj.GetComponentInChildren<Camera>();
+			this.depthCamera = this.cameraFrameObj.GetComponentInChildren<Camera>();
 
 			int imageWidth  = this.depthCamera.targetTexture.width;
 			int imageHeight = this.depthCamera.targetTexture.height;
@@ -105,31 +125,60 @@ namespace SIGVerse.TurtleBot3
 
 			this.imageData = new ImageForSIGVerseBridge(null, (uint)imageHeight, (uint)imageWidth, encoding, isBigendian, step, null);
 
-			this.header = new Header(0, new SIGVerse.RosBridge.msg_helpers.Time(0, 0), this.depthCameraObj.name);
+			this.header = new Header(0, new SIGVerse.RosBridge.msg_helpers.Time(0, 0), this.cameraFrameObj.name);
 
+			this.cameraInfoMsg = new SIGVerseRosBridgeMessage<CameraInfoForSIGVerseBridge>("publish", topicNameCameraInfo, CameraInfoForSIGVerseBridge.GetMessageType(), this.cameraInfoData);
+			this.imageMsg      = new SIGVerseRosBridgeMessage<ImageForSIGVerseBridge>     ("publish", topicNameImage     , ImageForSIGVerseBridge.GetMessageType(),      this.imageData);
 
-			this.cameraInfoMsg = new SIGVerseRosBridgeMessage<CameraInfoForSIGVerseBridge>("publish", this.topicNameCameraInfo, CameraInfoForSIGVerseBridge.GetMessageType(), this.cameraInfoData);
-			this.imageMsg      = new SIGVerseRosBridgeMessage<ImageForSIGVerseBridge>     ("publish", this.topicNameImage     , ImageForSIGVerseBridge.GetMessageType(),      this.imageData);
+			this.isUsingThread = isUsingThread;
 		}
 
-		void OnDestroy()
+		//void OnDestroy()
+		//{
+		//	if (this.networkStreamCameraInfo != null) { this.networkStreamCameraInfo.Close(); }
+		//	if (this.networkStreamImage      != null) { this.networkStreamImage     .Close(); }
+
+		//	if (this.tcpClientCameraInfo != null) { this.tcpClientCameraInfo.Close(); }
+		//	if (this.tcpClientImage      != null) { this.tcpClientImage     .Close(); }
+		//}
+
+		public void SendMessageInThisFrame()
 		{
-			if (this.networkStream != null) { this.networkStream.Close(); }
-			if (this.tcpClient != null) { this.tcpClient.Close(); }
+			this.shouldSendMessage = true;
 		}
 
-		void Update()
+		public bool IsConnected()
 		{
-			this.elapsedTime += UnityEngine.Time.deltaTime;
+			return this.tcpClientCameraInfo.Connected && this.tcpClientImage.Connected && this.networkStreamCameraInfo != null && this.networkStreamImage != null;
+		}
 
-			if (this.elapsedTime < this.sendingInterval * 0.001)
+		public bool IsPublishing()
+		{
+			return this.isPublishingCameraInfo || this.isPublishingImage;
+		}
+
+		public void Close()
+		{
+			if (this.networkStreamCameraInfo != null) { this.networkStreamCameraInfo.Close(); }
+			if (this.networkStreamImage      != null) { this.networkStreamImage     .Close(); }
+
+			if (this.tcpClientCameraInfo != null) { this.tcpClientCameraInfo.Close(); }
+			if (this.tcpClientImage      != null) { this.tcpClientImage     .Close(); }
+		}
+
+
+		//void Update()
+		//{
+		//}
+
+		void OnPostRender()
+		{
+			if(this.shouldSendMessage)
 			{
-				return;
+				this.shouldSendMessage = false;
+
+				this.PubImage();
 			}
-
-			this.elapsedTime = 0.0f;
-
-			this.PubImage();
 		}
 
 
@@ -138,17 +187,20 @@ namespace SIGVerse.TurtleBot3
 //			System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 //			sw.Start();
 
+			this.isPublishingCameraInfo = true;
+			this.isPublishingImage      = true;
+
 			// Set a terget texture as a target of rendering
 			RenderTexture.active = this.depthCamera.targetTexture;
 
 			// Apply depth information to 2D texture
-			this.imageTexture.ReadPixels(new Rect(0, 0, this.imageTexture.width, this.imageTexture.height), 0, 0);
-
+			this.imageTexture.ReadPixels(new Rect(0, 0, this.imageTexture.width, this.imageTexture.height), 0, 0, false);
 			this.imageTexture.Apply();
 
 			// Convert pixel values to depth buffer for ROS message
 			byte[] depthBytes = this.imageTexture.GetRawTextureData();
 
+//			yield return null;
 
 			this.header.Update();
 
@@ -156,11 +208,17 @@ namespace SIGVerse.TurtleBot3
 			this.cameraInfoData.header = this.header;
 			this.cameraInfoMsg.msg = this.cameraInfoData;
 
-			this.cameraInfoMsg.SendMsg(this.networkStream);
+			if(this.isUsingThread)
+			{
+				Thread threadCameraInfo = new Thread(new ThreadStart(SendCameraInfo));
+				threadCameraInfo.Start();
+			}
+			else
+			{
+				this.SendCameraInfo();
+			}
 
-
-//			System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-//			sw.Start();
+//			yield return null;
 
 			// [camera/depth/Image_raw]
 			int textureWidth = this.imageTexture.width;
@@ -176,17 +234,37 @@ namespace SIGVerse.TurtleBot3
 				}
 			}
 
-//			sw.Stop();
-//			UnityEngine.Debug.Log("time="+sw.Elapsed);
+//			yield return null;
 
 			this.imageData.header = this.header;
 			this.imageData.data = this.byteArray;
 			this.imageMsg.msg = this.imageData;
 
-			this.imageMsg.SendMsg(this.networkStream);
+			if(this.isUsingThread)
+			{
+				Thread threadImage = new Thread(new ThreadStart(SendImage));
+				threadImage.Start();
+			}
+			else
+			{
+				this.SendImage();
+			}
 
 //			sw.Stop();
 //			UnityEngine.Debug.Log("time=" + sw.Elapsed);
+		}
+
+
+		private void SendCameraInfo()
+		{
+			this.cameraInfoMsg.SendMsg(this.networkStreamCameraInfo);
+			this.isPublishingCameraInfo = false;
+		}
+
+		private void SendImage()
+		{
+			this.imageMsg.SendMsg(this.networkStreamImage);
+			this.isPublishingImage = false;
 		}
 	}
 }

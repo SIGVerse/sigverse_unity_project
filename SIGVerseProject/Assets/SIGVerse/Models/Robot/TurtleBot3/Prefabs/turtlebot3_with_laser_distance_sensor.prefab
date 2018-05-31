@@ -68,7 +68,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4400812990569130}
-  - component: {fileID: 54672927775279020}
   m_Layer: 0
   m_Name: turtlebot3_with_laser_distance_sensor
   m_TagString: Untagged
@@ -118,8 +117,9 @@ GameObject:
   - component: {fileID: 4760287451597044}
   - component: {fileID: 20043032972273660}
   - component: {fileID: 114575333796504036}
+  - component: {fileID: 114652394103009192}
   m_Layer: 0
-  m_Name: camera
+  m_Name: RgbCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -167,8 +167,9 @@ GameObject:
   - component: {fileID: 4964567063669106}
   - component: {fileID: 20135432455333154}
   - component: {fileID: 114350241536962954}
+  - component: {fileID: 114684491223582700}
   m_Layer: 0
-  m_Name: camera
+  m_Name: DepthCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -231,6 +232,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4520925696829722}
+  - component: {fileID: 54077221212025550}
+  - component: {fileID: 114711796260484320}
   - component: {fileID: 65677948155752704}
   - component: {fileID: 65609950363083620}
   - component: {fileID: 65764625443582526}
@@ -253,10 +256,11 @@ GameObject:
   - component: {fileID: 4115508279222694}
   - component: {fileID: 114527016147514288}
   - component: {fileID: 114710388064102106}
+  - component: {fileID: 114999812901809730}
   - component: {fileID: 114381776901584592}
-  - component: {fileID: 114005723213282064}
-  - component: {fileID: 114620659844070786}
   - component: {fileID: 114022458377685146}
+  - component: {fileID: 114672665766357610}
+  - component: {fileID: 114906430615606938}
   m_Layer: 0
   m_Name: RosBridgeScripts
   m_TagString: Untagged
@@ -383,7 +387,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1188964434371536}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -391,7 +395,7 @@ Transform:
   - {fileID: 4115508279222694}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 90, z: 0}
 --- !u!4 &4507262048856626
 Transform:
   m_ObjectHideFlags: 1
@@ -457,14 +461,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1931442193992060}
-  m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4520925696829722}
   m_Father: {fileID: 4400812990569130}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -90, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4771320405052220
 Transform:
   m_ObjectHideFlags: 1
@@ -551,14 +555,14 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 1000
+  far clip plane: 100
   field of view: 43
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294967263
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 42f85cedb61c10a4a9f2f6648518c108, type: 2}
   m_TargetDisplay: 0
@@ -594,7 +598,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294967263
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 6010e083874088348b5b4a4476882ed6, type: 2}
   m_TargetDisplay: 0
@@ -748,7 +752,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1302965085820494}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -893,12 +897,12 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1758018637000948}
   m_Mesh: {fileID: 4300050, guid: 6bd958cc0ffcb9449a338928eaf1c917, type: 3}
---- !u!54 &54672927775279020
+--- !u!54 &54077221212025550
 Rigidbody:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1188964434371536}
+  m_GameObject: {fileID: 1844880897471100}
   serializedVersion: 2
   m_Mass: 2
   m_Drag: 0
@@ -906,7 +910,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 48
   m_CollisionDetection: 0
 --- !u!65 &65381296291659740
 BoxCollider:
@@ -968,23 +972,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.065, y: 0.0182, z: 0.065}
   m_Center: {x: 0, y: -0.144, z: 0.033}
---- !u!114 &114005723213282064
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1907902716027538}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a7610d51fd9e8f4390f13ab1932ea64, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rosBridgeIP: 
-  sigverseBridgePort: 0
-  rgbCameraObj: {fileID: 1055300372546984}
-  topicNameCameraInfo: /camera/rgb/camera_info
-  topicNameImage: /camera/rgb/image_raw
-  sendingInterval: 100
 --- !u!114 &114022458377685146
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1001,7 +988,10 @@ MonoBehaviour:
   topicName: /scan
   sendingInterval: 200
   sensorLink: {fileID: 4342497883069870}
-  showDebugRay: 0
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 4294967263
+  showDebugRay: 1
   debugRayColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &114350241536962954
 MonoBehaviour:
@@ -1057,7 +1047,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mat: {fileID: 2100000, guid: 2ff40c79d6710b848b022f93e106f783, type: 2}
---- !u!114 &114620659844070786
+--- !u!114 &114652394103009192
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1340395232423334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a7610d51fd9e8f4390f13ab1932ea64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114672665766357610
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -1065,15 +1066,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 1907902716027538}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d517020ded3249f4ea095c44a737bf45, type: 3}
+  m_Script: {fileID: 11500000, guid: eab35289c310802469e1ff68e7d2136a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rosBridgeIP: 
   sigverseBridgePort: 0
-  depthCameraObj: {fileID: 1796107482047736}
-  topicNameCameraInfo: /camera/depth/camera_info
-  topicNameImage: /camera/depth/image_raw
+  publisher: {fileID: 114652394103009192}
+  topicNameCameraInfo: /camera/rgb/camera_info
+  topicNameImage: /camera/rgb/image_raw
   sendingInterval: 100
+--- !u!114 &114684491223582700
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1755364557341854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d517020ded3249f4ea095c44a737bf45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114710388064102106
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1085,7 +1097,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f276cca5e9850b54db15f703b0fa3812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rosbridgeIP: 
-  rosbridgePort: 0
+  rosBridgeIP: 
+  rosBridgePort: 0
   topicName: /tb3/cmd_vel
-  baseFootprint: {fileID: 4520925696829722}
+--- !u!114 &114711796260484320
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1844880897471100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54f2d3b07b693a14283ac5b68852ed63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114906430615606938
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1907902716027538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f8e0dab649d8584fb45f23d9f546d24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rosBridgeIP: 
+  sigverseBridgePort: 0
+  publisher: {fileID: 114684491223582700}
+  topicNameCameraInfo: /camera/depth/camera_info
+  topicNameImage: /camera/depth/image_raw
+  sendingInterval: 100
+--- !u!114 &114999812901809730
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1907902716027538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60e9b0b4a4206a048a7d248f0fadd1c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useThread: 0

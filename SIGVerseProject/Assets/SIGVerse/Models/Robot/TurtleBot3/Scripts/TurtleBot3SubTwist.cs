@@ -5,63 +5,58 @@ using SIGVerse.Common;
 
 namespace SIGVerse.TurtleBot3
 {
-	public class TurtleBot3SubTwist : MonoBehaviour
+	public class TurtleBot3SubTwist : RosSubMessage<SIGVerse.RosBridge.geometry_msgs.Twist>
 	{
-		public string rosbridgeIP;
-		public int    rosbridgePort;
-
-		public string topicName;
-
-		public Transform baseFootprint;
+		private const float wheelInclinationThreshold = 0.985f; // 80[deg]
 
 		//--------------------------------------------------
-		float linearVelX;
-		float angularVelZ;
+		private Transform baseFootprint;
+		private Rigidbody baseRigidbody;
+
+		private float linearVelX;
+		private float angularVelZ;
 		
-		// ROS bridge
-		private RosBridgeWebSocketConnection webSocketConnection = null;
+		private bool isMoving = false;
 
-		void Start()
+		void Awake()
 		{
-			if (this.rosbridgeIP.Equals(string.Empty))
-			{
-				this.rosbridgeIP = ConfigManager.Instance.configInfo.rosbridgeIP;
-			}
-			if (this.rosbridgePort==0)
-			{
-				this.rosbridgePort = ConfigManager.Instance.configInfo.rosbridgePort;
-			}
+			this.baseFootprint = TurtleBot3Common.FindGameObjectFromChild(this.transform.root, TurtleBot3LinkInfo.LinkType.BaseFootprint);
 
-			this.webSocketConnection = new SIGVerse.RosBridge.RosBridgeWebSocketConnection(this.rosbridgeIP, this.rosbridgePort);
-
-			this.webSocketConnection.Subscribe<SIGVerse.RosBridge.geometry_msgs.Twist>(topicName, this.TwistCallback);
-
-			// Connect to ROSbridge server
-			this.webSocketConnection.Connect();
+			this.baseRigidbody = this.baseFootprint.GetComponent<Rigidbody>();
 		}
 
-		public void TwistCallback(SIGVerse.RosBridge.geometry_msgs.Twist twist)
+		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.geometry_msgs.Twist twist)
 		{
-			this.linearVelX  = (float)twist.linear.x;
-			this.angularVelZ = (float)twist.angular.z;
-		}
+			float linearVel = Mathf.Sqrt(Mathf.Pow(twist.linear.x, 2) + Mathf.Pow(twist.linear.y, 2));
 
-		void OnApplicationQuit()
-		{
-			if (this.webSocketConnection != null)
+			float linearVelClamped = Mathf.Clamp(linearVel, 0.0f, TurtleBot3Common.MaxSpeedBase);
+
+			if(linearVel >= 0.001)
 			{
-				this.webSocketConnection.Disconnect();
+				this.linearVelX  = twist.linear.x * linearVelClamped / linearVel;
 			}
+			else
+			{
+				this.linearVelX = 0.0f;
+			}
+
+			this.angularVelZ = Mathf.Sign(twist.angular.z) * Mathf.Clamp(Mathf.Abs(twist.angular.z), 0.0f, TurtleBot3Common.MaxSpeedBaseRad);
+
+//			Debug.Log("linearVel=" + linearVel + ", angularVel=" + angularVel);
+			this.isMoving = Mathf.Abs(this.linearVelX) >= 0.001f || Mathf.Abs(this.angularVelZ) >= 0.001f;
 		}
 
-		void Update()
+		void FixedUpdate()
 		{
-			UnityEngine.Vector3 robotLocalPosition = -this.baseFootprint.right * this.linearVelX * UnityEngine.Time.deltaTime;
+			if (Mathf.Abs(this.baseFootprint.forward.y) < wheelInclinationThreshold) { return; }
 
-			this.baseFootprint.position = this.baseFootprint.position + robotLocalPosition;
-			this.baseFootprint.Rotate(0.0f, 0.0f, -this.angularVelZ / Mathf.PI * 180 * UnityEngine.Time.deltaTime);
+			if (!this.isMoving) { return; }
 
-			this.webSocketConnection.Render();
+			UnityEngine.Vector3 deltaPosition = (-this.baseFootprint.right * linearVelX) * Time.fixedDeltaTime;
+			this.baseRigidbody.MovePosition(this.baseFootprint.position + deltaPosition);
+
+			Quaternion deltaRotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, -angularVelZ * Mathf.Rad2Deg * Time.fixedDeltaTime));
+			this.baseRigidbody.MoveRotation(this.baseRigidbody.rotation * deltaRotation);
 		}
 	}
 }

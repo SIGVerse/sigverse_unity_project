@@ -7,14 +7,8 @@ using JointType = SIGVerse.TurtleBot3.TurtleBot3JointInfo.JointType;
 
 namespace SIGVerse.TurtleBot3
 {
-	public class TurtleBot3SubJointTrajectory : MonoBehaviour, ITurtleBot3GraspedObjectHandler
+	public class TurtleBot3SubJointTrajectory : RosSubMessage<SIGVerse.RosBridge.trajectory_msgs.JointTrajectory>, ITurtleBot3GraspedObjectHandler
 	{
-		public string rosBridgeIP;
-		public int    rosBridgePort;
-
-		public string topicName;
-
-		//--------------------------------------------------
 		public class TrajectoryInfo
 		{
 			public float StartTime    { get; set; }
@@ -41,13 +35,9 @@ namespace SIGVerse.TurtleBot3
 		private Transform gripJointSubLink;
 
 		private Dictionary<string, TrajectoryInfo> trajectoryInfoMap;
+		private List<string> trajectoryKeyList;
 
 		private GameObject graspedObject;
-
-		// ROS bridge
-		private RosBridgeWebSocketConnection webSocketConnection = null;
-
-		private RosBridgeSubscriber<SIGVerse.RosBridge.trajectory_msgs.JointTrajectory> subscriber = null;
 
 		void Awake()
 		{
@@ -66,28 +56,20 @@ namespace SIGVerse.TurtleBot3
 			this.trajectoryInfoMap.Add(TurtleBot3Common.jointNameMap[JointType.Joint4], null);
 			this.trajectoryInfoMap.Add(TurtleBot3Common.jointNameMap[JointType.GripJoint   ], null);
 			this.trajectoryInfoMap.Add(TurtleBot3Common.jointNameMap[JointType.GripJointSub], null);
+
+			this.trajectoryKeyList = new List<string>(trajectoryInfoMap.Keys);
 		}
 
 
-		void Start()
+		protected override void Start()
 		{
-			if (!ConfigManager.Instance.configInfo.rosbridgeIP.Equals(string.Empty))
-			{
-				this.rosBridgeIP   = ConfigManager.Instance.configInfo.rosbridgeIP;
-				this.rosBridgePort = ConfigManager.Instance.configInfo.rosbridgePort;
-			}
+			base.Start();
 			
 			this.graspedObject = null;
-
-			this.webSocketConnection = new SIGVerse.RosBridge.RosBridgeWebSocketConnection(rosBridgeIP, rosBridgePort);
-
-			this.subscriber = this.webSocketConnection.Subscribe<SIGVerse.RosBridge.trajectory_msgs.JointTrajectory>(topicName, this.JointTrajectoryCallback);
-
-			// Connect to ROSbridge server
-			this.webSocketConnection.Connect();
 		}
 
-		public void JointTrajectoryCallback(SIGVerse.RosBridge.trajectory_msgs.JointTrajectory jointTrajectory)
+
+		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.trajectory_msgs.JointTrajectory jointTrajectory)
 		{
 			if(jointTrajectory.joint_names.Count != jointTrajectory.points[0].positions.Count)
 			{
@@ -101,7 +83,7 @@ namespace SIGVerse.TurtleBot3
 			{
 				string name    = jointTrajectory.joint_names[i];
 				float position = TurtleBot3Common.GetClampedPosition(name, (float)jointTrajectory.points[Zero].positions[i]);
-				float duration = (float)jointTrajectory.points[Zero].time_from_start.secs + (float)jointTrajectory.points[Zero].time_from_start.nsecs * 0.000000001f;
+				float duration = (float)jointTrajectory.points[Zero].time_from_start.secs + (float)jointTrajectory.points[Zero].time_from_start.nsecs * 1.0e-9f;
 
 				if(name == TurtleBot3Common.jointNameMap[JointType.Joint1])
 				{
@@ -135,61 +117,52 @@ namespace SIGVerse.TurtleBot3
 			}
 		}
 
-		void OnDestroy()
-		{
-			if (this.webSocketConnection != null)
-			{
-				this.webSocketConnection.Unsubscribe(this.subscriber);
 
-				this.webSocketConnection.Disconnect();
-			}
-		}
-
-		void Update()
+		protected override void Update()
 		{
-			foreach(string jointName in trajectoryInfoMap.Keys)
+			base.Update();
+
+			foreach(string jointName in this.trajectoryKeyList)
 			{
 				if (this.trajectoryInfoMap[jointName] != null)
 				{
-					TrajectoryInfo trajectoryInfo = this.trajectoryInfoMap[jointName];
-
 					if (jointName == TurtleBot3Common.jointNameMap[JointType.Joint1])
 					{
-						float newPos = TurtleBot3Common.GetCorrectedJointsEulerAngle(jointName, GetPositionAndUpdateTrajectory(ref trajectoryInfo, TurtleBot3Common.MinSpeedRad, TurtleBot3Common.MaxSpeedArm) * Mathf.Rad2Deg);
+						float newPos = TurtleBot3Common.GetCorrectedJointsEulerAngle(jointName, GetPositionAndUpdateTrajectory(this.trajectoryInfoMap, jointName, TurtleBot3Common.MinSpeedRad, TurtleBot3Common.MaxSpeedArm) * Mathf.Rad2Deg);
 						
 						this.joint1Link.localEulerAngles = new Vector3(this.joint1Link.localEulerAngles.x, this.joint1Link.localEulerAngles.y, newPos);
 					}
 
 					if (jointName == TurtleBot3Common.jointNameMap[JointType.Joint2])
 					{
-						float newPos = TurtleBot3Common.GetCorrectedJointsEulerAngle(jointName, GetPositionAndUpdateTrajectory(ref trajectoryInfo, TurtleBot3Common.MinSpeedRad, TurtleBot3Common.MaxSpeedArm) * Mathf.Rad2Deg);
+						float newPos = TurtleBot3Common.GetCorrectedJointsEulerAngle(jointName, GetPositionAndUpdateTrajectory(this.trajectoryInfoMap, jointName, TurtleBot3Common.MinSpeedRad, TurtleBot3Common.MaxSpeedArm) * Mathf.Rad2Deg);
 
 						this.joint2Link.localEulerAngles = new Vector3(this.joint2Link.localEulerAngles.x, newPos, this.joint2Link.localEulerAngles.z);
 					}
 
 					if (jointName == TurtleBot3Common.jointNameMap[JointType.Joint3])
 					{
-						float newPos = TurtleBot3Common.GetCorrectedJointsEulerAngle(jointName, GetPositionAndUpdateTrajectory(ref trajectoryInfo, TurtleBot3Common.MinSpeedRad, TurtleBot3Common.MaxSpeedArm) * Mathf.Rad2Deg);
+						float newPos = TurtleBot3Common.GetCorrectedJointsEulerAngle(jointName, GetPositionAndUpdateTrajectory(this.trajectoryInfoMap, jointName, TurtleBot3Common.MinSpeedRad, TurtleBot3Common.MaxSpeedArm) * Mathf.Rad2Deg);
 
 						this.joint3Link.localEulerAngles = new Vector3(this.joint3Link.localEulerAngles.x, newPos, this.joint3Link.localEulerAngles.z);
 					}
 
 					if (jointName == TurtleBot3Common.jointNameMap[JointType.Joint4])
 					{
-						float newPos = TurtleBot3Common.GetCorrectedJointsEulerAngle(jointName, GetPositionAndUpdateTrajectory(ref trajectoryInfo, TurtleBot3Common.MinSpeedRad, TurtleBot3Common.MaxSpeedArm) * Mathf.Rad2Deg);
+						float newPos = TurtleBot3Common.GetCorrectedJointsEulerAngle(jointName, GetPositionAndUpdateTrajectory(this.trajectoryInfoMap, jointName, TurtleBot3Common.MinSpeedRad, TurtleBot3Common.MaxSpeedArm) * Mathf.Rad2Deg);
 
 						this.joint4Link.localEulerAngles = new Vector3(this.joint4Link.localEulerAngles.x, newPos, this.joint4Link.localEulerAngles.z);
 					}
 
 					if (jointName == TurtleBot3Common.jointNameMap[JointType.GripJoint])
 					{
-						float newPos = GetPositionAndUpdateTrajectory(ref trajectoryInfo, TurtleBot3Common.MinSpeed, TurtleBot3Common.MaxSpeedHand);
+						float newPos = GetPositionAndUpdateTrajectory(this.trajectoryInfoMap, jointName, TurtleBot3Common.MinSpeed, TurtleBot3Common.MaxSpeedHand);
 
 						// Grasping and hand closing
 						if(this.graspedObject!=null && newPos < this.gripJointLink.localPosition.y)
 						{
 							// Have to stop
-							trajectoryInfo = null;
+							this.trajectoryInfoMap[jointName] = null;
 						}
 						// Otherwise
 						else
@@ -200,13 +173,13 @@ namespace SIGVerse.TurtleBot3
 
 					if (jointName == TurtleBot3Common.jointNameMap[JointType.GripJointSub])
 					{
-						float newPos = GetPositionAndUpdateTrajectory(ref trajectoryInfo, TurtleBot3Common.MinSpeed, TurtleBot3Common.MaxSpeedHand);
+						float newPos = GetPositionAndUpdateTrajectory(this.trajectoryInfoMap, jointName, TurtleBot3Common.MinSpeed, TurtleBot3Common.MaxSpeedHand);
 
 						// Grasping and hand closing
 						if(this.graspedObject!=null && newPos > this.gripJointSubLink.localPosition.y)
 						{
 							// Have to stop
-							trajectoryInfo = null;
+							this.trajectoryInfoMap[jointName] = null;
 						}
 						// Otherwise
 						else
@@ -221,8 +194,10 @@ namespace SIGVerse.TurtleBot3
 		}
 
 
-		public static float GetPositionAndUpdateTrajectory(ref TrajectoryInfo trajectoryInfo, float minSpeed, float maxSpeed)
+		public static float GetPositionAndUpdateTrajectory(Dictionary<string, TrajectoryInfo> trajectoryInfoMap, string jointName, float minSpeed, float maxSpeed)
 		{
+			TrajectoryInfo trajectoryInfo = trajectoryInfoMap[jointName];
+
 			// Calculate move speed
 			float speed = 0.0f;
 
@@ -243,7 +218,7 @@ namespace SIGVerse.TurtleBot3
 			if (movingDistance > Mathf.Abs(trajectoryInfo.GoalPosition - trajectoryInfo.CurrentPosition))
 			{
 				newPosition = trajectoryInfo.GoalPosition;
-				trajectoryInfo = null;
+				trajectoryInfoMap[jointName] = null;
 			}
 			else
 			{

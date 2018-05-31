@@ -9,13 +9,8 @@ using JointType = SIGVerse.TurtleBot3.TurtleBot3JointInfo.JointType;
 
 namespace SIGVerse.TurtleBot3
 {
-	public class TurtleBot3PubJointState : MonoBehaviour
+	public class TurtleBot3PubJointState : RosPubMessage<JointState>
 	{
-		public string rosBridgeIP;
-		public int rosBridgePort;
-
-		public string topicName;
-
 		[TooltipAttribute("milliseconds")]
 		public float sendingInterval = 100;
 
@@ -28,11 +23,6 @@ namespace SIGVerse.TurtleBot3
 		private Transform gripJointSubLink;
 
 		private JointState jointState;
-
-		// ROS bridge
-		private RosBridgeWebSocketConnection webSocketConnection = null;
-
-		private RosBridgePublisher<JointState> jointStatePublisher;
 
 		private float elapsedTime;
 
@@ -48,20 +38,9 @@ namespace SIGVerse.TurtleBot3
 			this.gripJointSubLink = TurtleBot3Common.FindGameObjectFromChild(this.transform.root, JointType.GripJointSub);
 		}
 
-		void Start()
+		protected override void Start()
 		{
-			if (!ConfigManager.Instance.configInfo.rosbridgeIP.Equals(string.Empty))
-			{
-				this.rosBridgeIP   = ConfigManager.Instance.configInfo.rosbridgeIP;
-				this.rosBridgePort = ConfigManager.Instance.configInfo.rosbridgePort;
-			}
-			
-			this.webSocketConnection = new SIGVerse.RosBridge.RosBridgeWebSocketConnection(rosBridgeIP, rosBridgePort);
-
-			this.jointStatePublisher = this.webSocketConnection.Advertise<JointState>(topicName);
-
-			// Connect to ROSbridge server
-			this.webSocketConnection.Connect();
+			base.Start();
 
 			this.jointState = new JointState();
 			this.jointState.header = new Header(0, new SIGVerse.RosBridge.msg_helpers.Time(0, 0), "tb3_omc_joint_state");
@@ -79,18 +58,10 @@ namespace SIGVerse.TurtleBot3
 			this.jointState.effort   = new List<double> { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		}
 
-		void OnDestroy()
+		protected override void Update()
 		{
-			if (this.webSocketConnection != null)
-			{
-				this.webSocketConnection.Unadvertise(this.jointStatePublisher);
+			base.Update();
 
-				this.webSocketConnection.Disconnect();
-			}
-		}
-
-		void Update()
-		{
 			this.elapsedTime += UnityEngine.Time.deltaTime;
 
 			if (this.elapsedTime < this.sendingInterval * 0.001)
@@ -110,10 +81,11 @@ namespace SIGVerse.TurtleBot3
 			positions.Add(-TurtleBot3Common.GetCorrectedJointsEulerAngle(TurtleBot3Common.jointNameMap[JointType.Joint3], this.joint3Link.localEulerAngles.y) * Mathf.Deg2Rad);
 			//4 joint4
 			positions.Add(-TurtleBot3Common.GetCorrectedJointsEulerAngle(TurtleBot3Common.jointNameMap[JointType.Joint4], this.joint4Link.localEulerAngles.y) * Mathf.Deg2Rad);
+			// TODO Have to check sensor data of a real turtlebot3 
 			//5 grip_joint
-			positions.Add(-this.gripJointLink.localEulerAngles.y * Mathf.Deg2Rad);
+			positions.Add(-this.gripJointLink.localPosition.y);
 			//6 grip_joint_sub
-			positions.Add(+this.gripJointSubLink.localEulerAngles.y * Mathf.Deg2Rad);
+			positions.Add(+this.gripJointSubLink.localPosition.y);
 
 //			Debug.Log("Pub JointState joint1="+positions[0]);
 			this.jointState.header.Update();
@@ -121,7 +93,7 @@ namespace SIGVerse.TurtleBot3
 
 //			float position = TurtleBot3Common.GetClampedPosition(value, name);
 
-			this.jointStatePublisher.Publish(this.jointState);
+			this.publisher.Publish(this.jointState);
 		}
 	}
 }

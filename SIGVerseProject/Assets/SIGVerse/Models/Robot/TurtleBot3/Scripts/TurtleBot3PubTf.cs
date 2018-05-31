@@ -1,20 +1,18 @@
 using UnityEngine;
 
 using System.Collections;
-using SIGVerse.RosBridge.sensor_msgs;
-using SIGVerse.RosBridge.std_msgs;
-using SIGVerse.Common;
 using SIGVerse.SIGVerseRosBridge;
 using SIGVerse.RosBridge.geometry_msgs;
 using System.Collections.Generic;
+using System.Threading;
+using SIGVerse.RosBridge;
 
 namespace SIGVerse.TurtleBot3
 {
-	public class TurtleBot3PubTf : MonoBehaviour
-	{
-		public string rosBridgeIP;
-		public int sigverseBridgePort;
+	[RequireComponent(typeof (TurtleBot3PubSynchronizer))]
 
+	public class TurtleBot3PubTf : SIGVerseRosBridgePubMessage
+	{
 		public string topicName = "/sigverse/TurtleBot3/tf";
 
 		[TooltipAttribute("milliseconds")]
@@ -51,6 +49,10 @@ namespace SIGVerse.TurtleBot3
 			}
 		}
 
+		private TurtleBot3PubSynchronizer synchronizer;
+
+		private int publishSequenceNumber;
+
 		private System.Net.Sockets.TcpClient tcpClient = null;
 		private System.Net.Sockets.NetworkStream networkStream = null;
 
@@ -59,6 +61,12 @@ namespace SIGVerse.TurtleBot3
 		private List<TfInfo> localTfInfoList = new List<TfInfo>();
 
 		private float elapsedTime = 0.0f;
+
+		private bool isPublishing = false;
+
+		private bool shouldSendMessage = false;
+
+		private bool isUsingThread;
 
 
 		void Awake()
@@ -75,52 +83,82 @@ namespace SIGVerse.TurtleBot3
 				TfInfo localTfInfo = new TfInfo(localLink, localTransformStamped);
 
 				this.localTfInfoList.Add(localTfInfo);
+
+				this.synchronizer = this.GetComponent<TurtleBot3PubSynchronizer>();
+
+				this.publishSequenceNumber = this.synchronizer.GetAssignedSequenceNumber();
+
+				this.isUsingThread = this.synchronizer.useThread;
 			}
 		}
 
-		void Start()
+		protected override void Start()
 		{
-			if (!ConfigManager.Instance.configInfo.rosbridgeIP.Equals(string.Empty))
+			base.Start();
+
+			if(!RosConnectionManager.Instance.rosConnections.sigverseRosBridgeTcpClientMap.ContainsKey(topicName))
 			{
-				this.rosBridgeIP        = ConfigManager.Instance.configInfo.rosbridgeIP;
-				this.sigverseBridgePort = ConfigManager.Instance.configInfo.sigverseBridgePort;
+				this.tcpClient = SIGVerseRosBridgeConnection.GetConnection(this.rosBridgeIP, this.sigverseBridgePort);
+
+				RosConnectionManager.Instance.rosConnections.sigverseRosBridgeTcpClientMap.Add(topicName, this.tcpClient);
 			}
-
-
-			this.tcpClient = new System.Net.Sockets.TcpClient(rosBridgeIP, sigverseBridgePort);
+			else
+			{
+				this.tcpClient = RosConnectionManager.Instance.rosConnections.sigverseRosBridgeTcpClientMap[topicName];
+			}
 
 			this.networkStream = this.tcpClient.GetStream();
 
 			this.networkStream.ReadTimeout  = 100000;
 			this.networkStream.WriteTimeout = 100000;
 
-
 			this.transformStampedMsg = new SIGVerseRosBridgeMessage<TransformStamped[]>("publish", this.topicName, "sigverse/TfList", null);
 		}
 
-		void OnDestroy()
-		{
-			if (this.networkStream != null) { this.networkStream.Close(); }
-			if (this.tcpClient     != null) { this.tcpClient.Close(); }
-		}
+		//void OnDestroy()
+		//{
+		//	if (this.networkStream != null) { this.networkStream.Close(); }
+		//	if (this.tcpClient     != null) { this.tcpClient.Close(); }
+		//}
 
 		void Update()
 		{
+			if(!this.IsConnected()) { return; }
+
 			this.elapsedTime += UnityEngine.Time.deltaTime;
 
-			if (this.elapsedTime < this.sendingInterval * 0.001)
+			if (this.isPublishing || this.elapsedTime < this.sendingInterval * 0.001f)
 			{
 				return;
 			}
 
+			if(!this.synchronizer.CanExecute(this.publishSequenceNumber)) { return; }
+
 			this.elapsedTime = 0.0f;
 
+			this.shouldSendMessage = true;
+		}
+
+		void LateUpdate()
+		{
+			if(this.shouldSendMessage)
+			{
+				this.shouldSendMessage = false;
+
+				this.PubTF();
+			}
+		}
+
+		private void PubTF()
+		{
 //			System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 //			sw.Start();
 
+			this.isPublishing = true;
+
 			TransformStamped[] transformStampedArray = new TransformStamped[localTfInfoList.Count];
 
-			// Add local tf infos
+			// Add local TF infos
 			for (int i=0; i<localTfInfoList.Count; i++)
 			{
 				localTfInfoList[i].UpdateTransformForLocal();
@@ -131,11 +169,43 @@ namespace SIGVerse.TurtleBot3
 			}
 
 			this.transformStampedMsg.msg = transformStampedArray;
-			
-			this.transformStampedMsg.SendMsg(this.networkStream);
+
+			if(this.isUsingThread)
+			{
+				Thread thread = new Thread(new ThreadStart(SendTF));
+				thread.Start();
+			}
+			else
+			{
+				this.SendTF();
+			}
 
 //			sw.Stop();
 //			Debug.Log("tf sending time="+sw.Elapsed);
+		}
+
+
+		private void SendTF()
+		{
+			this.transformStampedMsg.SendMsg(this.networkStream);
+			this.isPublishing = false;
+		}
+
+
+		public override bool IsConnected()
+		{
+			return this.networkStream !=null && this.tcpClient.Connected;
+		}
+
+		public override void Close()
+		{
+			if (this.networkStream != null) { this.networkStream.Close(); }
+			if (this.tcpClient     != null) { this.tcpClient.Close(); }
+		}
+
+		void OnApplicationQuit()
+		{
+			this.Close();
 		}
 	}
 }
