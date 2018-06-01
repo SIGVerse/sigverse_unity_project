@@ -38,7 +38,7 @@ namespace SIGVerse.TurtleBot3
 		private const float RangeMax       = 3.5f;
 		private const int   NumLines       = 360; // LaserAngle / AngleIncrement;
 
-		private const float LaserAngle     = 360;
+//		private const float LaserAngle     = 360;
 //		private const int   ScanRate       = 300; //[rpm]
 
 		private TurtleBot3PubSynchronizer synchronizer;
