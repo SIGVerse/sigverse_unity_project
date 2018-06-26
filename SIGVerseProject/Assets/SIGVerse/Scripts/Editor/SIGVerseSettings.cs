@@ -34,6 +34,7 @@ namespace SIGVerse.Common
 		private string rosbridgeIP;
 		private int    rosbridgePort;
 		private int    sigverseBridgePort;
+		private string logFileName;
 		private bool   useSigverseMenu;
 		private bool   isAutoStartWithMenu;
 		private bool   setUpRosTimestamp;
@@ -52,6 +53,7 @@ namespace SIGVerse.Common
 			this.rosbridgeIP         = configInfo.rosbridgeIP;
 			this.rosbridgePort       = configInfo.rosbridgePort;
 			this.sigverseBridgePort  = configInfo.sigverseBridgePort;
+			this.logFileName         = configInfo.logFileName;
 			this.useSigverseMenu     = configInfo.useSigverseMenu;
 			this.isAutoStartWithMenu = configInfo.isAutoStartWithMenu;
 			this.setUpRosTimestamp   = configInfo.setUpRosTimestamp;
@@ -100,9 +102,12 @@ namespace SIGVerse.Common
 
 			EditorGUI.BeginChangeCheck();
 
+
+
 			this.rosbridgeIP         = EditorGUILayout.TextField("Rosbridge IP",                       this.rosbridgeIP,        GUILayout.Width(EditorGUIUtility.labelWidth + 120));
 			this.rosbridgePort       = EditorGUILayout.IntField ("Rosbridge Port",                     this.rosbridgePort,      GUILayout.Width(EditorGUIUtility.labelWidth + 80));
 			this.sigverseBridgePort  = EditorGUILayout.IntField ("SIGVerse Bridge Port",               this.sigverseBridgePort, GUILayout.Width(EditorGUIUtility.labelWidth + 80));
+			this.logFileName         = EditorGUILayout.TextField("Log File Name",                      this.logFileName,        GUILayout.Width(EditorGUIUtility.labelWidth + 300));
 			this.useSigverseMenu     = EditorGUILayout.Toggle   ("Use SIGVerse menu",                  this.useSigverseMenu);
 			this.isAutoStartWithMenu = EditorGUILayout.Toggle   ("     (option)  Auto Start",          this.isAutoStartWithMenu);
 			this.setUpRosTimestamp   = EditorGUILayout.Toggle   ("Set up Time stamps of ROS message",  this.setUpRosTimestamp);
@@ -114,6 +119,7 @@ namespace SIGVerse.Common
 				configInfo.rosbridgeIP         = this.rosbridgeIP;
 				configInfo.rosbridgePort       = this.rosbridgePort;
 				configInfo.sigverseBridgePort  = this.sigverseBridgePort;
+				configInfo.logFileName         = this.logFileName;
 				configInfo.useSigverseMenu     = this.useSigverseMenu;
 				configInfo.isAutoStartWithMenu = this.isAutoStartWithMenu;
 				configInfo.setUpRosTimestamp   = this.setUpRosTimestamp;

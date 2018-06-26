@@ -27,9 +27,7 @@ namespace SIGVerse.Common
 	{
 		// Default logger information
 		private const string SIGVerseGroupName     = "SIGVerse";
-		private const string SIGVerseGroupFilePath = SIGVerseGroupName + ".log";
-
-		private const int LogInterval = 300; // [ms]
+		private const int    LogInterval = 300; // [ms]
 
 		public enum LogLevel
 		{
@@ -106,7 +104,7 @@ namespace SIGVerse.Common
 
 			SIGVerseLogger.isFinishing = false;
 
-			if (!AddLogGroup(SIGVerseGroupName, SIGVerseGroupFilePath)) { return; }
+			if (!AddLogGroup(SIGVerseGroupName, ConfigManager.Instance.configInfo.logFileName)) { return; }
 
 			Info("SIGVerseLogger Start");
 		}
@@ -133,13 +131,13 @@ namespace SIGVerse.Common
 			}
 			catch (Exception exception)
 			{
-				Debug.LogError("Cannot create " + logFilePath + ". Exception=" + exception.Message);
+				Debug.LogError("Cannot create directory. path=" + logFilePath + ". Exception=" + exception.Message);
 				return false;
 			}
 
 			try
 			{
-				LogGroup logGroup = new LogGroup(logFilePath);
+				LogGroup logGroup = new LogGroup(GetConvertedName(logFilePath));
 
 				SIGVerseLogger.logGroupMap.Add(logGroupName, logGroup);
 
@@ -155,6 +153,21 @@ namespace SIGVerse.Common
 				return false;
 			}
 			return true;
+		}
+
+		private static string GetConvertedName(string path)
+		{
+			string[] splitByOpen = path.Split(new char[]{'{' }, 2);
+
+			if (splitByOpen.Length < 2){ return path; }
+			
+			string[] splitByClose  = splitByOpen[1].Split(new char[]{'}' }, 2);
+
+			if(splitByClose.Length < 2){ return path; }
+
+			if(splitByClose[0]==string.Empty){ return path; }
+			
+			return splitByOpen[0] + DateTime.Now.ToString(splitByClose[0]) + splitByClose[1];
 		}
 
 

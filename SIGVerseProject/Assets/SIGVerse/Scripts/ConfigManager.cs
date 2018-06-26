@@ -85,6 +85,7 @@ namespace SIGVerse.Common
 		private const string DefaultRosbridgeIP         = "192.168.1.101";
 		private const int    DefaultRosbridgePort       = 9090;
 		private const int    DefaultSigverseBridgePort  = 50001;
+		private const string DefaultLogFileName         = "SIGVerse.log";
 		private const bool   DefaultUseSigverseMenu     = true;
 		private const bool   DefaultIsAutoStartWithMenu = true;
 		private const bool   DefaultSetUpRosTimestamp   = true;
@@ -93,6 +94,7 @@ namespace SIGVerse.Common
 		public string rosbridgeIP;
 		public int    rosbridgePort;
 		public int    sigverseBridgePort;
+		public string logFileName;
 		public bool   useSigverseMenu;
 		public bool   isAutoStartWithMenu;
 		public bool   setUpRosTimestamp;
@@ -102,6 +104,7 @@ namespace SIGVerse.Common
 			this.rosbridgeIP         = DefaultRosbridgeIP;
 			this.rosbridgePort       = DefaultRosbridgePort;
 			this.sigverseBridgePort  = DefaultSigverseBridgePort;
+			this.logFileName         = DefaultLogFileName;
 			this.useSigverseMenu     = DefaultUseSigverseMenu;
 			this.isAutoStartWithMenu = DefaultIsAutoStartWithMenu;
 			this.setUpRosTimestamp   = DefaultSetUpRosTimestamp;
