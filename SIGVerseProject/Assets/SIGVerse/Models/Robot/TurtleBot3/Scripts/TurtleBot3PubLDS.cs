@@ -41,6 +41,8 @@ namespace SIGVerse.TurtleBot3
 //		private const float LaserAngle     = 360;
 //		private const int   ScanRate       = 300; //[rpm]
 
+		private Transform sensorPivot;
+
 		private TurtleBot3PubSynchronizer synchronizer;
 
 		private int publishSequenceNumber;
@@ -73,6 +75,8 @@ namespace SIGVerse.TurtleBot3
 
 		void Awake()
 		{
+			this.sensorPivot = this.sensorLink.Find("LDS_sensor_pivot");
+
 			this.synchronizer = this.GetComponent<TurtleBot3PubSynchronizer>();
 
 			this.publishSequenceNumber = this.synchronizer.GetAssignedSequenceNumber();
@@ -166,12 +170,12 @@ namespace SIGVerse.TurtleBot3
 
 			for (int index = 0; index < NumLines; index++)
 			{
-				Vector3 ray = this.sensorLink.rotation * Quaternion.AngleAxis(-index * AngleIncrement, Vector3.forward) * -Vector3.right;
+				Vector3 ray = this.sensorPivot.rotation * Quaternion.AngleAxis(-index * AngleIncrement, Vector3.forward) * -Vector3.right;
 
 				float distance = 0.0f;
 				RaycastHit hit;
 
-				if (Physics.Raycast(this.sensorLink.position, ray, out hit, RangeMax, this.layerMask))
+				if (Physics.Raycast(this.sensorPivot.position, ray, out hit, RangeMax, this.layerMask))
 				{
 					distance = hit.distance;
 				}
@@ -181,7 +185,7 @@ namespace SIGVerse.TurtleBot3
 
 				if (this.showDebugRay)
 				{
-					Debug.DrawRay(this.sensorLink.position, ray * distance, this.debugRayColor);
+					Debug.DrawRay(this.sensorPivot.position, ray * distance, this.debugRayColor);
 				}
 			}
 

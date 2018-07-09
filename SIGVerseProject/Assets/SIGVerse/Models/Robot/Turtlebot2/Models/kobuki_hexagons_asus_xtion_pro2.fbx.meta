@@ -1,0 +1,393 @@
+fileFormatVersion: 2
+guid: c0a21f1a8762dff4e8e24b5b08b8aa4e
+timeCreated: 1530165708
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: base_footprint
+    100002: base_link
+    100004: camera_depth_frame
+    100006: camera_depth_optical_frame
+    100008: camera_link
+    100010: camera_rgb_frame
+    100012: camera_rgb_optical_frame
+    100014: caster_back_link
+    100016: caster_front_link
+    100018: cliff_sensor_front_link
+    100020: cliff_sensor_left_link
+    100022: cliff_sensor_right_link
+    100024: gyro_link
+    100026: //RootNode
+    100028: mount_asus_xtion_pro_link
+    100030: plate_bottom_link
+    100032: plate_middle_link
+    100034: plate_top_link
+    100036: pole_bottom_0_link
+    100038: pole_bottom_1_link
+    100040: pole_bottom_2_link
+    100042: pole_bottom_3_link
+    100044: pole_bottom_4_link
+    100046: pole_bottom_5_link
+    100048: pole_kinect_0_link
+    100050: pole_kinect_1_link
+    100052: pole_middle_0_link
+    100054: pole_middle_1_link
+    100056: pole_middle_2_link
+    100058: pole_middle_3_link
+    100060: pole_top_0_link
+    100062: pole_top_1_link
+    100064: pole_top_2_link
+    100066: pole_top_3_link
+    100068: wheel_left_link
+    100070: wheel_right_link
+    400000: base_footprint
+    400002: base_link
+    400004: camera_depth_frame
+    400006: camera_depth_optical_frame
+    400008: camera_link
+    400010: camera_rgb_frame
+    400012: camera_rgb_optical_frame
+    400014: caster_back_link
+    400016: caster_front_link
+    400018: cliff_sensor_front_link
+    400020: cliff_sensor_left_link
+    400022: cliff_sensor_right_link
+    400024: gyro_link
+    400026: //RootNode
+    400028: mount_asus_xtion_pro_link
+    400030: plate_bottom_link
+    400032: plate_middle_link
+    400034: plate_top_link
+    400036: pole_bottom_0_link
+    400038: pole_bottom_1_link
+    400040: pole_bottom_2_link
+    400042: pole_bottom_3_link
+    400044: pole_bottom_4_link
+    400046: pole_bottom_5_link
+    400048: pole_kinect_0_link
+    400050: pole_kinect_1_link
+    400052: pole_middle_0_link
+    400054: pole_middle_1_link
+    400056: pole_middle_2_link
+    400058: pole_middle_3_link
+    400060: pole_top_0_link
+    400062: pole_top_1_link
+    400064: pole_top_2_link
+    400066: pole_top_3_link
+    400068: wheel_left_link
+    400070: wheel_right_link
+    2100000: gkmodel0_base_link_geom0_mat_001
+    2100002: gkmodel0_wheel_right_link_geom0_mat_001
+    2100004: gkmodel0_wheel_left_link_geom0_mat_001
+    2100006: gkmodel0_pole_top_3_link_geom0_mat_001
+    2100008: gkmodel0_pole_top_2_link_geom0_mat_001
+    2100010: gkmodel0_pole_top_1_link_geom0_mat_001
+    2100012: gkmodel0_pole_top_0_link_geom0_mat_001
+    2100014: gkmodel0_pole_middle_3_link_geom0_mat_001
+    2100016: gkmodel0_pole_middle_2_link_geom0_mat_001
+    2100018: gkmodel0_pole_middle_1_link_geom0_mat_001
+    2100020: gkmodel0_pole_middle_0_link_geom0_mat_001
+    2100022: gkmodel0_pole_kinect_1_link_geom0_mat_001
+    2100024: gkmodel0_pole_kinect_0_link_geom0_mat_001
+    2100026: gkmodel0_pole_bottom_5_link_geom0_mat_001
+    2100028: gkmodel0_pole_bottom_4_link_geom0_mat_001
+    2100030: gkmodel0_pole_bottom_3_link_geom0_mat_001
+    2100032: gkmodel0_pole_bottom_2_link_geom0_mat_001
+    2100034: gkmodel0_pole_bottom_1_link_geom0_mat_001
+    2100036: gkmodel0_pole_bottom_0_link_geom0_mat_001
+    2100038: gkmodel0_plate_top_link_geom0_mat_001
+    2100040: gkmodel0_plate_middle_link_geom0_mat_001
+    2100042: gkmodel0_plate_bottom_link_geom0_mat_001
+    2100044: gkmodel0_mount_asus_xtion_pro_link_geom0_mat_001
+    2100046: gkmodel0_caster_front_link_geom0_mat_001
+    2100048: gkmodel0_caster_back_link_geom0_mat_001
+    2100050: gkmodel0_camera_link_geom0_mat_001
+    2300000: base_link
+    2300002: camera_link
+    2300004: caster_back_link
+    2300006: caster_front_link
+    2300008: mount_asus_xtion_pro_link
+    2300010: plate_bottom_link
+    2300012: plate_middle_link
+    2300014: plate_top_link
+    2300016: pole_bottom_0_link
+    2300018: pole_bottom_1_link
+    2300020: pole_bottom_2_link
+    2300022: pole_bottom_3_link
+    2300024: pole_bottom_4_link
+    2300026: pole_bottom_5_link
+    2300028: pole_kinect_0_link
+    2300030: pole_kinect_1_link
+    2300032: pole_middle_0_link
+    2300034: pole_middle_1_link
+    2300036: pole_middle_2_link
+    2300038: pole_middle_3_link
+    2300040: pole_top_0_link
+    2300042: pole_top_1_link
+    2300044: pole_top_2_link
+    2300046: pole_top_3_link
+    2300048: wheel_left_link
+    2300050: wheel_right_link
+    3300000: base_link
+    3300002: camera_link
+    3300004: caster_back_link
+    3300006: caster_front_link
+    3300008: mount_asus_xtion_pro_link
+    3300010: plate_bottom_link
+    3300012: plate_middle_link
+    3300014: plate_top_link
+    3300016: pole_bottom_0_link
+    3300018: pole_bottom_1_link
+    3300020: pole_bottom_2_link
+    3300022: pole_bottom_3_link
+    3300024: pole_bottom_4_link
+    3300026: pole_bottom_5_link
+    3300028: pole_kinect_0_link
+    3300030: pole_kinect_1_link
+    3300032: pole_middle_0_link
+    3300034: pole_middle_1_link
+    3300036: pole_middle_2_link
+    3300038: pole_middle_3_link
+    3300040: pole_top_0_link
+    3300042: pole_top_1_link
+    3300044: pole_top_2_link
+    3300046: pole_top_3_link
+    3300048: wheel_left_link
+    3300050: wheel_right_link
+    4300000: base_link
+    4300002: wheel_right_link
+    4300004: wheel_left_link
+    4300006: pole_top_3_link
+    4300008: pole_top_2_link
+    4300010: pole_top_1_link
+    4300012: pole_top_0_link
+    4300014: pole_middle_3_link
+    4300016: pole_middle_2_link
+    4300018: pole_middle_1_link
+    4300020: pole_middle_0_link
+    4300022: pole_kinect_1_link
+    4300024: pole_kinect_0_link
+    4300026: pole_bottom_5_link
+    4300028: pole_bottom_4_link
+    4300030: pole_bottom_3_link
+    4300032: pole_bottom_2_link
+    4300034: pole_bottom_1_link
+    4300036: pole_bottom_0_link
+    4300038: plate_top_link
+    4300040: plate_middle_link
+    4300042: plate_bottom_link
+    4300044: mount_asus_xtion_pro_link
+    4300046: caster_front_link
+    4300048: caster_back_link
+    4300050: camera_link
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_base_link_geom0_mat_001
+    second: {fileID: 2100000, guid: 55949309d67575345818dff4840c2286, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_camera_link_geom0_mat_001
+    second: {fileID: 2100000, guid: c0d73aac724307446966108e23f6b9fb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_caster_back_link_geom0_mat_001
+    second: {fileID: 2100000, guid: a37f2faaccf013b48b149d479d02a3f2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_caster_front_link_geom0_mat_001
+    second: {fileID: 2100000, guid: 754faa193d2f93146a505b282bab37f1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_mount_asus_xtion_pro_link_geom0_mat_001
+    second: {fileID: 2100000, guid: 24ccebb883f5fbe4c817bd4196a2188c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_plate_bottom_link_geom0_mat_001
+    second: {fileID: 2100000, guid: 92e3bf026a446f947a64eede6ffa90dc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_plate_middle_link_geom0_mat_001
+    second: {fileID: 2100000, guid: 11584fa43788f8f43a6f3a5639d7205c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_plate_top_link_geom0_mat_001
+    second: {fileID: 2100000, guid: 07ddf13fdb31d9540ad755bb63fdefdc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_pole_bottom_0_link_geom0_mat_001
+    second: {fileID: 2100000, guid: f79ce764f78beed4d81ae4dd3adfa312, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_pole_bottom_1_link_geom0_mat_001
+    second: {fileID: 2100000, guid: 91ff709f14075094aacf194028527f69, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_pole_bottom_2_link_geom0_mat_001
+    second: {fileID: 2100000, guid: 068a4cb561207194e9a2eaa8ee3b4915, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_pole_bottom_3_link_geom0_mat_001
+    second: {fileID: 2100000, guid: 89421349ccdba7b42aa17a3cfff8188f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_pole_bottom_4_link_geom0_mat_001
+    second: {fileID: 2100000, guid: d3481040c88cdc8428152f8fcc48e5e2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_pole_bottom_5_link_geom0_mat_001
+    second: {fileID: 2100000, guid: 90b2eb487457c434fb60382e1fe35313, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_pole_kinect_0_link_geom0_mat_001
+    second: {fileID: 2100000, guid: 7ac6b163f43f91f458978d976dc8b18f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_pole_kinect_1_link_geom0_mat_001
+    second: {fileID: 2100000, guid: a303573015faeb349ae4c514ec3263fe, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_pole_middle_0_link_geom0_mat_001
+    second: {fileID: 2100000, guid: 17e66a3cb7e64fe47a937f2e29cfdc0e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_pole_middle_1_link_geom0_mat_001
+    second: {fileID: 2100000, guid: 663154cb17fd9c849b92bbf98fb1c7ea, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_pole_middle_2_link_geom0_mat_001
+    second: {fileID: 2100000, guid: 560c587f6b0f5da4abc7250d6931dc49, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_pole_middle_3_link_geom0_mat_001
+    second: {fileID: 2100000, guid: ee52fa2e344311546addc9f60b4b26ec, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_pole_top_0_link_geom0_mat_001
+    second: {fileID: 2100000, guid: 598301974276f9f4bb7da146136a2624, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_pole_top_1_link_geom0_mat_001
+    second: {fileID: 2100000, guid: 0c3fa1a239ed5054cb123971e2395677, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_pole_top_2_link_geom0_mat_001
+    second: {fileID: 2100000, guid: 4354942efd349404fb3def91ac8c3d0b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_pole_top_3_link_geom0_mat_001
+    second: {fileID: 2100000, guid: ff3b8a90a41c7d847a68141d2a56fbb9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_wheel_left_link_geom0_mat_001
+    second: {fileID: 2100000, guid: b3eb29b32af8bcd44b315da2ac96b93a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: gkmodel0_wheel_right_link_geom0_mat_001
+    second: {fileID: 2100000, guid: ec7a8b184958723409c63a5d50ff0abf, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

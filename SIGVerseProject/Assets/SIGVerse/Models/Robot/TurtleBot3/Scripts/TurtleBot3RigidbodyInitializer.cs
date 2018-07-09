@@ -10,7 +10,7 @@ namespace SIGVerse.TurtleBot3
 		{
 			Rigidbody bodyRigidbody = GetComponent<Rigidbody>();
 
-			bodyRigidbody.centerOfMass = new Vector3(0.0f, 0.0f, 0.05f);
+			bodyRigidbody.centerOfMass = new Vector3(0.03f, 0.0f, 0.03f);
 
 			bodyRigidbody.maxDepenetrationVelocity = 3.0f;
 		}
