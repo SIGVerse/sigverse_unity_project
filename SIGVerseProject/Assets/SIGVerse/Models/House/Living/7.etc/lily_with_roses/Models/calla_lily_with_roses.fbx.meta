@@ -1,29 +1,118 @@
 fileFormatVersion: 2
-guid: c367ab39a05ff0c43932b43c048312dd
-timeCreated: 1510902578
-licenseType: Free
+guid: 4bd1df89bbd45294b93cdef9503782f2
+timeCreated: 1531133039
+licenseType: Pro
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
-    100002: default
-    100004: default_MeshPart0
-    100006: default_MeshPart1
-    100008: default_MeshPart2
+    100002: jar_Cylinder
+    100004: leaf1_Circle.001
+    100006: leaf2_Circle
+    100008: rose1_Plane.015
+    100010: rose2_Plane.003
+    100012: rose3_Plane.005
+    100014: rose4_Plane.007
+    100016: rose_stem.001_Circle.007
+    100018: rose_stem2.001_Circle.006
+    100020: rose_stem2_Circle.003
+    100022: rose_stem3.001_Circle.008
+    100024: rose_stem3_Circle.004
+    100026: rose_stem4.001_Circle.009
+    100028: rose_stem4_Circle.005
+    100030: rose_stem_Circle.002
+    100032: spadix.001_Plane.004
+    100034: spadix_Plane.002
+    100036: stem.001_Plane
+    100038: stem_Plane.001
     400000: //RootNode
-    400002: default
-    400004: default_MeshPart0
-    400006: default_MeshPart1
-    400008: default_MeshPart2
-    2300000: default_MeshPart0
-    2300002: default_MeshPart1
-    2300004: default_MeshPart2
-    3300000: default_MeshPart0
-    3300002: default_MeshPart1
-    3300004: default_MeshPart2
-    4300000: default_MeshPart0
-    4300002: default_MeshPart1
-    4300004: default_MeshPart2
+    400002: jar_Cylinder
+    400004: leaf1_Circle.001
+    400006: leaf2_Circle
+    400008: rose1_Plane.015
+    400010: rose2_Plane.003
+    400012: rose3_Plane.005
+    400014: rose4_Plane.007
+    400016: rose_stem.001_Circle.007
+    400018: rose_stem2.001_Circle.006
+    400020: rose_stem2_Circle.003
+    400022: rose_stem3.001_Circle.008
+    400024: rose_stem3_Circle.004
+    400026: rose_stem4.001_Circle.009
+    400028: rose_stem4_Circle.005
+    400030: rose_stem_Circle.002
+    400032: spadix.001_Plane.004
+    400034: spadix_Plane.002
+    400036: stem.001_Plane
+    400038: stem_Plane.001
+    2100000: base
+    2100002: leaves.001_NONE
+    2100004: leaves.001
+    2100006: yellow_spadix
+    2100008: petalred_sideA
+    2100010: petalred_sideB
+    2100012: leaves
+    2100014: leaves_fils
+    2100016: leaves_highspec
+    2100018: ceramic
+    2100020: calla_lily_top
+    2300000: jar_Cylinder
+    2300002: leaf1_Circle.001
+    2300004: leaf2_Circle
+    2300006: rose1_Plane.015
+    2300008: rose2_Plane.003
+    2300010: rose3_Plane.005
+    2300012: rose4_Plane.007
+    2300014: rose_stem.001_Circle.007
+    2300016: rose_stem2.001_Circle.006
+    2300018: rose_stem2_Circle.003
+    2300020: rose_stem3.001_Circle.008
+    2300022: rose_stem3_Circle.004
+    2300024: rose_stem4.001_Circle.009
+    2300026: rose_stem4_Circle.005
+    2300028: rose_stem_Circle.002
+    2300030: spadix.001_Plane.004
+    2300032: spadix_Plane.002
+    2300034: stem.001_Plane
+    2300036: stem_Plane.001
+    3300000: jar_Cylinder
+    3300002: leaf1_Circle.001
+    3300004: leaf2_Circle
+    3300006: rose1_Plane.015
+    3300008: rose2_Plane.003
+    3300010: rose3_Plane.005
+    3300012: rose4_Plane.007
+    3300014: rose_stem.001_Circle.007
+    3300016: rose_stem2.001_Circle.006
+    3300018: rose_stem2_Circle.003
+    3300020: rose_stem3.001_Circle.008
+    3300022: rose_stem3_Circle.004
+    3300024: rose_stem4.001_Circle.009
+    3300026: rose_stem4_Circle.005
+    3300028: rose_stem_Circle.002
+    3300030: spadix.001_Plane.004
+    3300032: spadix_Plane.002
+    3300034: stem.001_Plane
+    3300036: stem_Plane.001
+    4300000: rose_stem4_Circle.005
+    4300002: rose_stem.001_Circle.007
+    4300004: rose_stem3.001_Circle.008
+    4300006: spadix_Plane.002
+    4300008: rose1_Plane.015
+    4300010: leaf1_Circle.001
+    4300012: jar_Cylinder
+    4300014: stem.001_Plane
+    4300016: rose_stem4.001_Circle.009
+    4300018: rose4_Plane.007
+    4300020: stem_Plane.001
+    4300022: rose_stem2_Circle.003
+    4300024: leaf2_Circle
+    4300026: rose2_Plane.003
+    4300028: spadix.001_Plane.004
+    4300030: rose3_Plane.005
+    4300032: rose_stem3_Circle.004
+    4300034: rose_stem_Circle.002
+    4300036: rose_stem2.001_Circle.006
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -110,9 +199,9 @@ ModelImporter:
   meshes:
     lODScreenPercentages: []
     globalScale: 0.1
-    meshCompression: 2
+    meshCompression: 0
     addColliders: 0
-    importVisibility: 0
+    importVisibility: 1
     importBlendShapes: 1
     importCameras: 0
     importLights: 0
@@ -123,12 +212,12 @@ ModelImporter:
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
-    indexFormat: 1
+    indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 1
+    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
