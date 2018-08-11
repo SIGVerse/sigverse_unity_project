@@ -47,7 +47,7 @@ namespace SIGVerse.Common
 		/// </summary>
 		/// <param name="subviewType">subview type</param>
 		/// <param name="subviewPositionNumber">0: buttom right, 1: buttom left</param>
-		void OnSetSubviewPosition(SubviewType subviewType, SubviewPositionType subviewPositionType, float offsetX, float offsetY);
+		void OnSetSubviewPosition(SubviewType subviewType, SubviewPositionType subviewPositionType, float offsetX, float offsetY, float sizeX, float sizeY);
 	}
 
 
@@ -57,6 +57,9 @@ namespace SIGVerse.Common
 		public const string ButtonTextOn  = "ON";
 
 		private const float DefaultPositionOffset = 15f;
+
+		private const float DefaultSizeX = 480;
+		private const float DefaultSizeY = 320;
 
 		private const int MaxCameraListUpdateInterval = 500;
 
@@ -448,7 +451,7 @@ namespace SIGVerse.Common
 			this.ChangeCamera(index, camera);
 		}
 
-		public void OnSetSubviewPosition(SubviewType subviewType, SubviewPositionType subviewPositionType, float offsetX, float offsetY)
+		public void OnSetSubviewPosition(SubviewType subviewType, SubviewPositionType subviewPositionType, float offsetX, float offsetY, float sizeX, float sizeY)
 		{
 			int index = (int)subviewType - 1;
 
@@ -456,6 +459,8 @@ namespace SIGVerse.Common
 
 			// Change subviews position
 			RectTransform rectTransform = this.subviewPanels[index].GetComponent<RectTransform>();
+
+			rectTransform.sizeDelta = new Vector2(sizeX, sizeY);
 
 			switch (subviewPositionType)
 			{
@@ -514,7 +519,7 @@ namespace SIGVerse.Common
 			}
 		}
 
-		public static void SetSubviewPosition(SubviewType subviewType, SubviewPositionType subviewPositionType, float offsetX, float offsetY)
+		public static void SetSubviewPosition(SubviewType subviewType, SubviewPositionType subviewPositionType, float offsetX, float offsetY, float sizeX, float sizeY)
 		{
 			SIGVerseMenu sigverseMenu = GameObject.FindObjectOfType<SIGVerseMenu>();
 
@@ -528,13 +533,18 @@ namespace SIGVerse.Common
 			(
 				target: sigverseMenu.gameObject,
 				eventData: null,
-				functor: (reciever, eventData) => reciever.OnSetSubviewPosition(subviewType, subviewPositionType, offsetX, offsetY)
+				functor: (reciever, eventData) => reciever.OnSetSubviewPosition(subviewType, subviewPositionType, offsetX, offsetY, sizeX, sizeY)
 			);
+		}
+
+		public static void SetSubviewPosition(SubviewType subviewType, SubviewPositionType subviewPositionType, float offsetX, float offsetY)
+		{
+			SetSubviewPosition(subviewType, subviewPositionType, offsetX, offsetY, DefaultSizeX, DefaultSizeY);
 		}
 
 		public static void SetSubviewPosition(SubviewType subviewType, SubviewPositionType subviewPositionType)
 		{
-			SetSubviewPosition(subviewType, subviewPositionType, DefaultPositionOffset, DefaultPositionOffset);
+			SetSubviewPosition(subviewType, subviewPositionType, DefaultPositionOffset, DefaultPositionOffset, DefaultSizeX, DefaultSizeY);
 		}
 	}
 }
