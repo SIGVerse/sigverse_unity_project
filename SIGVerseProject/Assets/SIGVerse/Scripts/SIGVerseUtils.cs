@@ -13,6 +13,8 @@ namespace SIGVerse.Common
 		public const string ConceptImageResourcePath  = "SIGVerse/Images/ConceptImageHeader";
 		public const string UnlitShaderResourcePath   = "SIGVerse/Shaders/UnlitShader";
 
+		private static bool hasInitializeRandom = false;
+
 
 		public static Vector3 CalcContactAveragePoint(Collision collision)
 		{
@@ -92,6 +94,27 @@ namespace SIGVerse.Common
 			}
 
 			return list.ToArray();
+		}
+
+		
+		/// <summary>
+		/// Generate a random number that follows the normal distribution using the Box-Muller's method. 
+		/// </summary>
+		public static float GetRandomNumberFollowingNormalDistribution(float sigma=1.0f, float mu=0.0f)
+		{
+			if(!hasInitializeRandom)
+			{
+				hasInitializeRandom = true;
+
+				Random.InitState(System.DateTime.Now.Millisecond);
+			}
+
+			float x = Random.value;
+			float y = Random.value;
+
+			while(x==0.0f){ x = Random.value; }
+
+			return (Mathf.Sqrt(-2.0f * Mathf.Log(x)) * Mathf.Cos(2.0f * Mathf.PI * y)) * sigma + mu;
 		}
 	}
 }
