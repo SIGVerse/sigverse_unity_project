@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Net.Sockets;
 using Newtonsoft.Json;
@@ -58,12 +58,15 @@ namespace SIGVerse.SIGVerseRosBridge
 				{
 					byte[] byteArray = new byte[256];
 
+					int numberOfBytesRead = 0;
+
 					if(networkStream.CanRead)
 					{
-						networkStream.Read(byteArray, 0, byteArray.Length);
+						numberOfBytesRead = networkStream.Read(byteArray, 0, byteArray.Length);
 					}
 
-					string message = System.Text.Encoding.UTF8.GetString(byteArray);
+					string message = System.Text.Encoding.UTF8.GetString(byteArray, 0, numberOfBytesRead);
+					
 					string[] messageArray  = message.Split(',');
 
 					if (messageArray.Length==3)

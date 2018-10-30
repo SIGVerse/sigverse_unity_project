@@ -12,6 +12,9 @@ namespace SIGVerse.Common
 		public const string WarningWindowResourcePath = "SIGVerse/Prefabs/WarningWindow";
 		public const string ConceptImageResourcePath  = "SIGVerse/Images/ConceptImageHeader";
 		public const string UnlitShaderResourcePath   = "SIGVerse/Shaders/UnlitShader";
+		public const string CollisionEffectPath       = "SIGVerse/Prefabs/CollisionEffect";
+		public const string CollisionAudioClip1Path   = "SIGVerse/Audio/collision1/collision1";
+		public const string CollisionAudioClip2Path   = "SIGVerse/Audio/collision2/collision2";
 
 		private static bool hasInitializeRandom = false;
 

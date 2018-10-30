@@ -72,6 +72,7 @@ GameObject:
   - component: {fileID: 4037316338157666}
   - component: {fileID: 33781426824264268}
   - component: {fileID: 23886809229473468}
+  - component: {fileID: 64238598345113410}
   m_Layer: 0
   m_Name: bal_oldali_lapok
   m_TagString: Untagged
@@ -104,6 +105,7 @@ GameObject:
   - component: {fileID: 4985826161428932}
   - component: {fileID: 33664991028459864}
   - component: {fileID: 23018137579783962}
+  - component: {fileID: 64425033244988718}
   m_Layer: 0
   m_Name: jobb_oldali_lapok
   m_TagString: Untagged
@@ -545,3 +547,31 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1201953386965022}
   m_Mesh: {fileID: 4300010, guid: 9bd2809ed3cdc194fbc0ae27f6b7ac8d, type: 3}
+--- !u!64 &64238598345113410
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1201953386965022}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300010, guid: 9bd2809ed3cdc194fbc0ae27f6b7ac8d, type: 3}
+--- !u!64 &64425033244988718
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1769707666492622}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300012, guid: 9bd2809ed3cdc194fbc0ae27f6b7ac8d, type: 3}
