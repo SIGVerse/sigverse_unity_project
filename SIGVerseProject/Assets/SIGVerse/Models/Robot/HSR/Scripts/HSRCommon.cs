@@ -8,14 +8,13 @@ namespace SIGVerse.ToyotaHSR
 {
 	public class HSRCommon
 	{
-		public const float MaxSpeedBase  = 0.22f; // [m/s]
-		public const float MaxSpeedBaseRad = 1.2f; // [rad/s] Roughly value. 
-		public const float MaxSpeedTorso = 0.15f; // [m/s]
-//		public const float MaxSpeedArm   = 1.1f / 0.6f; // [rad/s] Roughly value. Max speed of Hand is 1.1[m/s]. And a radius of the orbit is 0.6[m]=Hand length.
-		public const float MaxSpeedArm   = 1.2f;        // [rad/s] Roughly value. 
-		public const float MaxSpeedHead  = MaxSpeedArm; // [rad/s] Roughly value. 
+		public const float MaxSpeedBase    = 0.3f;  // [m/s]
+		public const float MaxSpeedBaseRad = 1.1f;  // [rad/s]
+		public const float MaxSpeedTorso   = 0.15f; // [m/s]
+		public const float MaxSpeedArm     = 1.0f;  // [rad/s] 
+		public const float MaxSpeedHead    = 1.0f;  // [rad/s] 
 		public const float MinSpeed    = 0.001f; // [m/s]
-		public const float MinSpeedRad = 0.01f; // [rad/s]
+		public const float MinSpeedRad = 0.01f;  // [rad/s]
 
 		// Link names
 		// TODO Want to change into Enum.
