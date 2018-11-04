@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using SIGVerse.Common;
-using SIGVerse.Competition;
 using UnityEngine.EventSystems;
 
 namespace SIGVerse.ToyotaHSR
