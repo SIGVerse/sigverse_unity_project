@@ -64,12 +64,14 @@ namespace SIGVerse.ToyotaHSR
 
 		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.trajectory_msgs.JointTrajectory jointTrajectory)
 		{
+            this.startPosition = this.baseFootprintRigidbody.position;
+            this.startRotation = this.baseFootprintRigidbody.rotation;
 
             if (jointTrajectory.joint_names.Count != jointTrajectory.points[0].positions.Count)
-			{
-				SIGVerseLogger.Warn("joint_names.Count != points.positions.Count  topicName = "+this.topicName);
-				return;
-			}else if(jointTrajectory.joint_names.Count != 3)
+            {
+                SIGVerseLogger.Warn("joint_names.Count != points.positions.Count  topicName = "+this.topicName);
+                return;
+            }else if(jointTrajectory.joint_names.Count != 3)
             {
                 SIGVerseLogger.Warn("joint_names.Count != 3");
                 return;
