@@ -27,11 +27,11 @@ namespace SIGVerse.ToyotaHSR
 				this.CurrentPosition = currentPosition;
 			}
 		}
-        		
+
+        private Transform baseFootprintRigidbody;
         private Transform baseFootprintPosNoise;
         private Transform baseFootprintRotNoise;
-        private Transform baseFootprintRigidbody;
-
+        
         private Dictionary<string, TrajectoryInfo> trajectoryInfoMap;
         private List<string> trajectoryKeyList;
 
@@ -39,6 +39,9 @@ namespace SIGVerse.ToyotaHSR
         private Quaternion initialRotation = new Quaternion();
         private Vector3 startPosition = new Vector3();
         private Quaternion startRotation = new Quaternion();
+
+        int targetPointIndex = 0;
+        float deltaTime = 0.0f;
 
 
         void Awake()
@@ -48,11 +51,11 @@ namespace SIGVerse.ToyotaHSR
             this.trajectoryInfoMap.Add(HSRCommon.OmniOdomYJointName, null);
             this.trajectoryInfoMap.Add(HSRCommon.OmniOdomTJointName, null);
 
+            this.baseFootprintRigidbody = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.BaseFootPrintRigidbodyName);
             this.baseFootprintPosNoise = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.BaseFootPrintPosNoiseName);
             this.baseFootprintRotNoise = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.BaseFootPrintRotNoiseName);
-            this.baseFootprintRigidbody = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.BaseFootPrintRigidbodyName);
-
-            this.initialPosition = this.baseFootprintRigidbody.position;//save initial position.
+            
+            this.initialPosition = this.baseFootprintRigidbody.position;
             this.initialRotation = this.baseFootprintRigidbody.rotation;
         }//Awake
 
@@ -67,11 +70,7 @@ namespace SIGVerse.ToyotaHSR
             this.startPosition = this.baseFootprintRigidbody.position;
             this.startRotation = this.baseFootprintRigidbody.rotation;
 
-            if (jointTrajectory.joint_names.Count != jointTrajectory.points[0].positions.Count)
-            {
-                SIGVerseLogger.Warn("joint_names.Count != points.positions.Count  topicName = "+this.topicName);
-                return;
-            }else if(jointTrajectory.joint_names.Count != 3)
+            if(jointTrajectory.joint_names.Count != 3)
             {
                 SIGVerseLogger.Warn("joint_names.Count != 3");
                 return;
@@ -103,7 +102,7 @@ namespace SIGVerse.ToyotaHSR
                 {
                     this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, 0.0f);
                 }
-            }
+            }//for
 
             if(trajectoryInfoMap[HSRCommon.OmniOdomXJointName] == null || trajectoryInfoMap[HSRCommon.OmniOdomYJointName] == null || trajectoryInfoMap[HSRCommon.OmniOdomTJointName] == null)
             {
@@ -150,7 +149,6 @@ namespace SIGVerse.ToyotaHSR
                     SIGVerseLogger.Warn("Omni trajectry args error. (exceed limit)");
                     return;
                 }
-                
             }//for
 
 
@@ -163,138 +161,124 @@ namespace SIGVerse.ToyotaHSR
             
             if (this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName] != null && this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName] != null && this.trajectoryInfoMap[HSRCommon.OmniOdomTJointName] != null)
             {
-                Vector3 NewPosition = new Vector3();
-                Vector3 NewNoisePos = new Vector3();
-                this.GetOmniXY_NewPosition(ref this.trajectoryInfoMap, ref NewPosition, ref NewNoisePos);
+                this.UpdateTargetPointIndex();
+                this.UpdateDeltaTime();
+                this.UpdateStartPsition();
 
-                this.baseFootprintRigidbody.position += NewPosition;
-                this.baseFootprintPosNoise.position += NewNoisePos;
+                if (this.deltaTime > 1 && (targetPointIndex + 1) == this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName].GoalPositions.Count)
+                {
+                    this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName] = null;
+                    this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName] = null;
+                    this.trajectoryInfoMap[HSRCommon.OmniOdomTJointName] = null;
+                    return;
+                }
 
-                Quaternion newRotation = new Quaternion();
-                Quaternion newNoiseRot = new Quaternion();
-                this.GetOmniT_NewRotation(ref this.trajectoryInfoMap, ref newRotation, ref newNoiseRot);
-                this.baseFootprintRigidbody.rotation = newRotation;
-                //this.baseFootprintRotNoise.rotation *= newNoiseRot;
+                this.UpdateOmniPosition();               
+                this.UpdateOmniRotation();
             }
 
         }//Update
 
 
-        private void GetOmniXY_NewPosition(ref Dictionary<string, TrajectoryInfo> trajectoryInfoMap, ref Vector3 Position, ref Vector3 NoisePos)
+        private void UpdateOmniPosition()
         {
-            TrajectoryInfo trajectoryInfo_x = trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
-            TrajectoryInfo trajectoryInfo_y = trajectoryInfoMap[HSRCommon.OmniOdomYJointName];
-
-
-            int targetPointIndex = 0; 
-            for (int i = 0; i < trajectoryInfo_x.Durations.Count; i++)//trajectryの対象ポイントを探査
-            {
-                targetPointIndex = i;
-                if (Time.time - trajectoryInfo_x.StartTime < trajectoryInfo_x.Durations[targetPointIndex]){ break; }
-            }
-
-            float delta_time;//時間進捗を0-1の時間にマッピング
-            if (targetPointIndex == 0)
-            {
-                delta_time = (Time.time - trajectoryInfo_x.StartTime) / (trajectoryInfo_x.Durations[targetPointIndex]);
-            }
-            else
-            {
-                delta_time = (Time.time - (trajectoryInfo_x.StartTime + trajectoryInfo_x.Durations[targetPointIndex - 1])) / (trajectoryInfo_x.Durations[targetPointIndex] - trajectoryInfo_x.Durations[targetPointIndex - 1]);
-                this.startPosition = new Vector3(trajectoryInfo_y.GoalPositions[targetPointIndex - 1] + this.initialPosition.x, 0, trajectoryInfo_x.GoalPositions[targetPointIndex - 1] + this.initialPosition.z);
-            }
-
-
-            Vector3 goalPosition = new Vector3();//temp xy goal point
-            goalPosition.x = trajectoryInfo_y.GoalPositions[targetPointIndex] + this.initialPosition.x;
-            goalPosition.z = trajectoryInfo_x.GoalPositions[targetPointIndex] + this.initialPosition.z;
-
-            if (delta_time > 1)
-            {
-                Position = (goalPosition - this.baseFootprintRigidbody.position);
-                if ((targetPointIndex + 1) == trajectoryInfo_x.GoalPositions.Count)
-                {
-                    trajectoryInfoMap[HSRCommon.OmniOdomXJointName] = null;
-                    trajectoryInfoMap[HSRCommon.OmniOdomYJointName] = null;
-                }
-                return;
-            }
+            TrajectoryInfo trajectoryInfoX = this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
+            TrajectoryInfo trajectoryInfoY = this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName];
             
-            Position = Vector3.Slerp(this.startPosition, goalPosition, delta_time);//calc new position.
-            Position = (Position - this.baseFootprintRigidbody.position);
-            NoisePos.x = this.GetPosNoise(Position.x);
-            NoisePos.z = this.GetPosNoise(Position.z);
+            Vector3 goalPosition = new Vector3();
+            goalPosition.x = trajectoryInfoY.GoalPositions[targetPointIndex] + this.initialPosition.x;
+            goalPosition.z = trajectoryInfoX.GoalPositions[targetPointIndex] + this.initialPosition.z;
 
-            trajectoryInfoMap[HSRCommon.OmniOdomXJointName].CurrentPosition = Position.z;
-            trajectoryInfoMap[HSRCommon.OmniOdomYJointName].CurrentPosition = Position.x;
+            Vector3 slerpedPosition = Vector3.Slerp(this.startPosition, goalPosition, deltaTime);
+            Vector3 position = (slerpedPosition - this.baseFootprintRigidbody.position);
+            Vector3 noisePosition = new Vector3();
+            noisePosition.x = this.GetPosNoise(position.x);
+            noisePosition.z = this.GetPosNoise(position.z);
+
+            //update position
+            this.baseFootprintRigidbody.position += position;
+            this.baseFootprintPosNoise.position += noisePosition;
+            trajectoryInfoMap[HSRCommon.OmniOdomXJointName].CurrentPosition = position.z;
+            trajectoryInfoMap[HSRCommon.OmniOdomYJointName].CurrentPosition = position.x;
             trajectoryInfoMap[HSRCommon.OmniOdomXJointName].CurrentTime = Time.time;
             trajectoryInfoMap[HSRCommon.OmniOdomYJointName].CurrentTime = Time.time;
-
-            Debug.Log(Position.x);
-
-
+            
             return;
-        }//GetOmniXY_NewPosition
+        }//UpdateOmniPosition
 
 
-        private void GetOmniT_NewRotation(ref Dictionary<string, TrajectoryInfo> trajectoryInfoMap, ref Quaternion Rotation, ref Quaternion NoiseRot)
+        private void UpdateOmniRotation()
         {
-            TrajectoryInfo trajectoryInfo = trajectoryInfoMap[HSRCommon.OmniOdomTJointName];
+            TrajectoryInfo trajectoryInfo = this.trajectoryInfoMap[HSRCommon.OmniOdomTJointName];         
+            Quaternion goalRotation = Quaternion.Euler(new Vector3(this.initialRotation.eulerAngles.x, this.initialRotation.eulerAngles.y, this.ToAngle(trajectoryInfo.GoalPositions[this.targetPointIndex]) + this.initialRotation.eulerAngles.z));
+            Quaternion sleapedRotation = Quaternion.Slerp(this.startRotation, goalRotation, this.deltaTime);
+            float subAngleDeg = (sleapedRotation.eulerAngles.y - this.baseFootprintRigidbody.rotation.eulerAngles.y);
+            if (subAngleDeg > 180) { subAngleDeg -= 360; }
+            else if(subAngleDeg < -180) { subAngleDeg += 360; }
+                        
+            Quaternion Rotation = Quaternion.Euler(new Vector3(0, 0, subAngleDeg));
+            Quaternion NoiseRot = Quaternion.Euler(new Vector3(0, 0, this.GetRotNoise(subAngleDeg)));
 
-            int targetPointIndex = 0;
-            for (int i = 0; i < trajectoryInfo.Durations.Count; i++)//trajectryの対象ポイントを探査
-            {
-                targetPointIndex = i;
-                if (Time.time - trajectoryInfo.StartTime < trajectoryInfo.Durations[targetPointIndex]) { break; }
-            }
-
-
-            float delta_time;//時間進捗を0-1の時間にマッピング
-            if (targetPointIndex == 0)
-            {
-                delta_time = (Time.time - trajectoryInfo.StartTime) / (trajectoryInfo.Durations[targetPointIndex]);
-            }
-            else
-            {
-                delta_time = (Time.time - (trajectoryInfo.StartTime + trajectoryInfo.Durations[targetPointIndex - 1])) / (trajectoryInfo.Durations[targetPointIndex] - trajectoryInfo.Durations[targetPointIndex - 1]);
-                this.startRotation = Quaternion.Euler(new Vector3(this.initialRotation.eulerAngles.x, this.initialRotation.eulerAngles.y, this.ToAngle(trajectoryInfo.GoalPositions[targetPointIndex - 1]) + this.initialRotation.eulerAngles.z));
-            }
-
-
-            Quaternion goalRotation = new Quaternion();//temp rotation goal point
-            goalRotation = Quaternion.Euler(new Vector3(this.initialRotation.eulerAngles.x, this.initialRotation.eulerAngles.y, this.ToAngle(trajectoryInfo.GoalPositions[targetPointIndex]) + this.initialRotation.eulerAngles.z));
-
-            if (delta_time > 1)
-            {
-                Rotation = this.baseFootprintRigidbody.rotation;
-                if ((targetPointIndex + 1) == trajectoryInfoMap[HSRCommon.OmniOdomTJointName].GoalPositions.Count)
-                {
-                    trajectoryInfoMap[HSRCommon.OmniOdomTJointName] = null;
-                }
-                return;
-            }
-
-            Rotation = Quaternion.Slerp(this.startRotation, goalRotation, delta_time);//calc new rotation.
-
+            //update rotation.
+            this.baseFootprintRigidbody.rotation *= Rotation;
+            this.baseFootprintRotNoise.rotation *= NoiseRot;
             trajectoryInfoMap[HSRCommon.OmniOdomTJointName].CurrentTime = Time.time;
             trajectoryInfoMap[HSRCommon.OmniOdomTJointName].CurrentPosition = Rotation.eulerAngles.z;
             
             return;
-        }//GetOmniT_RotationAndUpdateTrajectory
-        
+        }//UpdateOmniRotation
+
+
+        private void UpdateTargetPointIndex()
+        {
+            TrajectoryInfo trajectoryInfo = this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
+            int tempIndex = 0;
+            for (int i = 0; i < trajectoryInfo.Durations.Count; i++)
+            {
+                tempIndex = i;
+                if (Time.time - trajectoryInfo.StartTime < trajectoryInfo.Durations[tempIndex]) { break; }
+            }
+            this.targetPointIndex = tempIndex;
+        }//GetTargetPointIndex
+
+
+        private void UpdateDeltaTime()
+        {
+            TrajectoryInfo trajectoryInfo = this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
+            if (this.targetPointIndex == 0)
+            {                
+                this.deltaTime = (Time.time - trajectoryInfo.StartTime) / (trajectoryInfo.Durations[this.targetPointIndex]);
+            }
+            else
+            {
+                this.deltaTime = (Time.time - (trajectoryInfo.StartTime + trajectoryInfo.Durations[this.targetPointIndex-1])) / (trajectoryInfo.Durations[this.targetPointIndex] - trajectoryInfo.Durations[this.targetPointIndex-1]);
+            }
+        }//GetDeltaTime
+
+
+        private void UpdateStartPsition()
+        {
+            if(this.targetPointIndex != 0)
+            {
+                TrajectoryInfo trajectoryInfoX = this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
+                TrajectoryInfo trajectoryInfoY = this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName];
+                TrajectoryInfo trajectoryInfoT = this.trajectoryInfoMap[HSRCommon.OmniOdomTJointName];
+                this.startPosition = new Vector3(trajectoryInfoY.GoalPositions[this.targetPointIndex-1] + this.initialPosition.x, 0, trajectoryInfoX.GoalPositions[this.targetPointIndex-1] + this.initialPosition.z);
+                this.startRotation = Quaternion.Euler(new Vector3(this.initialRotation.eulerAngles.x, this.initialRotation.eulerAngles.y, this.ToAngle(trajectoryInfoT.GoalPositions[this.targetPointIndex-1]) + this.initialRotation.eulerAngles.z));
+            }
+        }//UpdateStartPsition
+
 
         private float GetPosNoise(float val)
         {
-            float randomNumber = SIGVerseUtils.GetRandomNumberFollowingNormalDistribution(0.6f); // sigma=0.6
-
+            float randomNumber = SIGVerseUtils.GetRandomNumberFollowingNormalDistribution(0.6f);
             return val * Mathf.Clamp(randomNumber, -3.0f, +3.0f); // plus/minus 3.0 is sufficiently large.
         }
 
 
         private float GetRotNoise(float val)
         {
-            float randomNumber = SIGVerseUtils.GetRandomNumberFollowingNormalDistribution(0.3f); // sigma=0.3
-
+            float randomNumber = SIGVerseUtils.GetRandomNumberFollowingNormalDistribution(0.3f);
             return val * Mathf.Clamp(randomNumber, -3.0f, +3.0f); // plus/minus 3.0 is sufficiently large.
         }
 
