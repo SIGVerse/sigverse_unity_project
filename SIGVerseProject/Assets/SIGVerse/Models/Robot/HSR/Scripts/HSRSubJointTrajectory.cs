@@ -12,70 +12,71 @@ namespace SIGVerse.ToyotaHSR
 		public class TrajectoryInfo
 		{
 			public float StartTime    { get; set; }
-			public float Duration     { get; set; }
-			public float GoalPosition { get; set; }
+			public List<float> Durations { get; set; }
+			public List<float> GoalPositions { get; set; }
 			public float CurrentTime     { get; set; }
 			public float CurrentPosition { get; set; }
 
-			public TrajectoryInfo(float startTime, float duration, float goalPosition, float currentTime, float currentPosition)
+			public TrajectoryInfo(float startTime, List<float> duration, List<float> goalPosition, float currentTime, float currentPosition)
 			{
 				this.StartTime       = startTime;
-				this.Duration        = duration;
-				this.GoalPosition    = goalPosition;
+				this.Durations       = duration;
+				this.GoalPositions   = goalPosition;
 				this.CurrentTime     = currentTime;
 				this.CurrentPosition = currentPosition;
 			}
 		}
 
-		private Transform armLiftLink;
-		private Transform armFlexLink;
-		private Transform armRollLink;
-		private Transform wristFlexLink;
-		private Transform wristRollLink;
-		private Transform headPanLink;
-		private Transform headTiltLink;
-		private Transform torsoLiftLink;
-		private Transform handLProximalLink;
-		private Transform handRProximalLink;
+        private Transform armLiftLink;
+        private Transform armFlexLink;
+        private Transform armRollLink;
+        private Transform wristFlexLink;
+        private Transform wristRollLink;
+        private Transform headPanLink;
+        private Transform headTiltLink;
+        private Transform torsoLiftLink;
+        private Transform handLProximalLink;
+        private Transform handRProximalLink;
 
-		private float armLiftLinkIniPosZ;
-		private float torsoLiftLinkIniPosZ;
+        private float armLiftLinkIniPosZ;
+        private float torsoLiftLinkIniPosZ;
 
-		private Dictionary<string, TrajectoryInfo> trajectoryInfoMap;
-		private List<string> trajectoryKeyList;
+        private Dictionary<string, TrajectoryInfo> trajectoryInfoMap;
+        private List<string> trajectoryKeyList;
 
-		private GameObject graspedObject;
+        private GameObject graspedObject;
 
 
 		void Awake()
 		{
-			this.armLiftLink       = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.ArmLiftLinkName );
-			this.armFlexLink       = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.ArmFlexLinkName );
-			this.armRollLink       = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.ArmRollLinkName );
-			this.wristFlexLink     = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.WristFlexLinkName );
-			this.wristRollLink     = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.WristRollLinkName );
-			this.headPanLink       = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HeadPanLinkName );
-			this.headTiltLink      = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HeadTiltLinkName );
-			this.torsoLiftLink     = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.TorsoLiftLinkName );
-			this.handLProximalLink = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandLProximalLinkName );
-			this.handRProximalLink = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandRProximalLinkName );
+            this.armLiftLink       = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.ArmLiftLinkName );
+            this.armFlexLink       = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.ArmFlexLinkName );
+            this.armRollLink       = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.ArmRollLinkName );
+            this.wristFlexLink     = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.WristFlexLinkName );
+            this.wristRollLink     = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.WristRollLinkName );
+            this.headPanLink       = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HeadPanLinkName );
+            this.headTiltLink      = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HeadTiltLinkName );
+            this.torsoLiftLink     = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.TorsoLiftLinkName );
+            this.handLProximalLink = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandLProximalLinkName );
+            this.handRProximalLink = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandRProximalLinkName );
 
-			this.armLiftLinkIniPosZ   = this.armLiftLink.localPosition.z;
-			this.torsoLiftLinkIniPosZ = this.torsoLiftLink.localPosition.z;
+            this.armLiftLinkIniPosZ   = this.armLiftLink.localPosition.z;
+            this.torsoLiftLinkIniPosZ = this.torsoLiftLink.localPosition.z;
 
-			this.trajectoryInfoMap = new Dictionary<string, TrajectoryInfo>();
-			this.trajectoryInfoMap.Add(HSRCommon.ArmLiftJointName, null);
-			this.trajectoryInfoMap.Add(HSRCommon.ArmFlexJointName, null);
-			this.trajectoryInfoMap.Add(HSRCommon.ArmRollJointName, null);
-			this.trajectoryInfoMap.Add(HSRCommon.WristFlexJointName, null);
-			this.trajectoryInfoMap.Add(HSRCommon.WristRollJointName, null);
-			this.trajectoryInfoMap.Add(HSRCommon.HeadPanJointName, null);
-			this.trajectoryInfoMap.Add(HSRCommon.HeadTiltJointName, null);
-			this.trajectoryInfoMap.Add(HSRCommon.HandLProximalJointName, null);
-			this.trajectoryInfoMap.Add(HSRCommon.HandRProximalJointName, null);
+            this.trajectoryInfoMap = new Dictionary<string, TrajectoryInfo>();
+            this.trajectoryInfoMap.Add(HSRCommon.ArmLiftJointName, null);
+            this.trajectoryInfoMap.Add(HSRCommon.ArmFlexJointName, null);
+            this.trajectoryInfoMap.Add(HSRCommon.ArmRollJointName, null);
+            this.trajectoryInfoMap.Add(HSRCommon.WristFlexJointName, null);
+            this.trajectoryInfoMap.Add(HSRCommon.WristRollJointName, null);
+            this.trajectoryInfoMap.Add(HSRCommon.HeadPanJointName, null);
+            this.trajectoryInfoMap.Add(HSRCommon.HeadTiltJointName, null);
+            this.trajectoryInfoMap.Add(HSRCommon.HandLProximalJointName, null);
+            this.trajectoryInfoMap.Add(HSRCommon.HandRProximalJointName, null);
 
-			this.trajectoryKeyList = new List<string>(trajectoryInfoMap.Keys);
-		}
+
+            this.trajectoryKeyList = new List<string>(trajectoryInfoMap.Keys);
+        }
 
 
 		protected override void Start()
@@ -87,8 +88,6 @@ namespace SIGVerse.ToyotaHSR
 
 		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.trajectory_msgs.JointTrajectory jointTrajectory)
 		{
-			//List<string>  jointNames = jointTrajectory.joint_names;
-			//List<SIGVerse.ROSBridge.trajectory_msgs.JointTrajectoryPoint> points = jointTrajectory.points;
 
 			if(jointTrajectory.joint_names.Count != jointTrajectory.points[0].positions.Count)
 			{
@@ -96,62 +95,65 @@ namespace SIGVerse.ToyotaHSR
 				return;
 			}
 
-			const int Zero = 0;
-
 			for(int i=0; i < jointTrajectory.joint_names.Count; i++)
 			{
 				string name    = jointTrajectory.joint_names[i];
-				float position = HSRCommon.GetClampedPosition((float)jointTrajectory.points[Zero].positions[i], name);
-				float duration = (float)jointTrajectory.points[Zero].time_from_start.secs + (float)jointTrajectory.points[Zero].time_from_start.nsecs * 1.0e-9f;
 
-//				Debug.Log("Duration="+ duration);
+                List<float> positions = new List<float>();
+                List<float> durations = new List<float>();
+                for (int pointIndex = 0; pointIndex < jointTrajectory.points.Count; pointIndex++)
+                {
+                    positions.Add(HSRCommon.GetClampedPosition((float)jointTrajectory.points[pointIndex].positions[i], name));
+                    durations.Add((float)jointTrajectory.points[pointIndex].time_from_start.secs + (float)jointTrajectory.points[pointIndex].time_from_start.nsecs * 1.0e-9f);
+                }
+                                
 
-				if (name == HSRCommon.ArmLiftJointName)
+                if (name == HSRCommon.ArmLiftJointName)
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, duration, position, Time.time, this.armLiftLink.localPosition.z - this.armLiftLinkIniPosZ);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, this.armLiftLink.localPosition.z - this.armLiftLinkIniPosZ);
 				}
 
 				if(name == HSRCommon.ArmFlexJointName)
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, duration, position, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(this.armFlexLink.localEulerAngles.y, name) * Mathf.Deg2Rad);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(this.armFlexLink.localEulerAngles.y, name) * Mathf.Deg2Rad);
 				}
 
 				if (name == HSRCommon.ArmRollJointName)
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, duration, position, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(-this.armRollLink.localEulerAngles.z, name) * Mathf.Deg2Rad);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(-this.armRollLink.localEulerAngles.z, name) * Mathf.Deg2Rad);
 				}
 
 				if(name == HSRCommon.WristFlexJointName)
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, duration, position, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(this.wristFlexLink.localEulerAngles.y, name) * Mathf.Deg2Rad);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(this.wristFlexLink.localEulerAngles.y, name) * Mathf.Deg2Rad);
 				}
 
 				if(name == HSRCommon.WristRollJointName)
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, duration, position, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(-this.wristRollLink.localEulerAngles.z, name) * Mathf.Deg2Rad);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(-this.wristRollLink.localEulerAngles.z, name) * Mathf.Deg2Rad);
 				}
 
 				if(name == HSRCommon.HeadPanJointName)
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, duration, position, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(-this.headPanLink.localEulerAngles.z, name) * Mathf.Deg2Rad);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(-this.headPanLink.localEulerAngles.z, name) * Mathf.Deg2Rad);
 				}
 
 				if(name == HSRCommon.HeadTiltJointName)
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, duration, position, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(this.headTiltLink.localEulerAngles.y, name) * Mathf.Deg2Rad);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(this.headTiltLink.localEulerAngles.y, name) * Mathf.Deg2Rad);
 				}
-
 
 				if(name == HSRCommon.HandLProximalJointName)
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, duration, position, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(this.handLProximalLink.localEulerAngles.x, name) * Mathf.Deg2Rad);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(this.handLProximalLink.localEulerAngles.x, name) * Mathf.Deg2Rad);
 				}
 
 				if(name == HSRCommon.HandRProximalJointName)
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, duration, position, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(this.handRProximalLink.localEulerAngles.x, name) * Mathf.Deg2Rad);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(this.handRProximalLink.localEulerAngles.x, name) * Mathf.Deg2Rad);
 				}
-			}
+
+            }
 		}
 
 		protected override void Update()
@@ -206,7 +208,7 @@ namespace SIGVerse.ToyotaHSR
 					}
 
 					if (jointName == HSRCommon.HeadTiltJointName)
-					{
+                    {
 						float newPos = HSRCommon.GetCorrectedJointsEulerAngle(GetPositionAndUpdateTrajectory(this.trajectoryInfoMap, jointName, HSRCommon.MinSpeedRad, HSRCommon.MaxSpeedHead) * Mathf.Rad2Deg, jointName);
 
 						this.headTiltLink.localEulerAngles = new Vector3(this.headTiltLink.localEulerAngles.x, newPos, this.headTiltLink.localEulerAngles.z);
@@ -245,44 +247,55 @@ namespace SIGVerse.ToyotaHSR
 							this.handRProximalLink.localEulerAngles = new Vector3(newPos, this.handRProximalLink.localEulerAngles.y, this.handRProximalLink.localEulerAngles.z);
 						}
 					}
-				}
+                }
 			}
 		}
 
+        
 
-		private static float GetPositionAndUpdateTrajectory(Dictionary<string, TrajectoryInfo> trajectoryInfoMap, string jointName, float minSpeed, float maxSpeed)
+        private static float GetPositionAndUpdateTrajectory(Dictionary<string, TrajectoryInfo> trajectoryInfoMap, string jointName, float minSpeed, float maxSpeed)
 		{
 			TrajectoryInfo trajectoryInfo = trajectoryInfoMap[jointName];
 
 			// Calculate move speed
 			float speed = 0.0f;
 
-			if (trajectoryInfo.CurrentTime - trajectoryInfo.StartTime >= trajectoryInfo.Duration)
-			{
+            int targetPointIndex = 0;
+            // Select current trajectory target point 
+            for (int i = 0; i < trajectoryInfo.Durations.Count; i++)
+            {
+                targetPointIndex = i;
+                if (Time.time - trajectoryInfo.StartTime < trajectoryInfo.Durations[targetPointIndex])
+                {
+                    break;
+                }
+            }
+
+            if (trajectoryInfo.CurrentTime - trajectoryInfo.StartTime >= trajectoryInfo.Durations[targetPointIndex])
+            {
 				speed = maxSpeed;
 			}
 			else
 			{
-				speed = Mathf.Abs((trajectoryInfo.GoalPosition - trajectoryInfo.CurrentPosition) / (trajectoryInfo.Duration - (trajectoryInfo.CurrentTime - trajectoryInfo.StartTime)));
+				speed = Mathf.Abs((trajectoryInfo.GoalPositions[targetPointIndex] - trajectoryInfo.CurrentPosition) / (trajectoryInfo.Durations[targetPointIndex] - (trajectoryInfo.CurrentTime - trajectoryInfo.StartTime)));
 				speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
 			}
 
 			// Calculate position
 			float newPosition;
 			float movingDistance = speed * (Time.time - trajectoryInfo.CurrentTime);
+            
 
-//			Debug.Log("movingDistance="+ movingDistance);
-
-			if (movingDistance > Mathf.Abs(trajectoryInfo.GoalPosition - trajectoryInfo.CurrentPosition))
+			if (movingDistance > Mathf.Abs(trajectoryInfo.GoalPositions[targetPointIndex] - trajectoryInfo.CurrentPosition))
 			{
-				newPosition = trajectoryInfo.GoalPosition;
+				newPosition = trajectoryInfo.GoalPositions[targetPointIndex];
 				trajectoryInfoMap[jointName] = null;
 			}
 			else
 			{
 				trajectoryInfo.CurrentTime = Time.time;
 
-				if (trajectoryInfo.GoalPosition > trajectoryInfo.CurrentPosition)
+				if (trajectoryInfo.GoalPositions[targetPointIndex] > trajectoryInfo.CurrentPosition)
 				{
 					trajectoryInfo.CurrentPosition = trajectoryInfo.CurrentPosition + movingDistance;
 
@@ -295,8 +308,7 @@ namespace SIGVerse.ToyotaHSR
 					newPosition = trajectoryInfo.CurrentPosition;
 				}
 			}
-
-//			Debug.Log("newPosition="+ newPosition);
+            
 
 			return newPosition;
 		}
@@ -346,6 +358,6 @@ namespace SIGVerse.ToyotaHSR
 		{
 			this.graspedObject = graspedObject;
 		}
-	}
+    }
 }
 
