@@ -27,56 +27,56 @@ namespace SIGVerse.ToyotaHSR
 			}
 		}
 
-        private Transform armLiftLink;
-        private Transform armFlexLink;
-        private Transform armRollLink;
-        private Transform wristFlexLink;
-        private Transform wristRollLink;
-        private Transform headPanLink;
-        private Transform headTiltLink;
-        private Transform torsoLiftLink;
-        private Transform handLProximalLink;
-        private Transform handRProximalLink;
+		private Transform armLiftLink;
+		private Transform armFlexLink;
+		private Transform armRollLink;
+		private Transform wristFlexLink;
+		private Transform wristRollLink;
+		private Transform headPanLink;
+		private Transform headTiltLink;
+		private Transform torsoLiftLink;
+		private Transform handLProximalLink;
+		private Transform handRProximalLink;
 
-        private float armLiftLinkIniPosZ;
-        private float torsoLiftLinkIniPosZ;
+		private float armLiftLinkIniPosZ;
+		private float torsoLiftLinkIniPosZ;
 
-        private Dictionary<string, TrajectoryInfo> trajectoryInfoMap;
-        private List<string> trajectoryKeyList;
+		private Dictionary<string, TrajectoryInfo> trajectoryInfoMap;
+		private List<string> trajectoryKeyList;
 
-        private GameObject graspedObject;
+		private GameObject graspedObject;
 
 
 		void Awake()
 		{
-            this.armLiftLink       = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.ArmLiftLinkName );
-            this.armFlexLink       = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.ArmFlexLinkName );
-            this.armRollLink       = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.ArmRollLinkName );
-            this.wristFlexLink     = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.WristFlexLinkName );
-            this.wristRollLink     = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.WristRollLinkName );
-            this.headPanLink       = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HeadPanLinkName );
-            this.headTiltLink      = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HeadTiltLinkName );
-            this.torsoLiftLink     = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.TorsoLiftLinkName );
-            this.handLProximalLink = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandLProximalLinkName );
-            this.handRProximalLink = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandRProximalLinkName );
+			this.armLiftLink       = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.ArmLiftLinkName );
+			this.armFlexLink       = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.ArmFlexLinkName );
+			this.armRollLink       = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.ArmRollLinkName );
+			this.wristFlexLink     = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.WristFlexLinkName );
+			this.wristRollLink     = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.WristRollLinkName );
+			this.headPanLink       = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HeadPanLinkName );
+			this.headTiltLink      = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HeadTiltLinkName );
+			this.torsoLiftLink     = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.TorsoLiftLinkName );
+			this.handLProximalLink = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandLProximalLinkName );
+			this.handRProximalLink = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandRProximalLinkName );
 
-            this.armLiftLinkIniPosZ   = this.armLiftLink.localPosition.z;
-            this.torsoLiftLinkIniPosZ = this.torsoLiftLink.localPosition.z;
+			this.armLiftLinkIniPosZ   = this.armLiftLink.localPosition.z;
+			this.torsoLiftLinkIniPosZ = this.torsoLiftLink.localPosition.z;
 
-            this.trajectoryInfoMap = new Dictionary<string, TrajectoryInfo>();
-            this.trajectoryInfoMap.Add(HSRCommon.ArmLiftJointName, null);
-            this.trajectoryInfoMap.Add(HSRCommon.ArmFlexJointName, null);
-            this.trajectoryInfoMap.Add(HSRCommon.ArmRollJointName, null);
-            this.trajectoryInfoMap.Add(HSRCommon.WristFlexJointName, null);
-            this.trajectoryInfoMap.Add(HSRCommon.WristRollJointName, null);
-            this.trajectoryInfoMap.Add(HSRCommon.HeadPanJointName, null);
-            this.trajectoryInfoMap.Add(HSRCommon.HeadTiltJointName, null);
-            this.trajectoryInfoMap.Add(HSRCommon.HandLProximalJointName, null);
-            this.trajectoryInfoMap.Add(HSRCommon.HandRProximalJointName, null);
+			this.trajectoryInfoMap = new Dictionary<string, TrajectoryInfo>();
+			this.trajectoryInfoMap.Add(HSRCommon.ArmLiftJointName, null);
+			this.trajectoryInfoMap.Add(HSRCommon.ArmFlexJointName, null);
+			this.trajectoryInfoMap.Add(HSRCommon.ArmRollJointName, null);
+			this.trajectoryInfoMap.Add(HSRCommon.WristFlexJointName, null);
+			this.trajectoryInfoMap.Add(HSRCommon.WristRollJointName, null);
+			this.trajectoryInfoMap.Add(HSRCommon.HeadPanJointName, null);
+			this.trajectoryInfoMap.Add(HSRCommon.HeadTiltJointName, null);
+			this.trajectoryInfoMap.Add(HSRCommon.HandLProximalJointName, null);
+			this.trajectoryInfoMap.Add(HSRCommon.HandRProximalJointName, null);
 
 
-            this.trajectoryKeyList = new List<string>(trajectoryInfoMap.Keys);
-        }
+			this.trajectoryKeyList = new List<string>(trajectoryInfoMap.Keys);
+		}
 
 
 		protected override void Start()
@@ -99,16 +99,16 @@ namespace SIGVerse.ToyotaHSR
 			{
 				string name    = jointTrajectory.joint_names[i];
 
-                List<float> positions = new List<float>();
-                List<float> durations = new List<float>();
-                for (int pointIndex = 0; pointIndex < jointTrajectory.points.Count; pointIndex++)
-                {
-                    positions.Add(HSRCommon.GetClampedPosition((float)jointTrajectory.points[pointIndex].positions[i], name));
-                    durations.Add((float)jointTrajectory.points[pointIndex].time_from_start.secs + (float)jointTrajectory.points[pointIndex].time_from_start.nsecs * 1.0e-9f);
-                }
-                                
+				List<float> positions = new List<float>();
+				List<float> durations = new List<float>();
+				for (int pointIndex = 0; pointIndex < jointTrajectory.points.Count; pointIndex++)
+				{
+					positions.Add(HSRCommon.GetClampedPosition((float)jointTrajectory.points[pointIndex].positions[i], name));
+					durations.Add((float)jointTrajectory.points[pointIndex].time_from_start.secs + (float)jointTrajectory.points[pointIndex].time_from_start.nsecs * 1.0e-9f);
+				}
+								
 
-                if (name == HSRCommon.ArmLiftJointName)
+				if (name == HSRCommon.ArmLiftJointName)
 				{
 					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, this.armLiftLink.localPosition.z - this.armLiftLinkIniPosZ);
 				}
@@ -153,7 +153,7 @@ namespace SIGVerse.ToyotaHSR
 					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(this.handRProximalLink.localEulerAngles.x, name) * Mathf.Deg2Rad);
 				}
 
-            }
+			}
 		}
 
 		protected override void Update()
@@ -208,7 +208,7 @@ namespace SIGVerse.ToyotaHSR
 					}
 
 					if (jointName == HSRCommon.HeadTiltJointName)
-                    {
+					{
 						float newPos = HSRCommon.GetCorrectedJointsEulerAngle(GetPositionAndUpdateTrajectory(this.trajectoryInfoMap, jointName, HSRCommon.MinSpeedRad, HSRCommon.MaxSpeedHead) * Mathf.Rad2Deg, jointName);
 
 						this.headTiltLink.localEulerAngles = new Vector3(this.headTiltLink.localEulerAngles.x, newPos, this.headTiltLink.localEulerAngles.z);
@@ -247,32 +247,32 @@ namespace SIGVerse.ToyotaHSR
 							this.handRProximalLink.localEulerAngles = new Vector3(newPos, this.handRProximalLink.localEulerAngles.y, this.handRProximalLink.localEulerAngles.z);
 						}
 					}
-                }
+				}
 			}
 		}
 
-        
+		
 
-        private static float GetPositionAndUpdateTrajectory(Dictionary<string, TrajectoryInfo> trajectoryInfoMap, string jointName, float minSpeed, float maxSpeed)
+		private static float GetPositionAndUpdateTrajectory(Dictionary<string, TrajectoryInfo> trajectoryInfoMap, string jointName, float minSpeed, float maxSpeed)
 		{
 			TrajectoryInfo trajectoryInfo = trajectoryInfoMap[jointName];
 
 			// Calculate move speed
 			float speed = 0.0f;
 
-            int targetPointIndex = 0;
-            // Select current trajectory target point 
-            for (int i = 0; i < trajectoryInfo.Durations.Count; i++)
-            {
-                targetPointIndex = i;
-                if (Time.time - trajectoryInfo.StartTime < trajectoryInfo.Durations[targetPointIndex])
-                {
-                    break;
-                }
-            }
+			int targetPointIndex = 0;
+			// Select current trajectory target point 
+			for (int i = 0; i < trajectoryInfo.Durations.Count; i++)
+			{
+				targetPointIndex = i;
+				if (Time.time - trajectoryInfo.StartTime < trajectoryInfo.Durations[targetPointIndex])
+				{
+					break;
+				}
+			}
 
-            if (trajectoryInfo.CurrentTime - trajectoryInfo.StartTime >= trajectoryInfo.Durations[targetPointIndex])
-            {
+			if (trajectoryInfo.CurrentTime - trajectoryInfo.StartTime >= trajectoryInfo.Durations[targetPointIndex])
+			{
 				speed = maxSpeed;
 			}
 			else
@@ -284,7 +284,7 @@ namespace SIGVerse.ToyotaHSR
 			// Calculate position
 			float newPosition;
 			float movingDistance = speed * (Time.time - trajectoryInfo.CurrentTime);
-            
+			
 
 			if (movingDistance > Mathf.Abs(trajectoryInfo.GoalPositions[targetPointIndex] - trajectoryInfo.CurrentPosition))
 			{
@@ -308,7 +308,7 @@ namespace SIGVerse.ToyotaHSR
 					newPosition = trajectoryInfo.CurrentPosition;
 				}
 			}
-            
+			
 
 			return newPosition;
 		}
@@ -358,6 +358,6 @@ namespace SIGVerse.ToyotaHSR
 		{
 			this.graspedObject = graspedObject;
 		}
-    }
+	}
 }
 
