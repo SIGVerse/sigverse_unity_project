@@ -97,6 +97,7 @@ namespace SIGVerse.ToyotaHSR
 		public const string HandRProximalJointName       = "hand_r_proximal_joint";
 		public const string HandLSpringProximalJointName = "hand_l_spring_proximal_joint";
 		public const string HandRSpringProximalJointName = "hand_r_spring_proximal_joint";
+        public const string HandMotorJointName           = "hand_motor_joint";
         public const string OmniOdomXJointName           = "odom_x";
         public const string OmniOdomYJointName           = "odom_y";
         public const string OmniOdomTJointName           = "odom_t";
