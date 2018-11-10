@@ -198,7 +198,7 @@ namespace SIGVerse.ToyotaHSR
         private bool CheckTrajectryMsg(ref SIGVerse.RosBridge.trajectory_msgs.JointTrajectory msg)
         {
             
-            if(msg.joint_names.Count == 3)//Omni
+            if(msg.joint_names.Count == 3 && msg.joint_names.Count == msg.points[0].positions.Count)//Omni
             {
                 if (0 <= msg.joint_names.IndexOf(HSRCommon.OmniOdomXJointName) && 0 <= msg.joint_names.IndexOf(HSRCommon.OmniOdomYJointName) && 0 <= msg.joint_names.IndexOf(HSRCommon.OmniOdomTJointName))
                 {
