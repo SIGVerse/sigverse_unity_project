@@ -13,8 +13,8 @@ namespace SIGVerse.ToyotaHSR
 		public const float MaxSpeedTorso   = 0.15f; // [m/s]
 		public const float MaxSpeedArm     = 1.0f;  // [rad/s] 
 		public const float MaxSpeedHead    = 1.0f;  // [rad/s]
-        public const float MaxSpeedHand    = 6.0f;  // [rad/s] 
-        public const float MinSpeed        = 0.001f;// [m/s]
+		public const float MaxSpeedHand    = 6.0f;  // [rad/s] 
+		public const float MinSpeed        = 0.001f;// [m/s]
 		public const float MinSpeedRad     = 0.01f; // [rad/s]
 
 		// Link names
@@ -98,12 +98,12 @@ namespace SIGVerse.ToyotaHSR
 		public const string HandRProximalJointName       = "hand_r_proximal_joint";
 		public const string HandLSpringProximalJointName = "hand_l_spring_proximal_joint";
 		public const string HandRSpringProximalJointName = "hand_r_spring_proximal_joint";
-        public const string HandMotorJointName           = "hand_motor_joint";
-        public const string OmniOdomXJointName           = "odom_x";
-        public const string OmniOdomYJointName           = "odom_y";
-        public const string OmniOdomTJointName           = "odom_t";
+		public const string HandMotorJointName           = "hand_motor_joint";
+		public const string OmniOdomXJointName           = "odom_x";
+		public const string OmniOdomYJointName           = "odom_y";
+		public const string OmniOdomTJointName           = "odom_t";
 
-        public static List<Transform> GetLinksInChildren(Transform root)
+		public static List<Transform> GetLinksInChildren(Transform root)
 		{
 			List<Transform> linkList = new List<Transform>();
 
@@ -174,7 +174,7 @@ namespace SIGVerse.ToyotaHSR
 			if (name == HSRCommon.WristRollJointName)     { return Mathf.Clamp(value, -1.919f, +3.665f); }
 			if (name == HSRCommon.HeadPanJointName)       { return Mathf.Clamp(value, -3.839f, +1.745f); }
 			if (name == HSRCommon.HeadTiltJointName)      { return Mathf.Clamp(value, -1.570f, +0.523f); }
-            if (name == HSRCommon.HandMotorJointName)     { return Mathf.Clamp(value, -0.1f, +1.24f); }
+			if (name == HSRCommon.HandMotorJointName)     { return Mathf.Clamp(value, -0.1f, +1.24f); }
 
 			return value;
 		}
@@ -187,7 +187,7 @@ namespace SIGVerse.ToyotaHSR
 			if (name == HSRCommon.WristRollJointName)     { value = GetCorrectedEulerAngle(value, -110f, 210f); }
 			if (name == HSRCommon.HeadPanJointName)       { value = GetCorrectedEulerAngle(value, -220f, 100f); }
 			if (name == HSRCommon.HeadTiltJointName)      { value = GetCorrectedEulerAngle(value, -90f,   30f); }
-            if (name == HSRCommon.HandMotorJointName)     { value = GetCorrectedEulerAngle(value, -5f,    71f); }
+			if (name == HSRCommon.HandMotorJointName)     { value = GetCorrectedEulerAngle(value, -5f,    71f); }
 			return value;
 		}
 
