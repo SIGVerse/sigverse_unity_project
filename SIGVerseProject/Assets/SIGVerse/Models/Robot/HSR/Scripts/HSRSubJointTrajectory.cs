@@ -99,7 +99,7 @@ namespace SIGVerse.ToyotaHSR
 			}
 
 			this.SetTrajectoryInfoMap(ref jointTrajectory);
-			if (this.IsNotExceedLimitSpeed() == false) { return; }
+			if (this.IsOverLimitSpeed() == true) { return; }
 
 		}//SubscribeMessageCallback
 
@@ -306,11 +306,11 @@ namespace SIGVerse.ToyotaHSR
 		}//SetTrajectoryInfoMap
 
 
-		private bool IsNotExceedLimitSpeed()
+		private bool IsOverLimitSpeed()
 		{
-			bool exceedArmSpeed = true;
-			bool exceedHandSpeed = true;
-			bool exceedHeadSpeed = true;
+			bool exceedArmSpeed = false;
+			bool exceedHandSpeed = false;
+			bool exceedHeadSpeed = false;
 
 			foreach (string jointName in this.trajectoryKeyList)
 			{
@@ -325,20 +325,20 @@ namespace SIGVerse.ToyotaHSR
 					double tempDurations = Math.Abs(trajectoryInfo.Durations[i] - trajectoryInfo.Durations[i-1]);
 					double tempSpeed = tempDistance / tempDurations;
 					
-					if (jointName == HSRCommon.ArmLiftJointName && tempSpeed > HSRCommon.MaxSpeedTorso) { exceedArmSpeed = false; }//arm
-					else if (jointName == HSRCommon.ArmFlexJointName && tempSpeed > HSRCommon.MaxSpeedArm) { exceedArmSpeed = false; }
-					else if (jointName == HSRCommon.ArmRollJointName && tempSpeed > HSRCommon.MaxSpeedArm) { exceedArmSpeed = false; }
-					else if (jointName == HSRCommon.WristFlexJointName && tempSpeed > HSRCommon.MaxSpeedArm) { exceedArmSpeed = false; }
-					else if (jointName == HSRCommon.WristRollJointName && tempSpeed > HSRCommon.MaxSpeedArm) { exceedArmSpeed = false; }
-					else if (jointName == HSRCommon.HeadPanJointName && tempSpeed > HSRCommon.MaxSpeedHead) { exceedHeadSpeed = false; }//head
-					else if (jointName == HSRCommon.HeadTiltJointName && tempSpeed > HSRCommon.MaxSpeedHead) { exceedHeadSpeed = false; }
-					else if (jointName == HSRCommon.HandMotorJointName && tempSpeed > HSRCommon.MaxSpeedHand) { exceedHandSpeed = false; }//gripper
+					if (jointName == HSRCommon.ArmLiftJointName && tempSpeed > HSRCommon.MaxSpeedTorso) { exceedArmSpeed = true; }//arm
+					else if (jointName == HSRCommon.ArmFlexJointName && tempSpeed > HSRCommon.MaxSpeedArm) { exceedArmSpeed = true; }
+					else if (jointName == HSRCommon.ArmRollJointName && tempSpeed > HSRCommon.MaxSpeedArm) { exceedArmSpeed = true; }
+					else if (jointName == HSRCommon.WristFlexJointName && tempSpeed > HSRCommon.MaxSpeedArm) { exceedArmSpeed = true; }
+					else if (jointName == HSRCommon.WristRollJointName && tempSpeed > HSRCommon.MaxSpeedArm) { exceedArmSpeed = true; }
+					else if (jointName == HSRCommon.HeadPanJointName && tempSpeed > HSRCommon.MaxSpeedHead) { exceedHeadSpeed = true; }//head
+					else if (jointName == HSRCommon.HeadTiltJointName && tempSpeed > HSRCommon.MaxSpeedHead) { exceedHeadSpeed = true; }
+					else if (jointName == HSRCommon.HandMotorJointName && tempSpeed > HSRCommon.MaxSpeedHand) { exceedHandSpeed = true; }//gripper
 				}//for
 				trajectoryInfo.GoalPositions.RemoveAt(0);
 				trajectoryInfo.Durations.RemoveAt(0);
 			}//for        
 
-			if(exceedArmSpeed == false)
+			if(exceedArmSpeed == true)
 			{
 				trajectoryInfoMap[HSRCommon.ArmLiftJointName] = null;
 				trajectoryInfoMap[HSRCommon.ArmFlexJointName] = null;
@@ -346,26 +346,26 @@ namespace SIGVerse.ToyotaHSR
 				trajectoryInfoMap[HSRCommon.WristFlexJointName] = null;
 				trajectoryInfoMap[HSRCommon.WristRollJointName] = null;
 			}
-			else if (exceedHeadSpeed == false)
+			else if (exceedHeadSpeed == true)
 			{
 				trajectoryInfoMap[HSRCommon.HeadPanJointName] = null;
 				trajectoryInfoMap[HSRCommon.HeadTiltJointName] = null;
 			}
-			else if (exceedHandSpeed == false)
+			else if (exceedHandSpeed == true)
 			{
 				trajectoryInfoMap[HSRCommon.HandMotorJointName] = null;
 			}
 			
-			if (exceedArmSpeed == false || exceedHandSpeed == false || exceedHeadSpeed == false)
+			if (exceedArmSpeed == true || exceedHandSpeed == true || exceedHeadSpeed == true)
 			{
 				SIGVerseLogger.Warn("Trajectry speed error. (" + this.topicName + ")");
-				return false;
+				return true;
 			}
-			return true;
-        }//IsNotExceedLimitSpeed
+			return false;
+		}//IsOverLimitSpeed
 
 
-        private int GetTargetPointIndex(ref TrajectoryInfo trajectoryInfo)
+		private int GetTargetPointIndex(ref TrajectoryInfo trajectoryInfo)
 		{
 			int targetPointIndex = 0;
 			for (int i = 0; i < trajectoryInfo.Durations.Count; i++)

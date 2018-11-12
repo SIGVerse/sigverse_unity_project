@@ -76,7 +76,7 @@ namespace SIGVerse.ToyotaHSR
 			}
 			
 			this.SetTrajectoryInfoMap(ref jointTrajectory);
-			if (this.IsNotExceedLimitSpeed() == false){ return; }
+			if (this.IsOverLimitSpeed() == true){ return; }
 
 		}//SubscribeMessageCallback
 
@@ -242,7 +242,7 @@ namespace SIGVerse.ToyotaHSR
 		}//SetTrajectoryInfoMap
 
 
-		private bool IsNotExceedLimitSpeed()
+		private bool IsOverLimitSpeed()
 		{
 			TrajectoryInfo trajectoryInfoX = this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
 			TrajectoryInfo trajectoryInfoY = this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName];
@@ -264,15 +264,15 @@ namespace SIGVerse.ToyotaHSR
 				if (temp_angle > Math.PI) { temp_angle -= (2 * Math.PI); }
 				double angular_speed = temp_angle / (trajectoryInfoT.Durations[i] - trajectoryInfoT.Durations[i-1]);
 				
-				if (linear_speed > HSRCommon.MaxSpeedBase || angular_speed > HSRCommon.MaxSpeedBaseRad)//exceed limit 
+				if (linear_speed > HSRCommon.MaxSpeedBase || angular_speed > HSRCommon.MaxSpeedBaseRad)
 				{
 					trajectoryInfoMap[HSRCommon.OmniOdomXJointName] = null;
 					trajectoryInfoMap[HSRCommon.OmniOdomYJointName] = null;
 					trajectoryInfoMap[HSRCommon.OmniOdomTJointName] = null;
 					SIGVerseLogger.Warn("Omni speed error. (linear_speed = " + linear_speed + ", angular_speed = " + angular_speed);
-					return false;
+					return true;
 				}
-			}//for
+			}
 
 			trajectoryInfoX.GoalPositions.RemoveAt(0);
 			trajectoryInfoY.GoalPositions.RemoveAt(0);
@@ -280,11 +280,11 @@ namespace SIGVerse.ToyotaHSR
 			trajectoryInfoX.Durations.RemoveAt(0);
 			trajectoryInfoY.Durations.RemoveAt(0);
 			trajectoryInfoT.Durations.RemoveAt(0);
-			return true;
-        }//IsNotExceedLimitSpeed
+			return false;
+		}//IsOverLimitSpeed
 
 
-        private float GetPosNoise(float val)
+		private float GetPosNoise(float val)
 		{
 			float randomNumber = SIGVerseUtils.GetRandomNumberFollowingNormalDistribution(0.6f);
 			return val * Mathf.Clamp(randomNumber, -3.0f, +3.0f); // plus/minus 3.0 is sufficiently large.
