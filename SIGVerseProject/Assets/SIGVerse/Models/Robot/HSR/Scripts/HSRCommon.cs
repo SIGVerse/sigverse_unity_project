@@ -12,9 +12,10 @@ namespace SIGVerse.ToyotaHSR
 		public const float MaxSpeedBaseRad = 1.1f;  // [rad/s]
 		public const float MaxSpeedTorso   = 0.15f; // [m/s]
 		public const float MaxSpeedArm     = 1.0f;  // [rad/s] 
-		public const float MaxSpeedHead    = 1.0f;  // [rad/s] 
-		public const float MinSpeed    = 0.001f; // [m/s]
-		public const float MinSpeedRad = 0.01f;  // [rad/s]
+		public const float MaxSpeedHead    = 1.0f;  // [rad/s]
+        public const float MaxSpeedHand    = 6.0f;  // [rad/s] 
+        public const float MinSpeed        = 0.001f;// [m/s]
+		public const float MinSpeedRad     = 0.01f; // [rad/s]
 
 		// Link names
 		// TODO Want to change into Enum.
@@ -173,8 +174,7 @@ namespace SIGVerse.ToyotaHSR
 			if (name == HSRCommon.WristRollJointName)     { return Mathf.Clamp(value, -1.919f, +3.665f); }
 			if (name == HSRCommon.HeadPanJointName)       { return Mathf.Clamp(value, -3.839f, +1.745f); }
 			if (name == HSRCommon.HeadTiltJointName)      { return Mathf.Clamp(value, -1.570f, +0.523f); }
-			if (name == HSRCommon.HandLProximalJointName) { return Mathf.Clamp(value, -0.052f, +0.611f); }
-			if (name == HSRCommon.HandRProximalJointName) { return Mathf.Clamp(value, -0.611f, +0.052f); }
+            if (name == HSRCommon.HandMotorJointName)     { return Mathf.Clamp(value, -0.1f, +1.24f); }
 
 			return value;
 		}
@@ -186,9 +186,8 @@ namespace SIGVerse.ToyotaHSR
 			if (name == HSRCommon.WristFlexJointName)     { value = GetCorrectedEulerAngle(value, -110f,  70f); }
 			if (name == HSRCommon.WristRollJointName)     { value = GetCorrectedEulerAngle(value, -110f, 210f); }
 			if (name == HSRCommon.HeadPanJointName)       { value = GetCorrectedEulerAngle(value, -220f, 100f); }
-			if (name == HSRCommon.HeadTiltJointName)      { value = GetCorrectedEulerAngle(value, - 90f,  30f); }
-			if (name == HSRCommon.HandLProximalJointName) { value = GetCorrectedEulerAngle(value, -  3f,  35f); }
-			if (name == HSRCommon.HandRProximalJointName) { value = GetCorrectedEulerAngle(value, - 35f,   3f); }
+			if (name == HSRCommon.HeadTiltJointName)      { value = GetCorrectedEulerAngle(value, -90f,   30f); }
+            if (name == HSRCommon.HandMotorJointName)     { value = GetCorrectedEulerAngle(value, -5f,    71f); }
 			return value;
 		}
 
