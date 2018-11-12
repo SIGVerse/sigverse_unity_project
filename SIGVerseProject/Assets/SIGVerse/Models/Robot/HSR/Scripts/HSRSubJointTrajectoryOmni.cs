@@ -271,7 +271,7 @@ namespace SIGVerse.ToyotaHSR
                     trajectoryInfoMap[HSRCommon.OmniOdomXJointName] = null;
                     trajectoryInfoMap[HSRCommon.OmniOdomYJointName] = null;
                     trajectoryInfoMap[HSRCommon.OmniOdomTJointName] = null;
-                    SIGVerseLogger.Warn("Omni trajectry args error. (exceed limit)");
+                    SIGVerseLogger.Warn("Omni speed error. (linear_speed = " + linear_speed + ", angular_speed = " + angular_speed);
                     return false;
                 }
             }//for
