@@ -60,7 +60,7 @@ namespace SIGVerse.ToyotaHSR
 			this.headTiltLink         = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HeadTiltLinkName );
 			this.torsoLiftLink        = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.TorsoLiftLinkName );
 			this.handLProximalLink    = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandLProximalLinkName );
-			this.handRProximalLink    = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandLMimicDistalLinkName );
+			this.handRProximalLink    = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandRProximalLinkName);
             this.handLMimicDistalLink = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandLMimicDistalLinkName);
             this.handRMimicDistalLink = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandRMimicDistalLinkName);
 
@@ -156,7 +156,7 @@ namespace SIGVerse.ToyotaHSR
 
 					if (jointName == HSRCommon.HandMotorJointName)
 					{
-						float newPos = HSRCommon.GetCorrectedJointsEulerAngle(GetPositionAndUpdateTrajectory(this.trajectoryInfoMap, jointName, HSRCommon.MinSpeedRad, HSRCommon.MaxSpeedArm) * Mathf.Rad2Deg, jointName);
+						float newPos = HSRCommon.GetCorrectedJointsEulerAngle(GetPositionAndUpdateTrajectory(this.trajectoryInfoMap, jointName, HSRCommon.MinSpeedRad, HSRCommon.MaxSpeedHand) * Mathf.Rad2Deg, jointName);
                         
                         // Grasping and hand closing
                         if (this.graspedObject!=null && this.IsAngleDecreasing(newPos, this.handLProximalLink.localEulerAngles.x))
@@ -168,9 +168,9 @@ namespace SIGVerse.ToyotaHSR
 						else
 						{
 							this.handLProximalLink.localEulerAngles = new Vector3(newPos, this.handLProximalLink.localEulerAngles.y, this.handLProximalLink.localEulerAngles.z);
-                            this.handRProximalLink.localEulerAngles = new Vector3(newPos, this.handRProximalLink.localEulerAngles.y, this.handRProximalLink.localEulerAngles.z);
-                            this.handLMimicDistalLink.localEulerAngles = new Vector3(newPos, this.handRProximalLink.localEulerAngles.y, this.handRProximalLink.localEulerAngles.z);
-                            this.handRMimicDistalLink.localEulerAngles = new Vector3(newPos, this.handRProximalLink.localEulerAngles.y, this.handRProximalLink.localEulerAngles.z);
+                            this.handRProximalLink.localEulerAngles = new Vector3(-newPos, this.handRProximalLink.localEulerAngles.y, this.handRProximalLink.localEulerAngles.z);
+                            this.handLMimicDistalLink.localEulerAngles = new Vector3(-newPos, this.handLMimicDistalLink.localEulerAngles.y, this.handLMimicDistalLink.localEulerAngles.z);
+                            this.handRMimicDistalLink.localEulerAngles = new Vector3(newPos, this.handRMimicDistalLink.localEulerAngles.y, this.handRMimicDistalLink.localEulerAngles.z);
                         }
 					}                    					
 				}//if
@@ -201,7 +201,7 @@ namespace SIGVerse.ToyotaHSR
 			if (movingDistance > Mathf.Abs(trajectoryInfo.GoalPositions[targetPointIndex] - trajectoryInfo.CurrentPosition))
 			{
 				newPosition = trajectoryInfo.GoalPositions[targetPointIndex];
-				trajectoryInfoMap[jointName] = null;
+                trajectoryInfoMap[jointName] = null;
 			}
 			else
 			{
@@ -311,10 +311,7 @@ namespace SIGVerse.ToyotaHSR
 			bool exceedArmSpeed = true;
 			bool exceedHandSpeed = true;
 			bool exceedHeadSpeed = true;
-			//string[] armJointNames = { HSRCommon.ArmLiftJointName, HSRCommon.ArmFlexJointName, HSRCommon.ArmRollJointName, HSRCommon.WristFlexJointName, HSRCommon.WristRollJointName };
-			//string[] headJointNames = { HSRCommon.HeadPanJointName, HSRCommon.HeadTiltJointName };
-			//string[] gripperJointNames = { HSRCommon.HandMotorJointName };
-			
+
 			foreach (string jointName in this.trajectoryKeyList)
 			{
 				if (this.trajectoryInfoMap[jointName] == null) { continue; }
@@ -324,9 +321,10 @@ namespace SIGVerse.ToyotaHSR
 				trajectoryInfo.GoalPositions.Insert(0, trajectoryInfo.CurrentPosition);
 				for (int i = 1; i < trajectoryInfo.GoalPositions.Count; i++)
 				{
-					double tempDistance = Math.Abs(trajectoryInfo.GoalPositions[i] - trajectoryInfo.GoalPositions[i - 1]);
-					double tempSpeed = tempDistance / Math.Abs(trajectoryInfo.Durations[i] - trajectoryInfo.Durations[i - 1]);
-
+					double tempDistance = Math.Abs(trajectoryInfo.GoalPositions[i] - trajectoryInfo.GoalPositions[i-1]);
+                    double tempDurations = Math.Abs(trajectoryInfo.Durations[i] - trajectoryInfo.Durations[i-1]);
+                    double tempSpeed = tempDistance / tempDurations;
+                    
 					if (jointName == HSRCommon.ArmLiftJointName && tempSpeed > HSRCommon.MaxSpeedTorso) { exceedArmSpeed = false; }//arm
 					else if (jointName == HSRCommon.ArmFlexJointName && tempSpeed > HSRCommon.MaxSpeedArm) { exceedArmSpeed = false; }
 					else if (jointName == HSRCommon.ArmRollJointName && tempSpeed > HSRCommon.MaxSpeedArm) { exceedArmSpeed = false; }
@@ -334,7 +332,7 @@ namespace SIGVerse.ToyotaHSR
 					else if (jointName == HSRCommon.WristRollJointName && tempSpeed > HSRCommon.MaxSpeedArm) { exceedArmSpeed = false; }
 					else if (jointName == HSRCommon.HeadPanJointName && tempSpeed > HSRCommon.MaxSpeedHead) { exceedHeadSpeed = false; }//head
 					else if (jointName == HSRCommon.HeadTiltJointName && tempSpeed > HSRCommon.MaxSpeedHead) { exceedHeadSpeed = false; }
-					else if (jointName == HSRCommon.HandMotorJointName && tempSpeed > HSRCommon.MaxSpeedHead) { exceedHandSpeed = false; }//gripper
+					else if (jointName == HSRCommon.HandMotorJointName && tempSpeed > HSRCommon.MaxSpeedHand) { exceedHandSpeed = false; }//gripper
 				}//for
 				trajectoryInfo.GoalPositions.RemoveAt(0);
 				trajectoryInfo.Durations.RemoveAt(0);
@@ -381,22 +379,6 @@ namespace SIGVerse.ToyotaHSR
 			return targetPointIndex;
 		}//GetTargetPointIndex
 
-
-		private bool IsAngleIncreasing(float newVal, float oldVal)
-		{
-			float angleDiff = this.GetAngleDiff(newVal, oldVal);
-
-			if(angleDiff==0.0f) { return false; }
-
-			if(angleDiff > 0.0f)
-			{
-				return Mathf.Abs(angleDiff) < 180;
-			}
-			else
-			{
-				return Mathf.Abs(angleDiff) > 180;
-			}
-		}
 
 		private bool IsAngleDecreasing(float newVal, float oldVal)
 		{
