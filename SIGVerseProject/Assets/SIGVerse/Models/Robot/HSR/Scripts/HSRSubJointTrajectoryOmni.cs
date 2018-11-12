@@ -69,16 +69,16 @@ namespace SIGVerse.ToyotaHSR
 			this.startPosition = this.baseFootprintRigidbody.position;
 			this.startRotation = this.baseFootprintRigidbody.rotation;
 
-            if(this.CheckTrajectryMsg(ref jointTrajectory) == false)
-            {
-                SIGVerseLogger.Warn("JointTrajectory args error.");
-                return;
-            }
-            
-            this.SetTrajectoryInfoMap(ref jointTrajectory);
-            if (this.CheckMaxSpeed() == false){ return; }
+			if(this.CheckTrajectryMsg(ref jointTrajectory) == false)
+			{
+				SIGVerseLogger.Warn("JointTrajectory args error.");
+				return;
+			}
+			
+			this.SetTrajectoryInfoMap(ref jointTrajectory);
+			if (this.CheckMaxSpeed() == false){ return; }
 
-        }//SubscribeMessageCallback
+		}//SubscribeMessageCallback
 
 
 		protected override void Update()
@@ -120,9 +120,9 @@ namespace SIGVerse.ToyotaHSR
 			Vector3 noisePosition = new Vector3();
 			noisePosition.x = this.GetPosNoise(position.x);
 			noisePosition.z = this.GetPosNoise(position.z);
-            
-            //update position
-            this.baseFootprintRigidbody.position += position;
+			
+			//update position
+			this.baseFootprintRigidbody.position += position;
 			this.baseFootprintPosNoise.position += noisePosition;
 			trajectoryInfoMap[HSRCommon.OmniOdomXJointName].CurrentPosition = position.z;
 			trajectoryInfoMap[HSRCommon.OmniOdomYJointName].CurrentPosition = position.x;
@@ -195,98 +195,98 @@ namespace SIGVerse.ToyotaHSR
 		}//UpdateStartPsition
 
 
-        private bool CheckTrajectryMsg(ref SIGVerse.RosBridge.trajectory_msgs.JointTrajectory msg)
-        {
-            if (msg.joint_names.Count != msg.points[0].positions.Count) { return false; }
+		private bool CheckTrajectryMsg(ref SIGVerse.RosBridge.trajectory_msgs.JointTrajectory msg)
+		{
+			if (msg.joint_names.Count != msg.points[0].positions.Count) { return false; }
 
-            if (msg.joint_names.Count == 3)//Omni
-            {
-                if (0 <= msg.joint_names.IndexOf(HSRCommon.OmniOdomXJointName) && 0 <= msg.joint_names.IndexOf(HSRCommon.OmniOdomYJointName) && 0 <= msg.joint_names.IndexOf(HSRCommon.OmniOdomTJointName))
-                {
-                    return true;
-                }
-            }                
-            return false;
-        }//CheckTrajectryMsg
-
-
-        private void SetTrajectoryInfoMap(ref SIGVerse.RosBridge.trajectory_msgs.JointTrajectory msg)
-        {
-            for (int i = 0; i < msg.joint_names.Count; i++)
-            {
-                string name = msg.joint_names[i];
-
-                List<float> positions = new List<float>();
-                List<float> durations = new List<float>();
-                for (int pointIndex = 0; pointIndex < msg.points.Count; pointIndex++)
-                {
-                    positions.Add(HSRCommon.GetClampedPosition((float)msg.points[pointIndex].positions[i], name));
-                    durations.Add((float)msg.points[pointIndex].time_from_start.secs + (float)msg.points[pointIndex].time_from_start.nsecs * 1.0e-9f);
-                }
-
-                if (name == HSRCommon.OmniOdomXJointName)
-                {
-                    this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, this.baseFootprintRigidbody.position.z);
-                }
-
-                if (name == HSRCommon.OmniOdomYJointName)
-                {
-                    this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, this.baseFootprintRigidbody.position.x);
-                }
-
-                if (name == HSRCommon.OmniOdomTJointName)
-                {
-                    this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, 0.0f);
-                }
-            }//for
-        }//SetTrajectoryInfoMap
+			if (msg.joint_names.Count == 3)//Omni
+			{
+				if (0 <= msg.joint_names.IndexOf(HSRCommon.OmniOdomXJointName) && 0 <= msg.joint_names.IndexOf(HSRCommon.OmniOdomYJointName) && 0 <= msg.joint_names.IndexOf(HSRCommon.OmniOdomTJointName))
+				{
+					return true;
+				}
+			}                
+			return false;
+		}//CheckTrajectryMsg
 
 
-        private bool CheckMaxSpeed()
-        {
-            TrajectoryInfo trajectoryInfoX = this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
-            TrajectoryInfo trajectoryInfoY = this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName];
-            TrajectoryInfo trajectoryInfoT = this.trajectoryInfoMap[HSRCommon.OmniOdomTJointName];
-            trajectoryInfoX.GoalPositions.Insert(0, this.startPosition.z - this.initialPosition.z);
-            trajectoryInfoY.GoalPositions.Insert(0, this.startPosition.x - this.initialPosition.x);
-            trajectoryInfoT.GoalPositions.Insert(0, this.ToRadian(this.startRotation.eulerAngles.y));
-            trajectoryInfoX.Durations.Insert(0, 0.0f);
-            trajectoryInfoY.Durations.Insert(0, 0.0f);
-            trajectoryInfoT.Durations.Insert(0, 0.0f);
-            
+		private void SetTrajectoryInfoMap(ref SIGVerse.RosBridge.trajectory_msgs.JointTrajectory msg)
+		{
+			for (int i = 0; i < msg.joint_names.Count; i++)
+			{
+				string name = msg.joint_names[i];
 
-            //check limit speed
-            for (int i = 1; i < trajectoryInfoX.GoalPositions.Count; i++)
-            {                
-                double temp_distance = Math.Sqrt(Math.Pow(trajectoryInfoX.GoalPositions[i] - trajectoryInfoX.GoalPositions[i-1], 2) + Math.Pow(trajectoryInfoY.GoalPositions[i] - trajectoryInfoY.GoalPositions[i-1], 2));
-                double linear_speed = temp_distance / (trajectoryInfoX.Durations[i] - trajectoryInfoX.Durations[i-1]);
-                
-                double temp_angle = Math.Abs(trajectoryInfoT.GoalPositions[i] - trajectoryInfoT.GoalPositions[i-1]);
-                if (temp_angle < -Math.PI) { temp_angle += (2 * Math.PI); }
-                if (temp_angle > Math.PI) { temp_angle -= (2 * Math.PI); }
-                double angular_speed = temp_angle / (trajectoryInfoT.Durations[i] - trajectoryInfoT.Durations[i-1]);
-                
-                if (linear_speed > HSRCommon.MaxSpeedBase || angular_speed > HSRCommon.MaxSpeedBaseRad)//exceed limit 
-                {
-                    trajectoryInfoMap[HSRCommon.OmniOdomXJointName] = null;
-                    trajectoryInfoMap[HSRCommon.OmniOdomYJointName] = null;
-                    trajectoryInfoMap[HSRCommon.OmniOdomTJointName] = null;
-                    SIGVerseLogger.Warn("Omni speed error. (linear_speed = " + linear_speed + ", angular_speed = " + angular_speed);
-                    return false;
-                }
-            }//for
+				List<float> positions = new List<float>();
+				List<float> durations = new List<float>();
+				for (int pointIndex = 0; pointIndex < msg.points.Count; pointIndex++)
+				{
+					positions.Add(HSRCommon.GetClampedPosition((float)msg.points[pointIndex].positions[i], name));
+					durations.Add((float)msg.points[pointIndex].time_from_start.secs + (float)msg.points[pointIndex].time_from_start.nsecs * 1.0e-9f);
+				}
 
-            trajectoryInfoX.GoalPositions.RemoveAt(0);
-            trajectoryInfoY.GoalPositions.RemoveAt(0);
-            trajectoryInfoT.GoalPositions.RemoveAt(0);
-            trajectoryInfoX.Durations.RemoveAt(0);
-            trajectoryInfoY.Durations.RemoveAt(0);
-            trajectoryInfoT.Durations.RemoveAt(0);
-            return true;
-        }//CheckMaxSpeed
+				if (name == HSRCommon.OmniOdomXJointName)
+				{
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, this.baseFootprintRigidbody.position.z);
+				}
+
+				if (name == HSRCommon.OmniOdomYJointName)
+				{
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, this.baseFootprintRigidbody.position.x);
+				}
+
+				if (name == HSRCommon.OmniOdomTJointName)
+				{
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, 0.0f);
+				}
+			}//for
+		}//SetTrajectoryInfoMap
 
 
-        private float GetPosNoise(float val)
+		private bool CheckMaxSpeed()
+		{
+			TrajectoryInfo trajectoryInfoX = this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
+			TrajectoryInfo trajectoryInfoY = this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName];
+			TrajectoryInfo trajectoryInfoT = this.trajectoryInfoMap[HSRCommon.OmniOdomTJointName];
+			trajectoryInfoX.GoalPositions.Insert(0, this.startPosition.z - this.initialPosition.z);
+			trajectoryInfoY.GoalPositions.Insert(0, this.startPosition.x - this.initialPosition.x);
+			trajectoryInfoT.GoalPositions.Insert(0, this.ToRadian(this.startRotation.eulerAngles.y));
+			trajectoryInfoX.Durations.Insert(0, 0.0f);
+			trajectoryInfoY.Durations.Insert(0, 0.0f);
+			trajectoryInfoT.Durations.Insert(0, 0.0f);
+			
+
+			//check limit speed
+			for (int i = 1; i < trajectoryInfoX.GoalPositions.Count; i++)
+			{                
+				double temp_distance = Math.Sqrt(Math.Pow(trajectoryInfoX.GoalPositions[i] - trajectoryInfoX.GoalPositions[i-1], 2) + Math.Pow(trajectoryInfoY.GoalPositions[i] - trajectoryInfoY.GoalPositions[i-1], 2));
+				double linear_speed = temp_distance / (trajectoryInfoX.Durations[i] - trajectoryInfoX.Durations[i-1]);
+				
+				double temp_angle = Math.Abs(trajectoryInfoT.GoalPositions[i] - trajectoryInfoT.GoalPositions[i-1]);
+				if (temp_angle < -Math.PI) { temp_angle += (2 * Math.PI); }
+				if (temp_angle > Math.PI) { temp_angle -= (2 * Math.PI); }
+				double angular_speed = temp_angle / (trajectoryInfoT.Durations[i] - trajectoryInfoT.Durations[i-1]);
+				
+				if (linear_speed > HSRCommon.MaxSpeedBase || angular_speed > HSRCommon.MaxSpeedBaseRad)//exceed limit 
+				{
+					trajectoryInfoMap[HSRCommon.OmniOdomXJointName] = null;
+					trajectoryInfoMap[HSRCommon.OmniOdomYJointName] = null;
+					trajectoryInfoMap[HSRCommon.OmniOdomTJointName] = null;
+					SIGVerseLogger.Warn("Omni speed error. (linear_speed = " + linear_speed + ", angular_speed = " + angular_speed);
+					return false;
+				}
+			}//for
+
+			trajectoryInfoX.GoalPositions.RemoveAt(0);
+			trajectoryInfoY.GoalPositions.RemoveAt(0);
+			trajectoryInfoT.GoalPositions.RemoveAt(0);
+			trajectoryInfoX.Durations.RemoveAt(0);
+			trajectoryInfoY.Durations.RemoveAt(0);
+			trajectoryInfoT.Durations.RemoveAt(0);
+			return true;
+		}//CheckMaxSpeed
+
+
+		private float GetPosNoise(float val)
 		{
 			float randomNumber = SIGVerseUtils.GetRandomNumberFollowingNormalDistribution(0.6f);
 			return val * Mathf.Clamp(randomNumber, -3.0f, +3.0f); // plus/minus 3.0 is sufficiently large.
@@ -306,11 +306,11 @@ namespace SIGVerse.ToyotaHSR
 		}
 
 
-        public float ToRadian(double deg)
-        {
-            return (float)(deg * (Math.PI / 180));
-        }
+		public float ToRadian(double deg)
+		{
+			return (float)(deg * (Math.PI / 180));
+		}
 
-    }
+	}
 }
 
