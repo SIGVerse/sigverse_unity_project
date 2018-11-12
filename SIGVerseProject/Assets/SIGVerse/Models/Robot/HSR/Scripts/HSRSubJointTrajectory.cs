@@ -99,7 +99,7 @@ namespace SIGVerse.ToyotaHSR
 			}
 
 			this.SetTrajectoryInfoMap(ref jointTrajectory);
-			if (this.CheckMaxSpeed() == false) { return; }
+			if (this.IsNotExceedLimitSpeed() == false) { return; }
 
 		}//SubscribeMessageCallback
 
@@ -302,11 +302,11 @@ namespace SIGVerse.ToyotaHSR
 					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, HSRCommon.GetCorrectedJointsEulerAngle(this.handLProximalLink.localEulerAngles.x, name) * Mathf.Deg2Rad);
 				}
 
-			}//for
+			}
 		}//SetTrajectoryInfoMap
 
 
-		private bool CheckMaxSpeed()
+		private bool IsNotExceedLimitSpeed()
 		{
 			bool exceedArmSpeed = true;
 			bool exceedHandSpeed = true;
@@ -362,10 +362,10 @@ namespace SIGVerse.ToyotaHSR
 				return false;
 			}
 			return true;
-		}//CheckMaxSpeed
+        }//IsNotExceedLimitSpeed
 
 
-		private int GetTargetPointIndex(ref TrajectoryInfo trajectoryInfo)
+        private int GetTargetPointIndex(ref TrajectoryInfo trajectoryInfo)
 		{
 			int targetPointIndex = 0;
 			for (int i = 0; i < trajectoryInfo.Durations.Count; i++)

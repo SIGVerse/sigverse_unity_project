@@ -76,7 +76,7 @@ namespace SIGVerse.ToyotaHSR
 			}
 			
 			this.SetTrajectoryInfoMap(ref jointTrajectory);
-			if (this.CheckMaxSpeed() == false){ return; }
+			if (this.IsNotExceedLimitSpeed() == false){ return; }
 
 		}//SubscribeMessageCallback
 
@@ -238,11 +238,11 @@ namespace SIGVerse.ToyotaHSR
 				{
 					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, 0.0f);
 				}
-			}//for
+			}
 		}//SetTrajectoryInfoMap
 
 
-		private bool CheckMaxSpeed()
+		private bool IsNotExceedLimitSpeed()
 		{
 			TrajectoryInfo trajectoryInfoX = this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
 			TrajectoryInfo trajectoryInfoY = this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName];
@@ -254,8 +254,6 @@ namespace SIGVerse.ToyotaHSR
 			trajectoryInfoY.Durations.Insert(0, 0.0f);
 			trajectoryInfoT.Durations.Insert(0, 0.0f);
 			
-
-			//check limit speed
 			for (int i = 1; i < trajectoryInfoX.GoalPositions.Count; i++)
 			{                
 				double temp_distance = Math.Sqrt(Math.Pow(trajectoryInfoX.GoalPositions[i] - trajectoryInfoX.GoalPositions[i-1], 2) + Math.Pow(trajectoryInfoY.GoalPositions[i] - trajectoryInfoY.GoalPositions[i-1], 2));
@@ -283,10 +281,10 @@ namespace SIGVerse.ToyotaHSR
 			trajectoryInfoY.Durations.RemoveAt(0);
 			trajectoryInfoT.Durations.RemoveAt(0);
 			return true;
-		}//CheckMaxSpeed
+        }//IsNotExceedLimitSpeed
 
 
-		private float GetPosNoise(float val)
+        private float GetPosNoise(float val)
 		{
 			float randomNumber = SIGVerseUtils.GetRandomNumberFollowingNormalDistribution(0.6f);
 			return val * Mathf.Clamp(randomNumber, -3.0f, +3.0f); // plus/minus 3.0 is sufficiently large.
