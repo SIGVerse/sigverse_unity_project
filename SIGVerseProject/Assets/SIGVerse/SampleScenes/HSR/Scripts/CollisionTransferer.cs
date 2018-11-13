@@ -32,7 +32,7 @@ namespace SIGVerse.SampleScenes.Hsr
 		private float minimumSendingInterval;
 		private AudioSource objectCollisionAudioSource;
 
-		private float lastSendingTime = 0.0f;
+		private float lastSendingTime = 1.0f; // Ignore collisions for the first one second.
 
 		private GameObject collisionEffect;
 
@@ -116,7 +116,7 @@ namespace SIGVerse.SampleScenes.Hsr
 
 		private void ExecCollisionProcess(CollisionType collisionType, Collision collision)
 		{
-			SIGVerseLogger.Info("Object collision occurred. name=" + this.name + " Collided object=" + SIGVerseUtils.GetHierarchyPath(collision.collider.transform));
+			SIGVerseLogger.Info("Object collision occurred. name=" + this.name + " Collided object=" + SIGVerseUtils.GetHierarchyPath(collision.collider.transform) + ", vel="+collision.relativeVelocity);
 
 			// Effect
 			GameObject effect = MonoBehaviour.Instantiate(this.collisionEffect);
