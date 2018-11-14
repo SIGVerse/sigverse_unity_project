@@ -14,12 +14,9 @@ namespace SIGVerse.TurtleBot3
 
 	public class TurtleBot3PubLDS : SIGVerseRosBridgePubMessage
 	{
-		private static readonly int SendingIntervalMin = 200;
-
 		public string topicName = "/scan";
 
-		[TooltipAttribute("[ms]  at least 200")]
-		public float sendingInterval = SendingIntervalMin;
+		public float sendingInterval = 100;
 
 		public Transform sensorLink;
 
@@ -67,11 +64,6 @@ namespace SIGVerse.TurtleBot3
 		private bool isUsingThread;
 
 
-
-		private void OnValidate()
-		{
-			if(this.sendingInterval < SendingIntervalMin){ this.sendingInterval = SendingIntervalMin; }
-		}
 
 		void Awake()
 		{

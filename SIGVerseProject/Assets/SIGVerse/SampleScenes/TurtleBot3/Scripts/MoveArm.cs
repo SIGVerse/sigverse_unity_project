@@ -40,11 +40,11 @@ namespace SIGVerse.SampleScenes.TurtleBot3
 			// Send the instruction message
 			if (Input.GetKeyDown(KeyCode.Space))
 			{
-				ExecuteEvents.Execute<SIGVerse.RosBridge.IRosBridgeStringHandler>
+				ExecuteEvents.Execute<SIGVerse.RosBridge.IRosSendingStringMsgHandler>
 				(
 					target: this.destinationOfRosMessage, 
 					eventData: null, 
-					functor: (reciever, eventData) => reciever.OnReceiveMessage("Rotate the arm to this side")
+					functor: (reciever, eventData) => reciever.OnSendRosStringMsg("Rotate the arm to this side")
 				);
 
 				SIGVerseLogger.Info("Sent the instruction message");
