@@ -174,7 +174,7 @@ namespace SIGVerse.ToyotaHSR
 			if (name == HSRCommon.WristRollJointName)     { return Mathf.Clamp(value, -1.919f, +3.665f); }
 			if (name == HSRCommon.HeadPanJointName)       { return Mathf.Clamp(value, -3.839f, +1.745f); }
 			if (name == HSRCommon.HeadTiltJointName)      { return Mathf.Clamp(value, -1.570f, +0.523f); }
-			if (name == HSRCommon.HandMotorJointName)     { return Mathf.Clamp(value, -0.100f, +1.240f); }
+			if (name == HSRCommon.HandMotorJointName)     { return Mathf.Clamp(value, -0.105f, +1.239f); }
 
 			return value;
 		}
