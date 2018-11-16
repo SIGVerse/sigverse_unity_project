@@ -67,7 +67,7 @@ namespace SIGVerse.SampleScenes.Hsr
 			{
 				environmentName = activeEnvironment.name;
 
-				SIGVerseLogger.Warn("Selected an active environment. name=" + activeEnvironment.name);
+				if(environments.Count != 1) { SIGVerseLogger.Warn("Selected an active environment. name=" + activeEnvironment.name);}
 			}
 			else
 			{
@@ -135,7 +135,7 @@ namespace SIGVerse.SampleScenes.Hsr
 				float posX = UnityEngine.Random.Range((float)(-0.5*boxCollider.size.x), (float)(+0.5*boxCollider.size.x));
 				float posZ = UnityEngine.Random.Range((float)(-0.5*boxCollider.size.z), (float)(+0.5*boxCollider.size.z));
 				
-				point.localPosition = new Vector3(posX, point.localPosition.y+0.005f, posZ);
+				point.localPosition = new Vector3(posX, point.localPosition.y+0.03f, posZ);
 
 				// Rotates with a certain probability
 				if(UnityEngine.Random.Range(0.0f, 1.0f) <= this.directionChangingProbability)

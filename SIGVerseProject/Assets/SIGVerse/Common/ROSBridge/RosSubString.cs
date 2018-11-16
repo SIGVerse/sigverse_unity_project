@@ -13,17 +13,17 @@ namespace SIGVerse.RosBridge
 
 	public class RosSubString : RosSubMessage<SIGVerse.RosBridge.std_msgs.String>
 	{
-		public List<GameObject> destinations;
+		public List<GameObject> forwardingDestinations;
 
 		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.std_msgs.String rosMsg)
 		{
 			SIGVerseLogger.Info("Received string message :"+rosMsg.data);
 
-			foreach(GameObject destination in this.destinations)
+			foreach(GameObject forwardingDestination in this.forwardingDestinations)
 			{
 				ExecuteEvents.Execute<IRosReceivingStringMsgHandler>
 				(
-					target: destination,
+					target: forwardingDestination,
 					eventData: null,
 					functor: (reciever, eventData) => reciever.OnReceiveRosStringMsg(rosMsg)
 				);
