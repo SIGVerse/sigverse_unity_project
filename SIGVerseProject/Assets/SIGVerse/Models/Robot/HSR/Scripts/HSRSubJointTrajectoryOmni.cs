@@ -101,7 +101,7 @@ namespace SIGVerse.ToyotaHSR
 					return;
 				}
 
-				this.UpdateOmniPosition();               
+				this.UpdateOmniPosition();
 				this.UpdateOmniRotation();
 			}
 		}
@@ -125,16 +125,16 @@ namespace SIGVerse.ToyotaHSR
 			//update position
 			this.baseFootprintRigidbody.position += deltaPosition;
 			this.baseFootprintPosNoise.position += deltaNoisePos;
-			trajectoryInfoMap[HSRCommon.OmniOdomXJointName].CurrentPosition = deltaPosition.z;
-			trajectoryInfoMap[HSRCommon.OmniOdomYJointName].CurrentPosition = deltaPosition.x;
-			trajectoryInfoMap[HSRCommon.OmniOdomXJointName].CurrentTime = Time.time;
-			trajectoryInfoMap[HSRCommon.OmniOdomYJointName].CurrentTime = Time.time;
+			//trajectoryInfoMap[HSRCommon.OmniOdomXJointName].CurrentPosition = deltaPosition.z;
+			//trajectoryInfoMap[HSRCommon.OmniOdomYJointName].CurrentPosition = deltaPosition.x;
+			//trajectoryInfoMap[HSRCommon.OmniOdomXJointName].CurrentTime = Time.time;
+			//trajectoryInfoMap[HSRCommon.OmniOdomYJointName].CurrentTime = Time.time;
 		}
 
 
 		private void UpdateOmniRotation()
 		{
-			TrajectoryInfo trajectoryInfo = this.trajectoryInfoMap[HSRCommon.OmniOdomTJointName];         
+			TrajectoryInfo trajectoryInfo = this.trajectoryInfoMap[HSRCommon.OmniOdomTJointName];
 			Quaternion goalRotation = Quaternion.Euler(new Vector3(this.initialRotation.eulerAngles.x, this.initialRotation.eulerAngles.y, (trajectoryInfo.GoalPositions[this.targetPointIndex] * Mathf.Rad2Deg) + this.initialRotation.eulerAngles.z));
 			Quaternion newRotation = Quaternion.Slerp(this.startRotation, goalRotation, this.progressTimeRatio);
 			float deltaAngleDeg = (newRotation.eulerAngles.y - this.baseFootprint.rotation.eulerAngles.y);
@@ -142,14 +142,14 @@ namespace SIGVerse.ToyotaHSR
 			if (deltaAngleDeg > 180) { deltaAngleDeg -= 360; }
 			else if(deltaAngleDeg < -180) { deltaAngleDeg += 360; }
 						
-			Quaternion Rotation = Quaternion.Euler(new Vector3(0, 0, deltaAngleDeg));
-			Quaternion NoiseRot = Quaternion.Euler(new Vector3(0, 0, this.GetRotNoise(deltaAngleDeg)));
+			Quaternion deltaRotation = Quaternion.Euler(new Vector3(0, 0, deltaAngleDeg));
+			Quaternion deltaNoiseRot = Quaternion.Euler(new Vector3(0, 0, this.GetRotNoise(deltaAngleDeg)));
 
 			//update rotation.
-			this.baseFootprintRigidbody.rotation *= Rotation;
-			this.baseFootprintRotNoise.rotation *= NoiseRot;
-			trajectoryInfoMap[HSRCommon.OmniOdomTJointName].CurrentTime = Time.time;
-			trajectoryInfoMap[HSRCommon.OmniOdomTJointName].CurrentPosition = Rotation.eulerAngles.z;
+			this.baseFootprintRigidbody.rotation *= deltaRotation;
+			this.baseFootprintRotNoise.rotation *= deltaNoiseRot;
+			//trajectoryInfoMap[HSRCommon.OmniOdomTJointName].CurrentTime = Time.time;
+			//trajectoryInfoMap[HSRCommon.OmniOdomTJointName].CurrentPosition = Rotation.eulerAngles.z;
 		}
 
 
@@ -172,7 +172,7 @@ namespace SIGVerse.ToyotaHSR
 		{
 			TrajectoryInfo trajectoryInfo = this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
 			if (this.targetPointIndex == 0)
-			{                
+			{
 				this.progressTimeRatio = (Time.time - trajectoryInfo.StartTime) / (trajectoryInfo.Durations[this.targetPointIndex]);
 			}
 			else
@@ -208,7 +208,7 @@ namespace SIGVerse.ToyotaHSR
 				{
 					return true;
 				}
-			}                
+			}
 			return false;
 		}
 
@@ -259,7 +259,7 @@ namespace SIGVerse.ToyotaHSR
 			trajectoryInfoT.Durations.Insert(0, 0.0f);
 			
 			for (int i = 1; i < trajectoryInfoX.GoalPositions.Count; i++)
-			{                
+			{
 				double tempDistance = Math.Sqrt(Math.Pow(trajectoryInfoX.GoalPositions[i] - trajectoryInfoX.GoalPositions[i-1], 2) + Math.Pow(trajectoryInfoY.GoalPositions[i] - trajectoryInfoY.GoalPositions[i-1], 2));
 				double linearSpeed = tempDistance / (trajectoryInfoX.Durations[i] - trajectoryInfoX.Durations[i-1]);
 				
