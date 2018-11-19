@@ -121,10 +121,6 @@ namespace SIGVerse.ToyotaHSR
 			//update position
 			this.baseFootprintRigidbody.position += deltaPosition;
 			this.baseFootprintPosNoise.position += deltaNoisePos;
-			//trajectoryInfoMap[HSRCommon.OmniOdomXJointName].CurrentPosition = deltaPosition.z;
-			//trajectoryInfoMap[HSRCommon.OmniOdomYJointName].CurrentPosition = deltaPosition.x;
-			//trajectoryInfoMap[HSRCommon.OmniOdomXJointName].CurrentTime = Time.time;
-			//trajectoryInfoMap[HSRCommon.OmniOdomYJointName].CurrentTime = Time.time;
 		}
 
 
@@ -144,8 +140,6 @@ namespace SIGVerse.ToyotaHSR
 			//update rotation.
 			this.baseFootprintRigidbody.rotation *= deltaRotation;
 			this.baseFootprintRotNoise.rotation *= deltaNoiseRot;
-			//trajectoryInfoMap[HSRCommon.OmniOdomTJointName].CurrentTime = Time.time;
-			//trajectoryInfoMap[HSRCommon.OmniOdomTJointName].CurrentPosition = Rotation.eulerAngles.z;
 		}
 
 
