@@ -113,7 +113,9 @@ namespace SIGVerse.ToyotaHSR
 			goalPosition.z = trajectoryInfoX.GoalPositions[targetPointIndex] + this.initialPosition.z;
 
 			Vector3 newPosition = Vector3.Slerp(this.startPosition, goalPosition, progressTimeRatio);
-			Vector3 deltaPosition = (newPosition - this.baseFootprint.position);
+			Vector3 oldPosition = new Vector3(trajectoryInfoY.CurrentPosition, 0.0f, trajectoryInfoX.CurrentPosition);
+			Vector3 deltaPosition = (newPosition - oldPosition);            
+
 			Vector3 deltaNoisePos = new Vector3();
 			deltaNoisePos.x = this.GetPosNoise(deltaPosition.x);
 			deltaNoisePos.z = this.GetPosNoise(deltaPosition.z);
@@ -121,6 +123,8 @@ namespace SIGVerse.ToyotaHSR
 			//update position
 			this.baseFootprintRigidbody.position += deltaPosition;
 			this.baseFootprintPosNoise.position += deltaNoisePos;
+			this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName].CurrentPosition = newPosition.z;
+			this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName].CurrentPosition = newPosition.x;
 		}
 
 
@@ -140,6 +144,7 @@ namespace SIGVerse.ToyotaHSR
 			//update rotation.
 			this.baseFootprintRigidbody.rotation *= deltaRotation;
 			this.baseFootprintRotNoise.rotation *= deltaNoiseRot;
+			this.trajectoryInfoMap[HSRCommon.OmniOdomTJointName].CurrentPosition = newRotation.eulerAngles.y;
 		}
 
 
@@ -220,17 +225,17 @@ namespace SIGVerse.ToyotaHSR
 
 				if (name == HSRCommon.OmniOdomXJointName)
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, 0.0f);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, this.baseFootprint.position.z);
 				}
 
 				if (name == HSRCommon.OmniOdomYJointName)
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, 0.0f);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, this.baseFootprint.position.x);
 				}
 
 				if (name == HSRCommon.OmniOdomTJointName)
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, 0.0f);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions, Time.time, this.baseFootprint.rotation.eulerAngles.z);
 				}
 			}
 		}
