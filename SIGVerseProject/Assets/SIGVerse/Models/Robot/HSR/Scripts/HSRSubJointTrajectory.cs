@@ -96,7 +96,9 @@ namespace SIGVerse.ToyotaHSR
 			if (this.IsTrajectryMsgCorrect(ref jointTrajectory) == false){ return; }
 
 			this.SetTrajectoryInfoMap(ref jointTrajectory);
-		}
+
+            this.CheckOverLimitSpeed();
+        }
 
 		protected override void Update()
 		{
@@ -307,11 +309,11 @@ namespace SIGVerse.ToyotaHSR
 		}
 
 
-		private bool IsOverLimitSpeed()
+		private void CheckOverLimitSpeed()
 		{
-			bool exceedArmSpeed = false;
-			bool exceedHandSpeed = false;
-			bool exceedHeadSpeed = false;
+			bool isOverArmLimitSpeed = false;
+			bool isOverHeadLimitSpeed = false;
+			bool isOverHandLimitSpeed = false;
 
 			foreach (string jointName in this.trajectoryKeyList)
 			{
@@ -326,38 +328,23 @@ namespace SIGVerse.ToyotaHSR
 					double tempDurations = Math.Abs(trajectoryInfo.Durations[i] - trajectoryInfo.Durations[i-1]);
 					double tempSpeed = tempDistance / tempDurations;
 					
-					if (jointName == HSRCommon.ArmLiftJointName && tempSpeed > HSRCommon.MaxSpeedTorso) { exceedArmSpeed = true; }//Arm
-					else if (jointName == HSRCommon.ArmFlexJointName && tempSpeed > HSRCommon.MaxSpeedArm) { exceedArmSpeed = true; }
-					else if (jointName == HSRCommon.ArmRollJointName && tempSpeed > HSRCommon.MaxSpeedArm) { exceedArmSpeed = true; }
-					else if (jointName == HSRCommon.WristFlexJointName && tempSpeed > HSRCommon.MaxSpeedArm) { exceedArmSpeed = true; }
-					else if (jointName == HSRCommon.WristRollJointName && tempSpeed > HSRCommon.MaxSpeedArm) { exceedArmSpeed = true; }
-					else if (jointName == HSRCommon.HeadPanJointName && tempSpeed > HSRCommon.MaxSpeedHead) { exceedHeadSpeed = true; }//Head
-					else if (jointName == HSRCommon.HeadTiltJointName && tempSpeed > HSRCommon.MaxSpeedHead) { exceedHeadSpeed = true; }
-					else if (jointName == HSRCommon.HandMotorJointName && tempSpeed > HSRCommon.MaxSpeedHand) { exceedHandSpeed = true; }//Hand
+					if (jointName == HSRCommon.ArmLiftJointName && tempSpeed > HSRCommon.MaxSpeedTorso) { isOverArmLimitSpeed = true; }//Arm
+					else if (jointName == HSRCommon.ArmFlexJointName && tempSpeed > HSRCommon.MaxSpeedArm) { isOverArmLimitSpeed = true; }
+					else if (jointName == HSRCommon.ArmRollJointName && tempSpeed > HSRCommon.MaxSpeedArm) { isOverArmLimitSpeed = true; }
+					else if (jointName == HSRCommon.WristFlexJointName && tempSpeed > HSRCommon.MaxSpeedArm) { isOverArmLimitSpeed = true; }
+					else if (jointName == HSRCommon.WristRollJointName && tempSpeed > HSRCommon.MaxSpeedArm) { isOverArmLimitSpeed = true; }
+					else if (jointName == HSRCommon.HeadPanJointName && tempSpeed > HSRCommon.MaxSpeedHead) { isOverHeadLimitSpeed = true; }//Head
+					else if (jointName == HSRCommon.HeadTiltJointName && tempSpeed > HSRCommon.MaxSpeedHead) { isOverHeadLimitSpeed = true; }
+					else if (jointName == HSRCommon.HandMotorJointName && tempSpeed > HSRCommon.MaxSpeedHand) { isOverHandLimitSpeed = true; }//Hand
 				}
 				trajectoryInfo.GoalPositions.RemoveAt(0);
 				trajectoryInfo.Durations.RemoveAt(0);
 			}
-
-			if(exceedArmSpeed == true)
-			{
-				SIGVerseLogger.Warn("Trajectry speed error. (" + this.topicName + ")");
-			}
-			else if (exceedHeadSpeed == true)
-			{
-				SIGVerseLogger.Warn("Trajectry speed error. (" + this.topicName + ")");
-			}
-			else if (exceedHandSpeed == true)
-			{
-				SIGVerseLogger.Warn("Trajectry speed error. (" + this.topicName + ")");
-			}
 			
-			if (exceedArmSpeed == true || exceedHandSpeed == true || exceedHeadSpeed == true)
+			if (isOverArmLimitSpeed == true || isOverHeadLimitSpeed == true || isOverHandLimitSpeed == true)
 			{
 				SIGVerseLogger.Warn("Trajectry speed error. (" + this.topicName + ")");
-				return true;
 			}
-			return false;
 		}
 
 

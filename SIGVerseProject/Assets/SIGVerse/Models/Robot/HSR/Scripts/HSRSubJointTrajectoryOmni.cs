@@ -72,14 +72,10 @@ namespace SIGVerse.ToyotaHSR
 			this.startPosition = this.baseFootprint.position;
 			this.startRotation = this.baseFootprint.rotation;
 
-			if(this.IsTrajectryMsgCorrect(ref jointTrajectory) == false)
-			{
-				return;
-			}
+			if(this.IsTrajectryMsgCorrect(ref jointTrajectory) == false){ return; }
 			
 			this.SetTrajectoryInfoMap(ref jointTrajectory);
-			if (this.IsOverLimitSpeed() == true){ return; }
-
+			this.StopJointIfOverLimitSpeed();
 		}
 
 
@@ -246,7 +242,7 @@ namespace SIGVerse.ToyotaHSR
 		}
 
 
-		private bool IsOverLimitSpeed()
+		private bool StopJointIfOverLimitSpeed()
 		{
 			TrajectoryInfo trajectoryInfoX = this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
 			TrajectoryInfo trajectoryInfoY = this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName];
@@ -260,15 +256,16 @@ namespace SIGVerse.ToyotaHSR
 			
 			for (int i = 1; i < trajectoryInfoX.GoalPositions.Count; i++)
 			{
-				double tempDistance = Math.Sqrt(Math.Pow(trajectoryInfoX.GoalPositions[i] - trajectoryInfoX.GoalPositions[i-1], 2) + Math.Pow(trajectoryInfoY.GoalPositions[i] - trajectoryInfoY.GoalPositions[i-1], 2));
-				double linearSpeed = tempDistance / (trajectoryInfoX.Durations[i] - trajectoryInfoX.Durations[i-1]);
-				
-				double tempAngle = Math.Abs(trajectoryInfoT.GoalPositions[i] - trajectoryInfoT.GoalPositions[i-1]);
-				if (tempAngle < -Math.PI) { tempAngle += (2 * Math.PI); }
-				if (tempAngle > Math.PI) { tempAngle -= (2 * Math.PI); }
-				double angularSpeed = tempAngle / (trajectoryInfoT.Durations[i] - trajectoryInfoT.Durations[i-1]);
-				
-				if (linearSpeed > HSRCommon.MaxSpeedBase || angularSpeed > HSRCommon.MaxSpeedBaseRad)
+                double deltaTime = (trajectoryInfoX.Durations[i] - trajectoryInfoX.Durations[i-1]);
+                double deltaDistance = Math.Sqrt(Math.Pow(trajectoryInfoX.GoalPositions[i] - trajectoryInfoX.GoalPositions[i-1], 2) + Math.Pow(trajectoryInfoY.GoalPositions[i] - trajectoryInfoY.GoalPositions[i-1], 2));
+                double deltaAngle = Math.Abs(trajectoryInfoT.GoalPositions[i] - trajectoryInfoT.GoalPositions[i - 1]);
+                if (deltaAngle < -Math.PI) { deltaAngle += (2 * Math.PI); }
+                if (deltaAngle > Math.PI) { deltaAngle -= (2 * Math.PI); }
+                
+                double linearSpeed = deltaDistance / deltaTime;            
+                double angularSpeed = deltaAngle / deltaTime;
+
+                if (linearSpeed > HSRCommon.MaxSpeedBase || angularSpeed > HSRCommon.MaxSpeedBaseRad)
 				{
 					trajectoryInfoMap[HSRCommon.OmniOdomXJointName] = null;
 					trajectoryInfoMap[HSRCommon.OmniOdomYJointName] = null;
