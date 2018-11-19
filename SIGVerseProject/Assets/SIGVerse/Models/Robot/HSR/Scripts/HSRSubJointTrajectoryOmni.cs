@@ -136,7 +136,7 @@ namespace SIGVerse.ToyotaHSR
 						
 			Quaternion deltaRotation = Quaternion.Euler(new Vector3(0, 0, deltaAngleDeg));
 			Quaternion deltaNoiseRot = Quaternion.Euler(new Vector3(0, 0, this.GetRotNoise(deltaAngleDeg)));
-
+			
 			//update rotation.
 			this.baseFootprintRigidbody.rotation *= deltaRotation;
 			this.baseFootprintRotNoise.rotation *= deltaNoiseRot;
@@ -250,16 +250,16 @@ namespace SIGVerse.ToyotaHSR
 			
 			for (int i = 1; i < trajectoryInfoX.GoalPositions.Count; i++)
 			{
-                double deltaTime = (trajectoryInfoX.Durations[i] - trajectoryInfoX.Durations[i-1]);
-                double deltaDistance = Math.Sqrt(Math.Pow(trajectoryInfoX.GoalPositions[i] - trajectoryInfoX.GoalPositions[i-1], 2) + Math.Pow(trajectoryInfoY.GoalPositions[i] - trajectoryInfoY.GoalPositions[i-1], 2));
-                double deltaAngle = Math.Abs(trajectoryInfoT.GoalPositions[i] - trajectoryInfoT.GoalPositions[i - 1]);
-                if (deltaAngle < -Math.PI) { deltaAngle += (2 * Math.PI); }
-                if (deltaAngle > Math.PI) { deltaAngle -= (2 * Math.PI); }
-                
-                double linearSpeed = deltaDistance / deltaTime;            
-                double angularSpeed = deltaAngle / deltaTime;
+				double deltaTime = (trajectoryInfoX.Durations[i] - trajectoryInfoX.Durations[i-1]);
+				double deltaDistance = Math.Sqrt(Math.Pow(trajectoryInfoX.GoalPositions[i] - trajectoryInfoX.GoalPositions[i-1], 2) + Math.Pow(trajectoryInfoY.GoalPositions[i] - trajectoryInfoY.GoalPositions[i-1], 2));
+				double deltaAngle = Math.Abs(trajectoryInfoT.GoalPositions[i] - trajectoryInfoT.GoalPositions[i - 1]);
+				if (deltaAngle < -Math.PI) { deltaAngle += (2 * Math.PI); }
+				if (deltaAngle > Math.PI) { deltaAngle -= (2 * Math.PI); }
+				
+				double linearSpeed = deltaDistance / deltaTime;
+				double angularSpeed = deltaAngle / deltaTime;
 
-                if (linearSpeed > HSRCommon.MaxSpeedBase || angularSpeed > HSRCommon.MaxSpeedBaseRad)
+				if (linearSpeed > HSRCommon.MaxSpeedBase || angularSpeed > HSRCommon.MaxSpeedBaseRad)
 				{
 					trajectoryInfoMap[HSRCommon.OmniOdomXJointName] = null;
 					trajectoryInfoMap[HSRCommon.OmniOdomYJointName] = null;
