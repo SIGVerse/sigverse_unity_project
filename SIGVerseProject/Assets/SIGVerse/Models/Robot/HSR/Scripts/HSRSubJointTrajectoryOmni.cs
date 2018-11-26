@@ -120,15 +120,15 @@ namespace SIGVerse.ToyotaHSR
 			Vector3 oldPosition = new Vector3(trajectoryInfoY.CurrentPosition, 0.0f, trajectoryInfoX.CurrentPosition);
 			Vector3 deltaPosition = (newPosition - oldPosition);
 
-            float deltaLinearSpeed = Mathf.Sqrt(Mathf.Pow(deltaPosition.x, 2) + Mathf.Pow(deltaPosition.z, 2));
-            if (deltaLinearSpeed > HSRCommon.MaxSpeedBase * Time.fixedDeltaTime)
-            {
-                float deltaLinearSpeedClamped = Mathf.Clamp(deltaLinearSpeed, 0.0f, HSRCommon.MaxSpeedBase * Time.fixedDeltaTime);
-                deltaPosition.x = deltaPosition.x * deltaLinearSpeedClamped / deltaLinearSpeed;
-                deltaPosition.z = deltaPosition.z * deltaLinearSpeedClamped / deltaLinearSpeed;
-            }
-            
-            Vector3 deltaNoisePos = new Vector3();
+			float deltaLinearSpeed = Mathf.Sqrt(Mathf.Pow(deltaPosition.x, 2) + Mathf.Pow(deltaPosition.z, 2));
+			if (deltaLinearSpeed > HSRCommon.MaxSpeedBase * Time.fixedDeltaTime)
+			{
+				float deltaLinearSpeedClamped = Mathf.Clamp(deltaLinearSpeed, 0.0f, HSRCommon.MaxSpeedBase * Time.fixedDeltaTime);
+				deltaPosition.x = deltaPosition.x * deltaLinearSpeedClamped / deltaLinearSpeed;
+				deltaPosition.z = deltaPosition.z * deltaLinearSpeedClamped / deltaLinearSpeed;
+			}
+			
+			Vector3 deltaNoisePos = new Vector3();
 			deltaNoisePos.x = this.GetPosNoise(deltaPosition.x);
 			deltaNoisePos.z = this.GetPosNoise(deltaPosition.z);
 			
@@ -148,13 +148,13 @@ namespace SIGVerse.ToyotaHSR
 			Quaternion goalRotation = Quaternion.Euler(new Vector3(0.0f, (trajectoryInfo.GoalPositions[this.targetPointIndex] * Mathf.Rad2Deg) + this.initialRotation.eulerAngles.y, 0.0f));
 			Quaternion newRotation = Quaternion.Slerp(startRotation, goalRotation, this.progressTimeRatio);
 			float deltaAngleDeg = (newRotation.eulerAngles.y - trajectoryInfo.CurrentPosition);
-            
-            if (Math.Abs(deltaAngleDeg) > HSRCommon.MaxSpeedBaseRad * Mathf.Rad2Deg * Time.fixedDeltaTime)
-            {
-                float maxSpeedBaseDegAtFixedDeltaTime = HSRCommon.MaxSpeedBaseRad * Mathf.Rad2Deg * Time.fixedDeltaTime;
-                deltaAngleDeg = Mathf.Clamp(deltaAngleDeg, -maxSpeedBaseDegAtFixedDeltaTime, +maxSpeedBaseDegAtFixedDeltaTime);
-            }
-                                    
+			
+			if (Math.Abs(deltaAngleDeg) > HSRCommon.MaxSpeedBaseRad * Mathf.Rad2Deg * Time.fixedDeltaTime)
+			{
+				float maxSpeedBaseDegAtFixedDeltaTime = HSRCommon.MaxSpeedBaseRad * Mathf.Rad2Deg * Time.fixedDeltaTime;
+				deltaAngleDeg = Mathf.Clamp(deltaAngleDeg, -maxSpeedBaseDegAtFixedDeltaTime, +maxSpeedBaseDegAtFixedDeltaTime);
+			}
+									
 			Quaternion deltaRotation = Quaternion.Euler(new Vector3(0, 0, deltaAngleDeg));
 			Quaternion deltaNoiseRot = Quaternion.Euler(new Vector3(0, 0, this.GetRotNoise(deltaAngleDeg)));
 			
