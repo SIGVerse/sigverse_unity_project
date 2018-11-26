@@ -97,8 +97,8 @@ namespace SIGVerse.ToyotaHSR
 
 			this.SetTrajectoryInfoMap(ref jointTrajectory);
 
-            this.CheckOverLimitSpeed();
-        }
+			this.CheckOverLimitSpeed();
+		}
 
 		protected override void Update()
 		{
