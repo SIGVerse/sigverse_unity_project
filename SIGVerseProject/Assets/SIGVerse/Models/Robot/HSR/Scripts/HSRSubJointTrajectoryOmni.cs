@@ -42,6 +42,7 @@ namespace SIGVerse.ToyotaHSR
 		private Quaternion startRotation = new Quaternion();
 
 		int targetPointIndex = 0;
+		int targetPointIndexOld = 0;
 		float progressTimeRatio = 0.0f;
 
 		void Awake()
@@ -71,8 +72,10 @@ namespace SIGVerse.ToyotaHSR
 		{
 			this.startPosition = this.baseFootprint.position;
 			this.startRotation = this.baseFootprint.rotation;
+			this.targetPointIndex = 0;
+			this.targetPointIndexOld = 0;
 
-			if(this.IsTrajectryMsgCorrect(ref jointTrajectory) == false){ return; }
+			if (this.IsTrajectryMsgCorrect(ref jointTrajectory) == false){ return; }
 			
 			this.SetTrajectoryInfoMap(ref jointTrajectory);
 			this.StopJointIfOverLimitSpeed();
@@ -184,13 +187,14 @@ namespace SIGVerse.ToyotaHSR
 
 		private void UpdateStartPosition()
 		{
-			if(this.targetPointIndex != 0)
+			if(this.targetPointIndex != this.targetPointIndexOld)
 			{
 				TrajectoryInfo trajectoryInfoX = this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
 				TrajectoryInfo trajectoryInfoY = this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName];
 				TrajectoryInfo trajectoryInfoT = this.trajectoryInfoMap[HSRCommon.OmniOdomTJointName];
-				this.startPosition = new Vector3(-trajectoryInfoY.GoalPositions[this.targetPointIndex-1] + this.initialPosition.x, 0, trajectoryInfoX.GoalPositions[this.targetPointIndex-1] + this.initialPosition.z);
-				this.startRotation = Quaternion.Euler(new Vector3(0.0f, (trajectoryInfoT.GoalPositions[this.targetPointIndex-1] * Mathf.Rad2Deg) + this.initialRotation.eulerAngles.y, 0.0f));
+				this.startPosition = this.baseFootprint.position;
+				this.startRotation = this.baseFootprint.rotation;
+				this.targetPointIndexOld = this.targetPointIndex;
 			}
 		}
 
