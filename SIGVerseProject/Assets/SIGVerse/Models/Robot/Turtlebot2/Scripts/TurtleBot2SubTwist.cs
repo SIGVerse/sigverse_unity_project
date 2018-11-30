@@ -1,63 +1,64 @@
 using UnityEngine;
 using SIGVerse.RosBridge;
 using SIGVerse.Common;
-
+using System.Collections.Generic;
 
 namespace SIGVerse.TurtleBot
 {
-	public class TurtleBot2SubTwist : MonoBehaviour
+	public class TurtleBot2SubTwist : RosSubMessage<SIGVerse.RosBridge.geometry_msgs.Twist>
 	{
-		public string rosbridgeIP;
-		public int    rosbridgePort;
+		public const float MaxSpeedBaseTrans = 0.7f;     // [m/s]
+		public const float MaxSpeedBaseRot   = Mathf.PI; // [rad/s]
 
-		public string topicName;
+//		protected const float WheelInclinationThreshold = 0.985f; // 80[deg]
+		protected const float WheelInclinationThreshold = 0.965f; // 75[deg]
+//		protected const float WheelInclinationThreshold = 0.940f; // 70[deg]
 
 		//--------------------------------------------------
 
-		// ROS bridge
-		private RosBridgeWebSocketConnection webSocketConnection = null;
+		protected Transform baseFootprint;
 
-		void Start()
+		protected float linearVelX  = 0.0f;
+		protected float angularVelZ = 0.0f;
+
+		protected bool isMoving = false;
+
+
+		protected virtual void Awake()
 		{
-			if (this.rosbridgeIP.Equals(string.Empty))
-			{
-				this.rosbridgeIP = ConfigManager.Instance.configInfo.rosbridgeIP;
-			}
-			if (this.rosbridgePort==0)
-			{
-				this.rosbridgePort = ConfigManager.Instance.configInfo.rosbridgePort;
-			}
-
-			this.webSocketConnection = new SIGVerse.RosBridge.RosBridgeWebSocketConnection(this.rosbridgeIP, this.rosbridgePort);
-
-			this.webSocketConnection.Subscribe<SIGVerse.RosBridge.geometry_msgs.Twist>(topicName, this.TwistCallback);
-
-			// Connect to ROSbridge server
-			this.webSocketConnection.Connect();
+			this.baseFootprint = SIGVerseUtils.FindTransformFromChild(this.transform.root, "base_footprint");
 		}
 
-		public void TwistCallback(SIGVerse.RosBridge.geometry_msgs.Twist twist)
+		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.geometry_msgs.Twist twist)
 		{
-			UnityEngine.Vector3 linearVel  = new UnityEngine.Vector3((float)twist.linear.x,  (float)twist.linear.y,  (float)twist.linear.z);
-			UnityEngine.Vector3 angularVel = new UnityEngine.Vector3((float)twist.angular.x, (float)twist.angular.y, (float)twist.angular.z);
+			float linearVelAbs = Mathf.Abs(twist.linear.x);
 
-			UnityEngine.Vector3 robotLocalPosition = this.transform.forward * linearVel.x * UnityEngine.Time.fixedDeltaTime;
+			float linearVelAbsClamped = Mathf.Clamp(linearVelAbs, 0.0f, MaxSpeedBaseTrans);
 
-			this.transform.position = this.transform.position + robotLocalPosition;
-			this.transform.Rotate(0.0f, angularVel.z / Mathf.PI * 180 * UnityEngine.Time.fixedDeltaTime * -1, 0.0f);
-		}
-
-		void OnApplicationQuit()
-		{
-			if (this.webSocketConnection != null)
+			if(linearVelAbs >= 0.001)
 			{
-				this.webSocketConnection.Disconnect();
+				this.linearVelX  = twist.linear.x * linearVelAbsClamped / linearVelAbs;
 			}
-		}
+			else
+			{
+				this.linearVelX = 0.0f;
+			}
 
-		void Update()
+			this.angularVelZ = Mathf.Sign(twist.angular.z) * Mathf.Clamp(Mathf.Abs(twist.angular.z), 0.0f, MaxSpeedBaseRot);
+
+//			Debug.Log("linearVel=" + this.linearVelX + ", angularVel=" + this.angularVelZ);
+
+			this.isMoving = Mathf.Abs(this.linearVelX) >= 0.001f || Mathf.Abs(this.angularVelZ) >= 0.001f;
+		}
+		
+		protected virtual void FixedUpdate()
 		{
-			this.webSocketConnection.Render();
+			if (Mathf.Abs(this.baseFootprint.forward.y) < WheelInclinationThreshold) { return; }
+
+			if (!this.isMoving) { return; }
+
+			this.baseFootprint.transform.position += (this.baseFootprint.transform.right * (-linearVelX)) * Time.fixedDeltaTime;
+			this.baseFootprint.transform.rotation *= Quaternion.Euler(new Vector3(0.0f, 0.0f, -angularVelZ * Mathf.Rad2Deg * Time.fixedDeltaTime));
 		}
 	}
 }

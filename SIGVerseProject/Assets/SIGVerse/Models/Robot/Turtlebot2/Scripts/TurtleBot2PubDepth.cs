@@ -59,7 +59,7 @@ namespace SIGVerse.TurtleBot
 
 
 			// Depth Camera
-			this.xtionDepthCamera = this.transform.Find("Xtion_depth").GetComponent<Camera>();
+			this.xtionDepthCamera = SIGVerseUtils.FindTransformFromChild(this.transform.root, "camera_depth_optical_frame").GetComponentInChildren<Camera>();
 
 			int imageWidth  = this.xtionDepthCamera.targetTexture.width;
 			int imageHeight = this.xtionDepthCamera.targetTexture.height;

@@ -7,9 +7,9 @@ namespace SIGVerse.ToyotaHSR
 {
 	public class HSRSubTwist : RosSubMessage<SIGVerse.RosBridge.geometry_msgs.Twist>
 	{
-//		private const float wheelInclinationThreshold = 0.985f; // 80[deg]
-		private const float wheelInclinationThreshold = 0.965f; // 75[deg]
-//		private const float wheelInclinationThreshold = 0.940f; // 70[deg]
+//		private const float WheelInclinationThreshold = 0.985f; // 80[deg]
+		private const float WheelInclinationThreshold = 0.965f; // 75[deg]
+//		private const float WheelInclinationThreshold = 0.940f; // 70[deg]
 
 		//--------------------------------------------------
 
@@ -59,7 +59,7 @@ namespace SIGVerse.ToyotaHSR
 
 		void FixedUpdate()
 		{
-			if (Mathf.Abs(this.baseFootprint.forward.y) < wheelInclinationThreshold) { return; }
+			if (Mathf.Abs(this.baseFootprint.forward.y) < WheelInclinationThreshold) { return; }
 
 			if (!this.isMoving) { return; }
 

@@ -59,7 +59,7 @@ namespace SIGVerse.TurtleBot
 
 
 			// RGB Camera
-			this.xtionRGBCamera = this.transform.Find("Xtion_rgb").GetComponent<Camera>();
+			this.xtionRGBCamera = SIGVerseUtils.FindTransformFromChild(this.transform.root, "camera_rgb_optical_frame").GetComponentInChildren<Camera>();
 
 			int imageWidth  = this.xtionRGBCamera.targetTexture.width;
 			int imageHeight = this.xtionRGBCamera.targetTexture.height;
