@@ -4,8 +4,8 @@ namespace SIGVerse.TurtleBot
 {
 	public class TurtleBot2SubTwistForceSample : TurtleBot2SubTwist
 	{
-		public float coefForce  = 500.0f; // Unfounded parameter
-		public float coefTorque = 10.0f;  // Unfounded parameter
+		public float coefForce  = 80.0f; // Unfounded parameter
+		public float coefTorque =  1.6f; // Unfounded parameter
 
 		//--------------------------------------------------
 
@@ -30,8 +30,8 @@ namespace SIGVerse.TurtleBot
 
 //			Debug.Log("val =" + this.baseRigidbody.transform.InverseTransformDirection(this.baseRigidbody.velocity).x + ", coef=" + coefAccelForce);
 
-			this.baseRigidbody.AddForce (this.coefForce  * (coefAccelForce  * base.baseFootprint.transform.right   * (-linearVelX)  - this.baseRigidbody.velocity));
-			this.baseRigidbody.AddTorque(this.coefTorque * (coefAccelTorque * base.baseFootprint.transform.forward * (-angularVelZ) - this.baseRigidbody.angularVelocity));
+			this.baseRigidbody.AddForce (this.coefForce  * this.baseRigidbody.mass * (coefAccelForce  * base.baseFootprint.transform.right   * (-linearVelX)  - this.baseRigidbody.velocity));
+			this.baseRigidbody.AddTorque(this.coefTorque * this.baseRigidbody.mass * (coefAccelTorque * base.baseFootprint.transform.forward * (-angularVelZ) - this.baseRigidbody.angularVelocity));
 		}
 	}
 }
