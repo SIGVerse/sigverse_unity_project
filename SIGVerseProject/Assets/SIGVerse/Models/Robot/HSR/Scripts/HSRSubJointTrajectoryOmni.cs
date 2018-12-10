@@ -251,15 +251,15 @@ namespace SIGVerse.ToyotaHSR
 
 		private bool StopJointIfOverLimitSpeed()
 		{
-            List<float> trajectoryInfoDurations      = new List<float>(this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName].Durations);
-            List<float> trajectoryInfoXGoalPositions = new List<float>(this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName].GoalPositions);
-            List<float> trajectoryInfoYGoalPositions = new List<float>(this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName].GoalPositions);
-            List<float> trajectoryInfoTGoalPositions = new List<float>(this.trajectoryInfoMap[HSRCommon.OmniOdomTJointName].GoalPositions);
-            trajectoryInfoDurations.Insert(0, 0.0f);
-            trajectoryInfoXGoalPositions.Insert(0, this.startPosition.z - this.initialPosition.z);
-            trajectoryInfoYGoalPositions.Insert(0, this.startPosition.x - this.initialPosition.x);
-            trajectoryInfoTGoalPositions.Insert(0, (this.startRotation.eulerAngles.y * Mathf.Deg2Rad));
-            
+			List<float> trajectoryInfoDurations      = new List<float>(this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName].Durations);
+			List<float> trajectoryInfoXGoalPositions = new List<float>(this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName].GoalPositions);
+			List<float> trajectoryInfoYGoalPositions = new List<float>(this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName].GoalPositions);
+			List<float> trajectoryInfoTGoalPositions = new List<float>(this.trajectoryInfoMap[HSRCommon.OmniOdomTJointName].GoalPositions);
+			trajectoryInfoDurations.Insert(0, 0.0f);
+			trajectoryInfoXGoalPositions.Insert(0, this.startPosition.z - this.initialPosition.z);
+			trajectoryInfoYGoalPositions.Insert(0, this.startPosition.x - this.initialPosition.x);
+			trajectoryInfoTGoalPositions.Insert(0, (this.startRotation.eulerAngles.y * Mathf.Deg2Rad));
+			
 			
 			for (int i = 1; i < trajectoryInfoDurations.Count; i++)
 			{
