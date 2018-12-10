@@ -63,8 +63,8 @@ namespace SIGVerse.ToyotaHSR
 			this.handMotorDummyLink   = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandMotorDummyLinkName);
 			this.handLProximalLink    = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandLProximalLinkName);
 			this.handRProximalLink    = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandRProximalLinkName);
-			this.handLDistalLink = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandLDistalLinkName);
-			this.handRDistalLink = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandRDistalLinkName);
+			this.handLDistalLink      = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandLDistalLinkName);
+			this.handRDistalLink      = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.HandRDistalLinkName);
 
 			this.armLiftLinkIniPosZ   = this.armLiftLink.localPosition.z;
 			this.torsoLiftLinkIniPosZ = this.torsoLiftLink.localPosition.z;
@@ -91,6 +91,7 @@ namespace SIGVerse.ToyotaHSR
 			this.graspedObject = null;
 		}
 
+
 		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.trajectory_msgs.JointTrajectory jointTrajectory)
 		{			
 			if (this.IsTrajectryMsgCorrect(ref jointTrajectory) == false){ return; }
@@ -100,9 +101,9 @@ namespace SIGVerse.ToyotaHSR
 			this.CheckOverLimitSpeed();
 		}
 
-		protected override void Update()
+
+		protected void FixedUpdate()
 		{
-			base.Update();
 
 			foreach(string jointName in this.trajectoryKeyList)
 			{
@@ -174,7 +175,6 @@ namespace SIGVerse.ToyotaHSR
 				}
 			}
 		}
-
 
 
 		private float GetPositionAndUpdateTrajectory(Dictionary<string, TrajectoryInfo> trajectoryInfoMap, string jointName, float minSpeed, float maxSpeed)
@@ -318,15 +318,17 @@ namespace SIGVerse.ToyotaHSR
 			foreach (string jointName in this.trajectoryKeyList)
 			{
 				if (this.trajectoryInfoMap[jointName] == null) { continue; }
-				
-				TrajectoryInfo trajectoryInfo = this.trajectoryInfoMap[jointName];
-				trajectoryInfo.Durations.Insert(0, 0.0f);
-				trajectoryInfo.GoalPositions.Insert(0, trajectoryInfo.CurrentPosition);
-				for (int i = 1; i < trajectoryInfo.GoalPositions.Count; i++)
+
+				List<float> trajectoryInfoDurations     = new List<float>(this.trajectoryInfoMap[jointName].Durations);
+				List<float> trajectoryInfoGoalPositions = new List<float>(this.trajectoryInfoMap[jointName].GoalPositions);
+				trajectoryInfoDurations.Insert(0, 0.0f);
+				trajectoryInfoGoalPositions.Insert(0, this.trajectoryInfoMap[jointName].CurrentPosition);
+
+				for (int i = 1; i < trajectoryInfoGoalPositions.Count; i++)
 				{
-					double tempDistance = Math.Abs(trajectoryInfo.GoalPositions[i] - trajectoryInfo.GoalPositions[i-1]);
-					double tempDurations = Math.Abs(trajectoryInfo.Durations[i] - trajectoryInfo.Durations[i-1]);
-					double tempSpeed = tempDistance / tempDurations;
+					double tempDistance  = Math.Abs(trajectoryInfoGoalPositions[i] - trajectoryInfoGoalPositions[i-1]);
+					double tempDurations = Math.Abs(trajectoryInfoDurations[i] - trajectoryInfoDurations[i-1]);
+					double tempSpeed     = tempDistance / tempDurations;
 					
 					if (jointName == HSRCommon.ArmLiftJointName && tempSpeed > HSRCommon.MaxSpeedTorso) { isOverArmLimitSpeed = true; }//Arm
 					else if (jointName == HSRCommon.ArmFlexJointName && tempSpeed > HSRCommon.MaxSpeedArm) { isOverArmLimitSpeed = true; }
@@ -337,8 +339,6 @@ namespace SIGVerse.ToyotaHSR
 					else if (jointName == HSRCommon.HeadTiltJointName && tempSpeed > HSRCommon.MaxSpeedHead) { isOverHeadLimitSpeed = true; }
 					else if (jointName == HSRCommon.HandMotorJointName && tempSpeed > HSRCommon.MaxSpeedHand) { isOverHandLimitSpeed = true; }//Hand
 				}
-				trajectoryInfo.GoalPositions.RemoveAt(0);
-				trajectoryInfo.Durations.RemoveAt(0);
 			}
 			
 			if (isOverArmLimitSpeed == true || isOverHeadLimitSpeed == true || isOverHandLimitSpeed == true)
