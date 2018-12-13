@@ -5,15 +5,15 @@ using UnityEngine;
 using SIGVerse.Common;
 using UnityEngine.EventSystems;
 
-namespace SIGVerse.ToyotaHSR
+namespace SIGVerse.Common
 {
-	public interface IHSRCollisionHandler : IEventSystemHandler
+	public interface ICollisionHandler : IEventSystemHandler
 	{
-		void OnHsrCollisionEnter(Collision collision, float collisionVelocity, float effectScale);
+		void OnCollisionEnter(Collision collision, float collisionVelocity, float effectScale);
 	}
 
 
-	public class HSRCollisionDetector : MonoBehaviour
+	public class CollisionDetector : MonoBehaviour
 	{
 		private const float CollisionInterval = 1.0f; //[s]
 
@@ -64,7 +64,7 @@ namespace SIGVerse.ToyotaHSR
 
 			this.collisionClip = (AudioClip)Resources.Load(SIGVerseUtils.CollisionAudioClip2Path);
 
-			SIGVerseLogger.Info("HSR collider count=" + this.colliders.Length);
+			SIGVerseLogger.Info("CollisionDetector collider count=" + this.colliders.Length);
 		}
 
 		// Use this for initialization
@@ -113,7 +113,7 @@ namespace SIGVerse.ToyotaHSR
 		{
 			float collisionVelocity = this.colliderVelocities[Array.IndexOf(this.colliders, collision.contacts[0].thisCollider)];
 
-			SIGVerseLogger.Info("HSR Collision Detection! Time=" + Time.time + ", Collision Velocity=" + collisionVelocity + 
+			SIGVerseLogger.Info("CollisionDetector Collision Detection! Time=" + Time.time + ", Collision Velocity=" + collisionVelocity + 
 				", Part=" +collision.contacts[0].thisCollider.name + ", Collided object=" + SIGVerseUtils.GetHierarchyPath(collision.collider.transform));
 
 			// Effect
@@ -134,11 +134,11 @@ namespace SIGVerse.ToyotaHSR
 			// Send the collision notification
 			foreach(GameObject destination in this.collisionNotificationDestinations)
 			{
-				ExecuteEvents.Execute<IHSRCollisionHandler>
+				ExecuteEvents.Execute<ICollisionHandler>
 				(
 					target: destination,
 					eventData: null,
-					functor: (reciever, eventData) => reciever.OnHsrCollisionEnter(collision, collisionVelocity,  0.5f)
+					functor: (reciever, eventData) => reciever.OnCollisionEnter(collision, collisionVelocity,  0.5f)
 				);
 			}
 

@@ -5,22 +5,20 @@ using UnityEngine;
 using SIGVerse.Common;
 using UnityEngine.EventSystems;
 
-namespace SIGVerse.ToyotaHSR
+namespace SIGVerse.Common
 {
-	public interface IHSRGraspedObjectHandler : IEventSystemHandler
+	public interface IGraspedObjectHandler : IEventSystemHandler
 	{
 		void OnChangeGraspedObject(GameObject graspedObject);
 	}
 
-	public class HSRGraspingDetector : MonoBehaviour, IFingerTriggerHandler
+	public class GraspingDetector : MonoBehaviour, IGripperTriggerHandler
 	{
 		private const float OpeningAngleThreshold = 0.0f; // This parameter is meaningless currently.
 
 		public GameObject handPalm;
-		public GameObject handLeftProximalLink;  // localEularAngle.x : 0 - 34
-		public GameObject handRightProximalLink; // localEularAngle.x : -34 - 0
-		public GameObject handLeftFingerTip;
-		public GameObject handRightFingerTip;
+		public GameObject leftGripper;  // 0   -- +34
+		public GameObject rightGripper; // -34 -- 0
 
 		public List<string> graspableTags;
 
@@ -28,18 +26,18 @@ namespace SIGVerse.ToyotaHSR
 
 		//------------------------
 
-		private float handLeftAngleX;
-		private float handRightAngleX;
+		private float leftGripperAngle;
+		private float rightGripperAngle;
 
-		private float preHandLeftAngleX;
-		private float preHandRightAngleX;
+		private float preLeftGripperAngle;
+		private float preRightGripperAngle;
 
 		private List<Rigidbody> graspableRigidbodies;
 
 		private Rigidbody graspedRigidbody;
 		private Transform savedParentObj;
 
-		private bool  isHandClosing;
+		private bool  isGripperClosing;
 		private float openingAngle;
 
 		private HashSet<Rigidbody> leftCollidingObjects;
@@ -64,7 +62,7 @@ namespace SIGVerse.ToyotaHSR
 				}
 			}
 
-//			Debug.Log("(HSRGraspingDetector)graspable collider num=" + this.graspableColliders.Count);
+//			Debug.Log("(GraspingDetector)graspable collider num=" + this.graspableColliders.Count);
 
 			this.leftCollidingObjects  = new HashSet<Rigidbody>();
 			this.rightCollidingObjects = new HashSet<Rigidbody>();
@@ -73,14 +71,14 @@ namespace SIGVerse.ToyotaHSR
 		// Use this for initialization
 		void Start()
 		{
-			this.handLeftAngleX  = this.handLeftProximalLink .transform.localEulerAngles.x;
-			this.handRightAngleX = this.handRightProximalLink.transform.localEulerAngles.x;
+			this.leftGripperAngle  = this.leftGripper .transform.localEulerAngles.x;
+			this.rightGripperAngle = this.rightGripper.transform.localEulerAngles.x;
 
-			this.preHandLeftAngleX  = this.handLeftAngleX;
-			this.preHandRightAngleX = this.handRightAngleX;
+			this.preLeftGripperAngle  = this.leftGripperAngle;
+			this.preRightGripperAngle = this.rightGripperAngle;
 
 			this.graspedRigidbody    = null;
-			this.isHandClosing = false;
+			this.isGripperClosing = false;
 
 			this.openingAngle = 0.0f;
 		}
@@ -88,23 +86,23 @@ namespace SIGVerse.ToyotaHSR
 		// Update is called once per frame
 		void Update()
 		{
-			this.handLeftAngleX  = this.handLeftProximalLink .transform.localEulerAngles.x;
-			this.handRightAngleX = this.handRightProximalLink.transform.localEulerAngles.x;
+			this.leftGripperAngle  = this.leftGripper .transform.localEulerAngles.x;
+			this.rightGripperAngle = this.rightGripper.transform.localEulerAngles.x;
 
 			// Check hand closing
-			if(this.handLeftAngleX < this.preHandLeftAngleX && this.handRightAngleX > this.preHandRightAngleX)
+			if(this.leftGripperAngle < this.preLeftGripperAngle && this.rightGripperAngle > this.preRightGripperAngle)
 			{
-				this.isHandClosing = true;
+				this.isGripperClosing = true;
 			}
 			else
 			{
-				this.isHandClosing = false;
+				this.isGripperClosing = false;
 			}
 
 			// Calc opening angle
-			if(this.handLeftAngleX > this.preHandLeftAngleX && this.handRightAngleX < this.preHandRightAngleX)
+			if(this.leftGripperAngle > this.preLeftGripperAngle && this.rightGripperAngle < this.preRightGripperAngle)
 			{
-				this.openingAngle += (this.handLeftAngleX - this.preHandLeftAngleX) + (this.preHandRightAngleX - this.handRightAngleX);
+				this.openingAngle += (this.leftGripperAngle - this.preLeftGripperAngle) + (this.preRightGripperAngle - this.rightGripperAngle);
 			}
 			else
 			{
@@ -116,39 +114,39 @@ namespace SIGVerse.ToyotaHSR
 				this.Release();
 			}
 
-			this.preHandLeftAngleX  = this.handLeftAngleX;
-			this.preHandRightAngleX = this.handRightAngleX;
+			this.preLeftGripperAngle  = this.leftGripperAngle;
+			this.preRightGripperAngle = this.rightGripperAngle;
 		}
 
 
-		public void OnTransferredTriggerEnter(Rigidbody targetRigidbody, FingerType fingerType)
+		public void OnTransferredTriggerEnter(Rigidbody targetRigidbody, GripperType gripperType)
 		{
 			if(!this.IsGraspable(targetRigidbody)) { return; }
 
-			if(fingerType==FingerType.Left)
+			if(gripperType==GripperType.Left)
 			{
 				this.leftCollidingObjects.Add(targetRigidbody);
 			}
-			if(fingerType==FingerType.Right)
+			if(gripperType==GripperType.Right)
 			{
 				this.rightCollidingObjects.Add(targetRigidbody);
 			}
 
-			if(this.isHandClosing && this.graspedRigidbody==null && this.leftCollidingObjects.Contains(targetRigidbody) && this.rightCollidingObjects.Contains(targetRigidbody))
+			if(this.isGripperClosing && this.graspedRigidbody==null && this.leftCollidingObjects.Contains(targetRigidbody) && this.rightCollidingObjects.Contains(targetRigidbody))
 			{
 				this.Grasp(targetRigidbody);
 			}
 		}
 
-		public void OnTransferredTriggerExit(Rigidbody targetRigidbody, FingerType fingerType)
+		public void OnTransferredTriggerExit(Rigidbody targetRigidbody, GripperType gripperType)
 		{
 			if(!this.IsGraspable(targetRigidbody)) { return; }
 
-			if(fingerType==FingerType.Left)
+			if(gripperType==GripperType.Left)
 			{
 				this.leftCollidingObjects.Remove(targetRigidbody);
 			}
-			if(fingerType==FingerType.Right)
+			if(gripperType==GripperType.Right)
 			{
 				this.rightCollidingObjects.Remove(targetRigidbody);
 			}
@@ -184,7 +182,7 @@ namespace SIGVerse.ToyotaHSR
 //			collidedRigidbody.isKinematic = true;
 			collidedRigidbody.constraints = RigidbodyConstraints.FreezeAll;
 
-			collidedRigidbody.gameObject.AddComponent<HSRGraspedObjectFixer>();
+			collidedRigidbody.gameObject.AddComponent<GraspedObjectFixer>();
 
 			this.graspedRigidbody = collidedRigidbody;
 
@@ -202,7 +200,7 @@ namespace SIGVerse.ToyotaHSR
 			this.graspedRigidbody.useGravity  = true;
 //			this.graspedRigidbody.isKinematic = false;
 
-			HSRGraspedObjectFixer graspedObjectFixer = this.graspedRigidbody.gameObject.GetComponent<HSRGraspedObjectFixer>();
+			GraspedObjectFixer graspedObjectFixer = this.graspedRigidbody.gameObject.GetComponent<GraspedObjectFixer>();
 			graspedObjectFixer.enabled = false;
 			Destroy(graspedObjectFixer);
 
@@ -222,7 +220,7 @@ namespace SIGVerse.ToyotaHSR
 		{
 			foreach(GameObject graspingNotificationDestination in graspingNotificationDestinations)
 			{
-				ExecuteEvents.Execute<IHSRGraspedObjectHandler>
+				ExecuteEvents.Execute<IGraspedObjectHandler>
 				(
 					target: graspingNotificationDestination, 
 					eventData: null, 

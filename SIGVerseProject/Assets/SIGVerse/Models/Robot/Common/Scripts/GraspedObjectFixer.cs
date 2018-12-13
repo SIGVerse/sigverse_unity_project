@@ -1,10 +1,8 @@
 using UnityEngine;
-using SIGVerse.Common;
 
-
-namespace SIGVerse.ToyotaHSR
+namespace SIGVerse.Common
 {
-	public class HSRGraspedObjectFixer : MonoBehaviour
+	public class GraspedObjectFixer : MonoBehaviour
 	{
 		private Vector3    prePos;
 		private Quaternion preRot;

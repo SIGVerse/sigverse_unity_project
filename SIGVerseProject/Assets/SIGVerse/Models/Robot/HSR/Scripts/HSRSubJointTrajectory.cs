@@ -7,7 +7,7 @@ using System;
 
 namespace SIGVerse.ToyotaHSR
 {
-	public class HSRSubJointTrajectory : RosSubMessage<SIGVerse.RosBridge.trajectory_msgs.JointTrajectory>, IHSRGraspedObjectHandler
+	public class HSRSubJointTrajectory : RosSubMessage<SIGVerse.RosBridge.trajectory_msgs.JointTrajectory>, IGraspedObjectHandler
 	{
 		public class TrajectoryInfo
 		{

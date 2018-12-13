@@ -41,7 +41,7 @@ namespace SIGVerse.SampleScenes.Hsr
 
 		private bool hasCollidedWithHsrBase = false;
 
-		private HSRGraspingDetector hsrGraspingDetector;
+		private GraspingDetector hsrGraspingDetector;
 
 
 		protected void Awake()
@@ -57,7 +57,7 @@ namespace SIGVerse.SampleScenes.Hsr
 			this.hsrHandColliders = new List<Collider>();
 			this.hsrHandColliders.AddRange(SIGVerseUtils.FindTransformFromChild(robot.transform.root, HSRCommon.WristRollLinkName).GetComponentsInChildren<Collider>());
 
-			this.hsrGraspingDetector = robot.GetComponent<HSRGraspingDetector>();
+			this.hsrGraspingDetector = robot.GetComponent<GraspingDetector>();
 		}
 
 

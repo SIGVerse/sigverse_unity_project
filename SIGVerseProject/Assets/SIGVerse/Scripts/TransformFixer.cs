@@ -2,9 +2,9 @@ using UnityEngine;
 using SIGVerse.Common;
 
 
-namespace SIGVerse.ToyotaHSR
+namespace SIGVerse.Common
 {
-	public class HSRTransformFixer : MonoBehaviour
+	public class TransformFixer : MonoBehaviour
 	{
 		private Vector3    posOrg;
 		private Quaternion rotOrg;

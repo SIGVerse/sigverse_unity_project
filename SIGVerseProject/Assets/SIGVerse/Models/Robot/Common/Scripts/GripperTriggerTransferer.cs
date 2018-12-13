@@ -1,10 +1,9 @@
-using SIGVerse.Common;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace SIGVerse.ToyotaHSR
+namespace SIGVerse.Common
 {
 	public enum TriggerType
 	{
@@ -12,24 +11,34 @@ namespace SIGVerse.ToyotaHSR
 		Exit,
 	}
 
-	public enum FingerType
+	public enum GripperType
 	{
 		Left,
 		Right,
 	}
 
-	public interface IFingerTriggerHandler : IEventSystemHandler
+	public interface IGripperTriggerHandler : IEventSystemHandler
 	{
-		void OnTransferredTriggerEnter(Rigidbody targetRigidbody, FingerType fingerType);
-		void OnTransferredTriggerExit (Rigidbody targetRigidbody, FingerType fingerType);
+		void OnTransferredTriggerEnter(Rigidbody targetRigidbody, GripperType gripperType);
+		void OnTransferredTriggerExit (Rigidbody targetRigidbody, GripperType gripperType);
 	}
 
-	public class HSRFingerTriggerTransferer : MonoBehaviour
+	public class HSRGripperTriggerTransferer : MonoBehaviour
 	{
 		public TriggerType triggerType;
-		public FingerType  fingerType;
+		public GripperType gripperType;
+
+		public GameObject eventDestination;
 
 		private Dictionary<Collider, Rigidbody> rigidbodyMap;
+
+		void Awake()
+		{
+			if(eventDestination==null)
+			{
+				this.eventDestination = this.transform.root.gameObject;
+			}
+		}
 
 		void Start()
 		{
@@ -51,11 +60,11 @@ namespace SIGVerse.ToyotaHSR
 
 			if(this.triggerType==TriggerType.Entrance && !this.rigidbodyMap.ContainsValue(other.attachedRigidbody))
 			{
-				ExecuteEvents.Execute<IFingerTriggerHandler>
+				ExecuteEvents.Execute<IGripperTriggerHandler>
 				(
-					target: this.transform.root.gameObject,
+					target: this.eventDestination,
 					eventData: null,
-					functor: (reciever, eventData) => reciever.OnTransferredTriggerEnter(other.attachedRigidbody, this.fingerType)
+					functor: (reciever, eventData) => reciever.OnTransferredTriggerEnter(other.attachedRigidbody, this.gripperType)
 				);
 			}
 
@@ -78,11 +87,11 @@ namespace SIGVerse.ToyotaHSR
 
 			if(this.triggerType==TriggerType.Exit && !this.rigidbodyMap.ContainsValue(other.attachedRigidbody))
 			{
-				ExecuteEvents.Execute<IFingerTriggerHandler>
+				ExecuteEvents.Execute<IGripperTriggerHandler>
 				(
-					target: this.transform.root.gameObject,
+					target: this.eventDestination,
 					eventData: null,
-					functor: (reciever, eventData) => reciever.OnTransferredTriggerExit(other.attachedRigidbody, this.fingerType)
+					functor: (reciever, eventData) => reciever.OnTransferredTriggerExit(other.attachedRigidbody, this.gripperType)
 				);
 			}
 		}
