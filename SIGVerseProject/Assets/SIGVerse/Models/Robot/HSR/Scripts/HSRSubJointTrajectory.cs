@@ -177,10 +177,10 @@ namespace SIGVerse.ToyotaHSR
 		}
 
 
-		private float GetPositionAndUpdateTrajectory(Dictionary<string, TrajectoryInfo> trajectoryInfoMap, string jointName, float minSpeed, float maxSpeed)
+		private static float GetPositionAndUpdateTrajectory(Dictionary<string, TrajectoryInfo> trajectoryInfoMap, string jointName, float minSpeed, float maxSpeed)
 		{
 			TrajectoryInfo trajectoryInfo = trajectoryInfoMap[jointName];
-			int targetPointIndex = this.GetTargetPointIndex(ref trajectoryInfo);
+			int targetPointIndex = GetTargetPointIndex(ref trajectoryInfo);
 
 			float speed = 0.0f;
 			if (trajectoryInfo.CurrentTime - trajectoryInfo.StartTime >= trajectoryInfo.Durations[targetPointIndex])
@@ -348,7 +348,7 @@ namespace SIGVerse.ToyotaHSR
 		}
 
 
-		private int GetTargetPointIndex(ref TrajectoryInfo trajectoryInfo)
+		private static int GetTargetPointIndex(ref TrajectoryInfo trajectoryInfo)
 		{
 			int targetPointIndex = 0;
 			for (int i = 0; i < trajectoryInfo.Durations.Count; i++)
