@@ -36,7 +36,6 @@ namespace SIGVerse.ToyotaHSR
 		private Transform baseFootprintRotNoise;
 
 		private Dictionary<string, TrajectoryInfo> trajectoryInfoMap;
-		private List<string> trajectoryKeyList;
 				
 		private Vector3 initialPosition = new Vector3();
 		private Vector3 startPosition   = new Vector3();
@@ -83,7 +82,7 @@ namespace SIGVerse.ToyotaHSR
 		protected void FixedUpdate()
 		{
 			if (Mathf.Abs(this.baseFootprint.forward.y) < wheelInclinationThreshold) { return; }
-
+            
 			if (this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName] != null && this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName] != null && this.trajectoryInfoMap[HSRCommon.OmniOdomTJointName] != null)
 			{
 				this.UpdateTargetPointIndex();
