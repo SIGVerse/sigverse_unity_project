@@ -26,14 +26,18 @@ namespace SIGVerse.ToyotaHSR
 			}
 		}
 
+//		private const float wheelInclinationThreshold = 0.985f; // 80[deg]
+		private const float wheelInclinationThreshold = 0.965f; // 75[deg]
+//		private const float wheelInclinationThreshold = 0.940f; // 70[deg]
+
 		private Transform baseFootprint;
 		private Transform baseFootprintRigidbody;
 		private Transform baseFootprintPosNoise;
 		private Transform baseFootprintRotNoise;
-		
+
 		private Dictionary<string, TrajectoryInfo> trajectoryInfoMap;
 		private List<string> trajectoryKeyList;
-
+				
 		private Vector3 initialPosition = new Vector3();
 		private Vector3 startPosition   = new Vector3();
 		private float initialRotation;
@@ -78,6 +82,8 @@ namespace SIGVerse.ToyotaHSR
 
 		protected void FixedUpdate()
 		{
+			if (Mathf.Abs(this.baseFootprint.forward.y) < wheelInclinationThreshold) { return; }
+
 			if (this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName] != null && this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName] != null && this.trajectoryInfoMap[HSRCommon.OmniOdomTJointName] != null)
 			{
 				this.UpdateTargetPointIndex();
@@ -241,7 +247,7 @@ namespace SIGVerse.ToyotaHSR
 			return unityPosition;
 		}
 
-        
+		
 		private void SetTrajectoryInfoMap(ref SIGVerse.RosBridge.trajectory_msgs.JointTrajectory msg)
 		{
 			for (int i = 0; i < msg.joint_names.Count; i++)
