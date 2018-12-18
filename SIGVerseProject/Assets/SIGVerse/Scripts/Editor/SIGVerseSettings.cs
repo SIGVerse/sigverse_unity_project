@@ -141,7 +141,7 @@ namespace SIGVerse.Common
 			{
 				this.isUsingMySQL = EditorGUILayout.Toggle("Use MySQL", this.isUsingMySQL);
 				GUILayout.Space(20);
-				GUILayout.Label("* Please add some libraries(MySql.Data.dll, System.Data.dll) if you want to use MySQL.");
+				GUILayout.Label("* Please add some libraries(MySql.Data.dll) if you want to use MySQL.");
 				GUILayout.FlexibleSpace();
 			}
 			EditorGUILayout.EndHorizontal();
