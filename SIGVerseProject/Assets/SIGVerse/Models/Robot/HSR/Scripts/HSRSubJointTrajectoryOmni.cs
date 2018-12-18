@@ -30,6 +30,7 @@ namespace SIGVerse.ToyotaHSR
 		private const float wheelInclinationThreshold = 0.965f; // 75[deg]
 //		private const float wheelInclinationThreshold = 0.940f; // 70[deg]
 
+		private Transform odom;
 		private Transform baseFootprint;
 		private Transform baseFootprintRigidbody;
 		private Transform baseFootprintPosNoise;
@@ -37,9 +38,9 @@ namespace SIGVerse.ToyotaHSR
 
 		private Dictionary<string, TrajectoryInfo> trajectoryInfoMap;
 				
-		private Vector3 initialPosition = new Vector3();
-		private Vector3 startPosition   = new Vector3();
-		private float initialRotation;
+		private Vector3 world2OdomPositionUnity = new Vector3();
+		private float world2OdomRotationUnity;
+		private Vector3 startPosition = new Vector3();
 		private float startRotation;
 
 		int targetPointIndex    = 0;
@@ -54,13 +55,14 @@ namespace SIGVerse.ToyotaHSR
 			this.trajectoryInfoMap.Add(HSRCommon.OmniOdomYJointName, null);
 			this.trajectoryInfoMap.Add(HSRCommon.OmniOdomTJointName, null);
 
+			this.odom                   = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.OdomName);
 			this.baseFootprint          = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.BaseFootPrintName);
 			this.baseFootprintRigidbody = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.BaseFootPrintRigidbodyName);
 			this.baseFootprintPosNoise  = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.BaseFootPrintPosNoiseName);
 			this.baseFootprintRotNoise  = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.BaseFootPrintRotNoiseName);
 			
-			this.initialPosition = this.baseFootprint.position;
-			this.initialRotation = this.baseFootprint.rotation.eulerAngles.y * Mathf.Deg2Rad;
+			this.world2OdomPositionUnity = this.odom.position;
+			this.world2OdomRotationUnity = this.odom.rotation.eulerAngles.y * Mathf.Deg2Rad;
 		}
 
 
@@ -82,7 +84,7 @@ namespace SIGVerse.ToyotaHSR
 		protected void FixedUpdate()
 		{
 			if (Mathf.Abs(this.baseFootprint.forward.y) < wheelInclinationThreshold) { return; }
-            
+			
 			if (this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName] != null && this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName] != null && this.trajectoryInfoMap[HSRCommon.OmniOdomTJointName] != null)
 			{
 				this.UpdateTargetPointIndex();
@@ -220,7 +222,7 @@ namespace SIGVerse.ToyotaHSR
 
 		private float getNowRosRotation()
 		{
-			float nowRosRotation = this.baseFootprint.rotation.eulerAngles.y * Mathf.Deg2Rad - this.initialRotation;
+			float nowRosRotation = this.baseFootprint.rotation.eulerAngles.y * Mathf.Deg2Rad - this.world2OdomRotationUnity;
 			if (nowRosRotation > Math.PI) { nowRosRotation -= (float)(2 * Math.PI); }
 
 			return nowRosRotation;
@@ -229,20 +231,20 @@ namespace SIGVerse.ToyotaHSR
 
 		private Vector3 getNowRosPosition()
 		{
-			return rosPositionFromUnityPosition(this.baseFootprint.position - this.initialPosition);
+			return rosPositionFromUnityPosition(this.baseFootprint.position - this.world2OdomPositionUnity);
 		}
 
 
 		private static Vector3 rosPositionFromUnityPosition(Vector3 unityPosition)
 		{
-			Vector3 rosPosition = new Vector3(unityPosition.z, -unityPosition.x, 0.0f);
+			Vector3 rosPosition = new Vector3(unityPosition.z, -unityPosition.x, unityPosition.y);
 			return rosPosition;
 		}
 
 
 		private static Vector3 unityPositionFromRosPosition(Vector3 rosPsition)
 		{
-			Vector3 unityPosition = new Vector3(-rosPsition.y, 0.0f, rosPsition.x);
+			Vector3 unityPosition = new Vector3(-rosPsition.y, rosPsition.z, rosPsition.x);
 			return unityPosition;
 		}
 
