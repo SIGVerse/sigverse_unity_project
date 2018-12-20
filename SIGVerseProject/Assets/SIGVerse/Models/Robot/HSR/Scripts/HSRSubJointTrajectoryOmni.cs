@@ -10,15 +10,13 @@ namespace SIGVerse.ToyotaHSR
 {
 	public class HSRSubJointTrajectoryOmni : RosSubMessage<SIGVerse.RosBridge.trajectory_msgs.JointTrajectory>
 	{
-		public class TrajectoryInfo
+		public class TrajectoryData
 		{
 			public float StartTime    { get; set; }
 			public List<float> Durations { get; set; }
 			public List<float> GoalPositions { get; set; }
-			public float CurrentTime     { get; set; }
-			public float CurrentPosition { get; set; }
 
-			public TrajectoryInfo(float startTime, List<float> duration, List<float> goalPosition)
+			public TrajectoryData(float startTime, List<float> duration, List<float> goalPosition)
 			{
 				this.StartTime       = startTime;
 				this.Durations       = duration;
@@ -36,7 +34,7 @@ namespace SIGVerse.ToyotaHSR
 		private Transform baseFootprintPosNoise;
 		private Transform baseFootprintRotNoise;
 
-		private Dictionary<string, TrajectoryInfo> trajectoryInfoMap;
+		private Dictionary<string, TrajectoryData> trajectoryInfoMap;
 				
 		private Vector3 world2OdomPositionUnity = new Vector3();
 		private float world2OdomRotationUnity;
@@ -50,7 +48,7 @@ namespace SIGVerse.ToyotaHSR
 
 		void Awake()
 		{
-			this.trajectoryInfoMap = new Dictionary<string, TrajectoryInfo>();
+			this.trajectoryInfoMap = new Dictionary<string, TrajectoryData>();
 			this.trajectoryInfoMap.Add(HSRCommon.OmniOdomXJointName, null);
 			this.trajectoryInfoMap.Add(HSRCommon.OmniOdomYJointName, null);
 			this.trajectoryInfoMap.Add(HSRCommon.OmniOdomTJointName, null);
@@ -68,8 +66,8 @@ namespace SIGVerse.ToyotaHSR
 
 		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.trajectory_msgs.JointTrajectory jointTrajectory)
 		{
-			this.startPosition = this.getNowRosPosition();
-			this.startRotation = this.getNowRosRotation();
+			this.startPosition = this.GetCurrentRosPosition();
+			this.startRotation = this.GetCurrentRosRotation();
 
 			this.targetPointIndex    = 0;
 			this.targetPointIndexOld = 0;
@@ -77,7 +75,7 @@ namespace SIGVerse.ToyotaHSR
 			if (IsTrajectryMsgCorrect(ref jointTrajectory) == false){ return; }
 			
 			this.SetTrajectoryInfoMap(ref jointTrajectory);
-			this.StopJointIfOverLimitSpeed();
+			this.StopOmniIfOverLimitSpeed();
 		}
 
 
@@ -91,7 +89,7 @@ namespace SIGVerse.ToyotaHSR
 				this.UpdateProgressTimeRatio();
 				this.UpdateStartPosition();
 
-				if (this.progressTimeRatio > 1 && targetPointIndex == (this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName].GoalPositions.Count-1))
+				if (this.progressTimeRatio > 1 && this.targetPointIndex == (this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName].GoalPositions.Count-1))
 				{
 					this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName] = null;
 					this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName] = null;
@@ -107,15 +105,15 @@ namespace SIGVerse.ToyotaHSR
 
 		private void UpdateOmniPosition()
 		{
-			TrajectoryInfo trajectoryInfoX = this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
-			TrajectoryInfo trajectoryInfoY = this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName];
+            TrajectoryData trajectoryInfoX = this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
+            TrajectoryData trajectoryInfoY = this.trajectoryInfoMap[HSRCommon.OmniOdomYJointName];
 			
 			Vector3 goalPosition = new Vector3();
-			goalPosition.x = trajectoryInfoX.GoalPositions[targetPointIndex];
-			goalPosition.y = trajectoryInfoY.GoalPositions[targetPointIndex];
+			goalPosition.x = trajectoryInfoX.GoalPositions[this.targetPointIndex];
+			goalPosition.y = trajectoryInfoY.GoalPositions[this.targetPointIndex];
 						
-			Vector3 newPosition   = Vector3.Lerp(this.startPosition, goalPosition, progressTimeRatio);
-			Vector3 deltaPosition = newPosition - this.getNowRosPosition();
+			Vector3 newPosition   = Vector3.Lerp(this.startPosition, goalPosition, this.progressTimeRatio);
+			Vector3 deltaPosition = newPosition - this.GetCurrentRosPosition();
 			
 			float deltaLinearSpeed = Mathf.Sqrt(Mathf.Pow(deltaPosition.x, 2) + Mathf.Pow(deltaPosition.z, 2));
 			if (deltaLinearSpeed > HSRCommon.MaxSpeedBase * Time.fixedDeltaTime)
@@ -130,20 +128,20 @@ namespace SIGVerse.ToyotaHSR
 			deltaNoisePos.y = this.GetPosNoise(deltaPosition.y);
 
 			//update position
-			this.baseFootprintRigidbody.position += unityPositionFromRosPosition(deltaPosition);
-			this.baseFootprintPosNoise.position  += unityPositionFromRosPosition(deltaNoisePos);
+			this.baseFootprintRigidbody.position += GetUnityPositionFromRosPosition(deltaPosition);
+			this.baseFootprintPosNoise.position  += GetUnityPositionFromRosPosition(deltaNoisePos);
 		}
 
 
 		private void UpdateOmniRotation()
 		{
-			TrajectoryInfo trajectoryInfo = this.trajectoryInfoMap[HSRCommon.OmniOdomTJointName];
+            TrajectoryData trajectoryInfo = this.trajectoryInfoMap[HSRCommon.OmniOdomTJointName];
 			
-			Quaternion startRotation = Quaternion.AngleAxis(this.startRotation * Mathf.Rad2Deg, Vector3.forward);
-			Quaternion goalRotation  = Quaternion.AngleAxis(-trajectoryInfo.GoalPositions[this.targetPointIndex] * Mathf.Rad2Deg, Vector3.forward);
-			Quaternion newRotation   = Quaternion.Lerp(startRotation, goalRotation, this.progressTimeRatio);
+			Quaternion startRotQua = Quaternion.AngleAxis(this.startRotation * Mathf.Rad2Deg, Vector3.forward);
+			Quaternion goalRotQua = Quaternion.AngleAxis(-trajectoryInfo.GoalPositions[this.targetPointIndex] * Mathf.Rad2Deg, Vector3.forward);
+			Quaternion newRotQua   = Quaternion.Lerp(startRotQua, goalRotQua, this.progressTimeRatio);
 
-			float deltaAngle = (newRotation.eulerAngles.z * Mathf.Deg2Rad) - this.getNowRosRotation();
+			float deltaAngle = (newRotQua.eulerAngles.z * Mathf.Deg2Rad) - this.GetCurrentRosRotation();
 			if (deltaAngle < -Math.PI) { deltaAngle += (float)(2 * Math.PI); }
 			if (deltaAngle >  Math.PI) { deltaAngle -= (float)(2 * Math.PI); }
 			
@@ -153,18 +151,18 @@ namespace SIGVerse.ToyotaHSR
 				deltaAngle = Mathf.Clamp(deltaAngle, -maxSpeedBaseRadAtFixedDeltaTime, +maxSpeedBaseRadAtFixedDeltaTime);
 			}
 			
-			Quaternion deltaRotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, deltaAngle * Mathf.Rad2Deg));
-			Quaternion deltaNoiseRot = Quaternion.Euler(new Vector3(0.0f, 0.0f, this.GetRotNoise(deltaAngle * Mathf.Rad2Deg)));
+			Quaternion deltaRotQua      = Quaternion.Euler(new Vector3(0.0f, 0.0f, deltaAngle * Mathf.Rad2Deg));
+			Quaternion deltaNoiseRotQua = Quaternion.Euler(new Vector3(0.0f, 0.0f, this.GetRotNoise(deltaAngle * Mathf.Rad2Deg)));
 			
 			//update rotation.
-			this.baseFootprintRigidbody.rotation *= deltaRotation;
-			this.baseFootprintRotNoise.rotation  *= deltaNoiseRot;
+			this.baseFootprintRigidbody.rotation *= deltaRotQua;
+			this.baseFootprintRotNoise.rotation  *= deltaNoiseRotQua;
 		}
 
 
 		private void UpdateTargetPointIndex()
 		{
-			TrajectoryInfo trajectoryInfo = this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
+            TrajectoryData trajectoryInfo = this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
 			int tempIndex = 0;
 
 			for (int i = 0; i < trajectoryInfo.Durations.Count; i++)
@@ -179,7 +177,7 @@ namespace SIGVerse.ToyotaHSR
 
 		private void UpdateProgressTimeRatio()
 		{
-			TrajectoryInfo trajectoryInfo = this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
+            TrajectoryData trajectoryInfo = this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName];
 			if (this.targetPointIndex == 0)
 			{
 				this.progressTimeRatio = (Time.time - trajectoryInfo.StartTime) / (trajectoryInfo.Durations[this.targetPointIndex]);
@@ -195,8 +193,8 @@ namespace SIGVerse.ToyotaHSR
 		{
 			if(this.targetPointIndex != this.targetPointIndexOld)
 			{
-				this.startPosition       = this.getNowRosPosition();
-				this.startRotation       = this.getNowRosRotation();
+				this.startPosition       = this.GetCurrentRosPosition();
+				this.startRotation       = this.GetCurrentRosRotation();
 				this.targetPointIndexOld = this.targetPointIndex;
 			}
 		}
@@ -220,7 +218,7 @@ namespace SIGVerse.ToyotaHSR
 		}
 
 
-		private float getNowRosRotation()
+		private float GetCurrentRosRotation()
 		{
 			float nowRosRotation = this.baseFootprint.rotation.eulerAngles.y * Mathf.Deg2Rad - this.world2OdomRotationUnity;
 			if (nowRosRotation > Math.PI) { nowRosRotation -= (float)(2 * Math.PI); }
@@ -229,23 +227,21 @@ namespace SIGVerse.ToyotaHSR
 		}
 
 
-		private Vector3 getNowRosPosition()
+		private Vector3 GetCurrentRosPosition()
 		{
-			return rosPositionFromUnityPosition(this.baseFootprint.position - this.world2OdomPositionUnity);
+			return GetRosPositionFromUnityPosition(this.baseFootprint.position - this.world2OdomPositionUnity);
 		}
 
 
-		private static Vector3 rosPositionFromUnityPosition(Vector3 unityPosition)
+		private static Vector3 GetRosPositionFromUnityPosition(Vector3 unityPosition)
 		{
-			Vector3 rosPosition = new Vector3(unityPosition.z, -unityPosition.x, unityPosition.y);
-			return rosPosition;
+            return new Vector3(unityPosition.z, -unityPosition.x, unityPosition.y);
 		}
 
 
-		private static Vector3 unityPositionFromRosPosition(Vector3 rosPsition)
+		private static Vector3 GetUnityPositionFromRosPosition(Vector3 rosPsition)
 		{
-			Vector3 unityPosition = new Vector3(-rosPsition.y, rosPsition.z, rosPsition.x);
-			return unityPosition;
+            return new Vector3(-rosPsition.y, rosPsition.z, rosPsition.x);
 		}
 
 		
@@ -266,23 +262,23 @@ namespace SIGVerse.ToyotaHSR
 
 				if (name == HSRCommon.OmniOdomXJointName)
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions);
+					this.trajectoryInfoMap[name] = new TrajectoryData(Time.time, durations, positions);
 				}
 
 				if (name == HSRCommon.OmniOdomYJointName)
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions);
+					this.trajectoryInfoMap[name] = new TrajectoryData(Time.time, durations, positions);
 				}
 
 				if (name == HSRCommon.OmniOdomTJointName)
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, durations, positions);
+					this.trajectoryInfoMap[name] = new TrajectoryData(Time.time, durations, positions);
 				}
 			}
 		}
 
 
-		private bool StopJointIfOverLimitSpeed()
+		private bool StopOmniIfOverLimitSpeed()
 		{
 			List<float> trajectoryInfoDurations      = new List<float>(this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName].Durations);
 			List<float> trajectoryInfoXGoalPositions = new List<float>(this.trajectoryInfoMap[HSRCommon.OmniOdomXJointName].GoalPositions);
