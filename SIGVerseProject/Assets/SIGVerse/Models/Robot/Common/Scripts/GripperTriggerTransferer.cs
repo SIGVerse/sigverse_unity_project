@@ -23,7 +23,7 @@ namespace SIGVerse.Common
 		void OnTransferredTriggerExit (Rigidbody targetRigidbody, GripperType gripperType);
 	}
 
-	public class HSRGripperTriggerTransferer : MonoBehaviour
+	public class GripperTriggerTransferer : MonoBehaviour
 	{
 		public TriggerType triggerType;
 		public GripperType gripperType;
