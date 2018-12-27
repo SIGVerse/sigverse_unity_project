@@ -155,6 +155,49 @@ namespace SIGVerse.PR2
 			l_gripper_joint,
 		}
 
+		private struct JointRange
+		{
+			public float min;
+			public float max;
+
+			public JointRange(float min, float max)
+			{
+				this.min = min;
+				this.max = max;
+			}
+		}
+
+		private static Dictionary<Joint, JointRange> jointRangeMap = new Dictionary<Joint, JointRange>()
+		{
+			{ Joint.torso_lift_joint,             new JointRange( +0.01f, +0.33f) },
+			{ Joint.torso_lift_motor_screw_joint, new JointRange( -3.15f, +3.15f) }, // Inf??
+			{ Joint.head_pan_joint,               new JointRange( -2.86f, +2.86f) },
+			{ Joint.head_tilt_joint,              new JointRange( -0.37f, +1.30f) },
+			{ Joint.laser_tilt_mount_joint,       new JointRange( -0.74f, +1.43f) },
+			{ Joint.r_shoulder_pan_joint,         new JointRange( -2.14f, +0.56f) },
+			{ Joint.r_shoulder_lift_joint,        new JointRange( -0.35f, +1.30f) },
+			{ Joint.r_upper_arm_roll_joint,       new JointRange( -3.75f, +0.65f) },
+			{ Joint.r_elbow_flex_joint,           new JointRange( -2.12f, -0.15f) },
+			{ Joint.r_forearm_roll_joint,         new JointRange( -3.15f, +3.15f) }, // Inf
+			{ Joint.r_wrist_flex_joint,           new JointRange( -2.00f, -0.10f) },
+			{ Joint.r_wrist_roll_joint,           new JointRange( -3.15f, +3.15f) }, // Inf
+			{ Joint.r_gripper_motor_slider_joint, new JointRange( -0.10f, +0.10f) },
+			{ Joint.r_gripper_motor_screw_joint,  new JointRange( -3.15f, +3.15f) }, // Inf??
+			{ Joint.r_gripper_l_finger_joint,     new JointRange( +0.00f, +0.55f) },
+			{ Joint.r_gripper_joint,              new JointRange( +0.00f, +0.09f) },
+			{ Joint.l_shoulder_pan_joint,         new JointRange( -0.56f, +2.14f) },
+			{ Joint.l_shoulder_lift_joint,        new JointRange( -0.35f, +1.30f) },
+			{ Joint.l_upper_arm_roll_joint,       new JointRange( -0.65f, +3.75f) },
+			{ Joint.l_elbow_flex_joint,           new JointRange( -2.12f, -0.15f) },
+			{ Joint.l_forearm_roll_joint,         new JointRange( -3.15f, +3.15f) }, // Inf
+			{ Joint.l_wrist_flex_joint,           new JointRange( -2.00f, -0.10f) },
+			{ Joint.l_wrist_roll_joint,           new JointRange( -3.15f, +3.15f) }, // Inf
+			{ Joint.l_gripper_motor_slider_joint, new JointRange( -0.10f, +0.10f) },
+			{ Joint.l_gripper_motor_screw_joint,  new JointRange( -3.15f, +3.15f) }, // Inf??
+			{ Joint.l_gripper_l_finger_joint,     new JointRange( +0.00f, +0.55f) },
+			{ Joint.l_gripper_joint,              new JointRange( +0.00f, +0.09f) },
+		};
+
 
 		public static List<Transform> GetLinksInChildren(Transform root)
 		{
@@ -176,63 +219,102 @@ namespace SIGVerse.PR2
 			}
 		}
 
+		public static float GetMaxJointVal(Joint joint)
+		{
+			return jointRangeMap[joint].max;
+		}
+
+		public static float GetMinJointVal(Joint joint)
+		{
+			return jointRangeMap[joint].min;
+		}
+
+
 		public static float GetClampedPosition(float value, Joint joint)
 		{
 			switch(joint)
 			{
-				case Joint.torso_lift_joint:            { return Mathf.Clamp(value, +0.01f, +0.33f); }
-				case Joint.torso_lift_motor_screw_joint:{ return Mathf.Clamp(value, -3.15f, +3.15f); } // Inf??
-				case Joint.head_pan_joint:              { return Mathf.Clamp(value, -2.86f, +2.86f); }
-				case Joint.head_tilt_joint:             { return Mathf.Clamp(value, -0.37f, +1.30f); }
-				case Joint.laser_tilt_mount_joint:      { return Mathf.Clamp(value, -0.74f, +1.43f); }
-				case Joint.r_shoulder_pan_joint:        { return Mathf.Clamp(value, -2.14f, +0.56f); }
-				case Joint.r_shoulder_lift_joint:       { return Mathf.Clamp(value, -0.35f, +1.30f); }
-				case Joint.r_upper_arm_roll_joint:      { return Mathf.Clamp(value, -3.75f, +0.65f); }
-				case Joint.r_elbow_flex_joint:          { return Mathf.Clamp(value, -2.12f, -0.15f); }
-				case Joint.r_forearm_roll_joint:        { return Mathf.Clamp(value, -3.15f, +3.15f); } // Inf
-				case Joint.r_wrist_flex_joint:          { return Mathf.Clamp(value, -2.00f, -0.10f); }
-				case Joint.r_wrist_roll_joint:          { return Mathf.Clamp(value, -3.15f, +3.15f); } // Inf
-				case Joint.r_gripper_motor_slider_joint:{ return Mathf.Clamp(value, -0.10f, +0.10f); }
-				case Joint.r_gripper_motor_screw_joint: { return Mathf.Clamp(value, -3.15f, +3.15f); } // Inf??
-				case Joint.r_gripper_l_finger_joint:    { return Mathf.Clamp(value, +0.00f, +0.55f); }
-				case Joint.r_gripper_joint:             { return Mathf.Clamp(value, +0.00f, +0.09f); }
-				case Joint.l_shoulder_pan_joint:        { return Mathf.Clamp(value, -0.56f, +2.14f); }
-				case Joint.l_shoulder_lift_joint:       { return Mathf.Clamp(value, -0.35f, +1.30f); }
-				case Joint.l_upper_arm_roll_joint:      { return Mathf.Clamp(value, -0.65f, +3.75f); }
-				case Joint.l_elbow_flex_joint:          { return Mathf.Clamp(value, -2.12f, -0.15f); }
-				case Joint.l_forearm_roll_joint:        { return Mathf.Clamp(value, -3.15f, +3.15f); } // Inf
-				case Joint.l_wrist_flex_joint:          { return Mathf.Clamp(value, -2.00f, -0.10f); }
-				case Joint.l_wrist_roll_joint:          { return Mathf.Clamp(value, -3.15f, +3.15f); } // Inf
-				case Joint.l_gripper_motor_slider_joint:{ return Mathf.Clamp(value, -0.10f, +0.10f); }
-				case Joint.l_gripper_motor_screw_joint: { return Mathf.Clamp(value, -3.15f, +3.15f); } // Inf??
-				case Joint.l_gripper_l_finger_joint:    { return Mathf.Clamp(value, +0.00f, +0.55f); }
-				case Joint.l_gripper_joint:             { return Mathf.Clamp(value, +0.00f, +0.09f); }
-				default: { throw new Exception("Unknown Joint. name=" + joint.ToString());}
+				case Joint.torso_lift_joint: 
+				case Joint.head_pan_joint: 
+				case Joint.head_tilt_joint: 
+				case Joint.laser_tilt_mount_joint: 
+				case Joint.r_shoulder_pan_joint: 
+				case Joint.r_shoulder_lift_joint: 
+				case Joint.r_upper_arm_roll_joint: 
+				case Joint.r_elbow_flex_joint:
+				case Joint.r_wrist_flex_joint:
+				case Joint.r_gripper_motor_slider_joint:
+				case Joint.r_gripper_l_finger_joint: 
+				case Joint.r_gripper_joint: 
+				case Joint.l_shoulder_pan_joint: 
+				case Joint.l_shoulder_lift_joint: 
+				case Joint.l_upper_arm_roll_joint: 
+				case Joint.l_elbow_flex_joint: 
+				case Joint.l_wrist_flex_joint: 
+				case Joint.l_gripper_motor_slider_joint:
+				case Joint.l_gripper_l_finger_joint: 
+				case Joint.l_gripper_joint: 
+				{
+					return Mathf.Clamp(value, GetMinJointVal(joint), GetMaxJointVal(joint));
+				}
 			}
+
+			return value;
 		}
 
-		public static float GetClampedEulerAngle(float value, Joint joint)
-		{
-			return PR2Common.GetClampedPosition(value * Mathf.Deg2Rad, joint) * Mathf.Rad2Deg;
-		}
+		//public static float GetClampedEulerAngle(float value, Joint joint)
+		//{
+		//	return PR2Common.GetClampedPosition(value * Mathf.Deg2Rad, joint) * Mathf.Rad2Deg;
+		//}
 
-		public static float GetMaxJointSpeed(Joint joint)
-		{
-			if(joint==Joint.torso_lift_joint)
-			{
-				return 0.001f;
-			}
-			else
-			{
-				return 0.01f;
-			}
-		}
 
-		public static float GetMinJointSpeed(Joint joint)
+		public static float GetNormalizedJointEulerAngle(float value, Joint joint)
 		{
 			switch(joint)
 			{
-				case Joint.torso_lift_joint:            { return 0.013f; }
+				case Joint.head_pan_joint: 
+				case Joint.head_tilt_joint: 
+				case Joint.laser_tilt_mount_joint: 
+				case Joint.r_shoulder_pan_joint: 
+				case Joint.r_shoulder_lift_joint: 
+				case Joint.r_upper_arm_roll_joint: 
+				case Joint.r_elbow_flex_joint:
+				case Joint.r_wrist_flex_joint:
+				case Joint.r_gripper_motor_slider_joint:
+				case Joint.r_gripper_l_finger_joint: 
+				case Joint.r_gripper_joint: 
+				case Joint.l_shoulder_pan_joint: 
+				case Joint.l_shoulder_lift_joint: 
+				case Joint.l_upper_arm_roll_joint: 
+				case Joint.l_elbow_flex_joint: 
+				case Joint.l_wrist_flex_joint: 
+				case Joint.l_gripper_motor_slider_joint:
+				case Joint.l_gripper_l_finger_joint: 
+				case Joint.l_gripper_joint: 
+				{
+					return GetCorrectedEulerAngle(value, GetMinJointVal(joint) * Mathf.Rad2Deg, GetMaxJointVal(joint) * Mathf.Rad2Deg);
+				}
+			}
+
+			return value;
+		}
+
+		private static float GetCorrectedEulerAngle(float value, float minValue, float maxValue)
+		{
+			float play = 5.0f;
+
+			value = (value > maxValue + play) ? value - 360f : value;
+			value = (value < minValue - play) ? value + 360f : value;
+
+			return value;
+		}
+
+
+		public static float GetMaxJointSpeed(Joint joint)
+		{
+			switch(joint)
+			{
+				case Joint.torso_lift_joint:            { return 0.013f; } // [m/s]
 
 				case Joint.head_pan_joint:              { return 6.0f; }
 				case Joint.head_tilt_joint:             { return 5.0f; }
@@ -260,18 +342,21 @@ namespace SIGVerse.PR2
 //				case Joint.l_gripper_motor_slider_joint:{ return ; }
 //				case Joint.l_gripper_motor_screw_joint: { return ; }
 //				case Joint.l_gripper_l_finger_joint:    { return ; }
-				case Joint.l_gripper_joint:             { return 0.2f; }
-				default: { throw new Exception("Unknown Joint. name=" + joint.ToString());}
+				case Joint.l_gripper_joint:             { return 0.2f; } // [m/s]??
+				default:                                { throw new Exception("Unknown Joint. name=" + joint.ToString());}
 			}
 		}
 
-		private static float GetCorrectedEulerAngle(float value, float minValue, float maxValue)
+		public static float GetMinJointSpeed(Joint joint)
 		{
-			float Play = 5.0f;
-			value = (value > maxValue + Play) ? value - 360f : value;
-			value = (value < minValue - Play) ? value + 360f : value;
-//			Debug.Log("roll=" + value);
-			return value;
+			if(joint==Joint.torso_lift_joint)
+			{
+				return 0.001f; // [m/s]
+			}
+			else
+			{
+				return 0.01f;  // [rad/s]
+			}
 		}
 	}
 }

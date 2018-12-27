@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static SIGVerse.ToyotaHSR.HSRCommon;
 
 namespace SIGVerse.SampleScenes.Hsr
 {
@@ -55,7 +56,7 @@ namespace SIGVerse.SampleScenes.Hsr
 			this.hsrBaseColliders.AddRange(SIGVerseUtils.FindTransformFromChild(robot.transform.root, HSRCommon.BumperName).GetComponentsInChildren<Collider>());
 
 			this.hsrHandColliders = new List<Collider>();
-			this.hsrHandColliders.AddRange(SIGVerseUtils.FindTransformFromChild(robot.transform.root, HSRCommon.WristRollLinkName).GetComponentsInChildren<Collider>());
+			this.hsrHandColliders.AddRange(SIGVerseUtils.FindTransformFromChild(robot.transform.root, Link.wrist_roll_link.ToString()).GetComponentsInChildren<Collider>());
 
 			this.hsrGraspingDetector = robot.GetComponent<GraspingDetector>();
 		}

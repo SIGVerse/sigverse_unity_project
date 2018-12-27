@@ -20,10 +20,10 @@ namespace UnityStandardAssets_1_1_2.Utility
             Mobile
         }
 
-        [SerializeField] private BuildTargetGroup m_BuildTargetGroup;
+        [SerializeField] private BuildTargetGroup m_BuildTargetGroup = BuildTargetGroup.Standalone;
         [SerializeField] private GameObject[] m_Content = new GameObject[0];
         [SerializeField] private MonoBehaviour[] m_MonoBehaviours = new MonoBehaviour[0];
-        [SerializeField] private bool m_ChildrenOfThisObject;
+        [SerializeField] private bool m_ChildrenOfThisObject = false;
 
 #if !UNITY_EDITOR
 	void OnEnable()

@@ -7,7 +7,7 @@ using static SIGVerse.PR2.PR2Common;
 
 namespace SIGVerse.PR2
 {
-	public class HPR2SubJointTrajectory : RosSubMessage<SIGVerse.RosBridge.trajectory_msgs.JointTrajectory>, IGraspedObjectHandler
+	public class HPR2SubJointTrajectory : RosSubMessage<SIGVerse.RosBridge.trajectory_msgs.JointTrajectory>
 	{
 		public class TrajectoryInfo
 		{
@@ -60,8 +60,6 @@ namespace SIGVerse.PR2
 
 		private Dictionary<PR2Common.Joint, TrajectoryInfo> trajectoryInfoMap;
 		private List<PR2Common.Joint> trajectoryKeyList;
-
-		private GameObject graspedObject;
 
 
 		void Awake()
@@ -116,13 +114,11 @@ namespace SIGVerse.PR2
 		protected override void Start()
 		{
 			base.Start();
-			
-			this.graspedObject = null;
 		}
 
 
 		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.trajectory_msgs.JointTrajectory jointTrajectory)
-		{			
+		{
 			if (this.IsTrajectryMsgCorrect(ref jointTrajectory) == false){ return; }
 
 			this.SetTrajectoryInfoMap(ref jointTrajectory);
@@ -133,10 +129,9 @@ namespace SIGVerse.PR2
 
 		protected void FixedUpdate()
 		{
-
 			foreach(PR2Common.Joint joint in this.trajectoryKeyList)
 			{
-				if (this.trajectoryInfoMap[joint] == null){ return; }
+				if (this.trajectoryInfoMap[joint] == null){ continue; }
 				
 				switch(joint)
 				{
@@ -184,7 +179,7 @@ namespace SIGVerse.PR2
 
 		private void UpdateLinkAngle(Transform link, PR2Common.Joint joint, Vector3 axis)
 		{
-			float newPos = PR2Common.GetClampedEulerAngle(GetPositionAndUpdateTrajectory(this.trajectoryInfoMap, joint) * Mathf.Rad2Deg, joint);
+			float newPos = PR2Common.GetNormalizedJointEulerAngle(GetPositionAndUpdateTrajectory(this.trajectoryInfoMap, joint) * Mathf.Rad2Deg, joint);
 
 			if(Mathf.Abs(axis.x)==1)
 			{
@@ -244,7 +239,7 @@ namespace SIGVerse.PR2
 					trajectoryInfo.CurrentPosition = trajectoryInfo.CurrentPosition - movingDistance;
 					newPosition = trajectoryInfo.CurrentPosition;
 				}
-			}			
+			}
 
 			return newPosition;
 		}
@@ -254,7 +249,8 @@ namespace SIGVerse.PR2
 		{
 			for (int i = 0; i < msg.points.Count; i++)
 			{
-				if (msg.joint_names.Count != msg.points[i].positions.Count) {
+				if (msg.joint_names.Count != msg.points[i].positions.Count)
+				{
 					SIGVerseLogger.Warn("Trajectry count error. (joint_names.Count = " + msg.joint_names.Count + ", msg.points[" + i + "].positions.Count = " + msg.points[i].positions.Count);
 					return false;
 				}
@@ -353,7 +349,7 @@ namespace SIGVerse.PR2
 
 		private void SetJointTrajectoryRotation(PR2Common.Joint joint, List<float> durations, List<float> goalPositions, float value)
 		{
-			this.trajectoryInfoMap[joint] = new TrajectoryInfo(durations, goalPositions, PR2Common.GetClampedEulerAngle(value, joint) * Mathf.Deg2Rad);
+			this.trajectoryInfoMap[joint] = new TrajectoryInfo(durations, goalPositions, PR2Common.GetNormalizedJointEulerAngle(value, joint) * Mathf.Deg2Rad);
 		}
 
 		private void CheckOverLimitSpeed()
@@ -365,7 +361,7 @@ namespace SIGVerse.PR2
 				List<float> trajectoryInfoDurations     = new List<float>(this.trajectoryInfoMap[joint].Durations);
 				List<float> trajectoryInfoGoalPositions = new List<float>(this.trajectoryInfoMap[joint].GoalPositions);
 
-				trajectoryInfoDurations.Insert(0, 0.0f);
+				trajectoryInfoDurations    .Insert(0, 0.0f);
 				trajectoryInfoGoalPositions.Insert(0, this.trajectoryInfoMap[joint].CurrentPosition);
 
 				for (int i = 1; i < trajectoryInfoGoalPositions.Count; i++)
@@ -402,12 +398,6 @@ namespace SIGVerse.PR2
 				}
 			}
 			return targetPointIndex;
-		}
-
-
-		public void OnChangeGraspedObject(GameObject graspedObject)
-		{
-			this.graspedObject = graspedObject;
 		}
 	}
 }

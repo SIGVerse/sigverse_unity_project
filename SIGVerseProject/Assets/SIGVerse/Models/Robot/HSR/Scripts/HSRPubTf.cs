@@ -77,7 +77,7 @@ namespace SIGVerse.ToyotaHSR
 
 			foreach(UnityEngine.Transform localLink in localLinkList)
 			{
-				if(localLink.name==HSRCommon.BaseFootPrintName)
+				if(localLink.name==HSRCommon.Link.base_footprint.ToString())
 				{
 					TransformStamped localTransformStamped = new TransformStamped();
 					localTransformStamped.header.frame_id = HSRCommon.OdomName;
@@ -177,7 +177,7 @@ namespace SIGVerse.ToyotaHSR
 			// Add local TF infos
 			for (int i=0; i<localTfInfoList.Count; i++)
 			{
-				if(localTfInfoList[i].transformStamped.child_frame_id==HSRCommon.BaseFootPrintName)
+				if(localTfInfoList[i].transformStamped.child_frame_id==HSRCommon.Link.base_footprint.ToString())
 				{
 					localTfInfoList[i].UpdateTransformForLocal(this.GetPosObservationNoise(), this.GetRotObservationNoise());
 				}
