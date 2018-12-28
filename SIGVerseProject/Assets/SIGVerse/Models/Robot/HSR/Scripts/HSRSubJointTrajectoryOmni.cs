@@ -46,6 +46,8 @@ namespace SIGVerse.ToyotaHSR
 		int targetPointIndexOld = 0;
 		float progressTimeRatio = 0.0f;
 
+		private HSRSubTwist twist;
+
 
 		void Awake()
 		{
@@ -55,6 +57,8 @@ namespace SIGVerse.ToyotaHSR
 			this.baseFootprintPosNoise  = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.BaseFootPrintPosNoiseName);
 			this.baseFootprintRotNoise  = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.BaseFootPrintRotNoiseName);
 			
+			this.twist = this.transform.GetComponentInChildren<HSRSubTwist>(true);
+
 			this.trajectoryInfoMap = new Dictionary<HSRCommon.Joint, TrajectoryData>()
 			{
 				{ HSRCommon.Joint.odom_x, null },
@@ -69,14 +73,20 @@ namespace SIGVerse.ToyotaHSR
 
 		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.trajectory_msgs.JointTrajectory jointTrajectory)
 		{
+			if(this.twist!=null && this.twist.IsRunning())
+			{
+				SIGVerseLogger.Warn("Rejected JointTrajectory message because the robot is moving by twist.");
+				return;
+			}
+
+			if (IsTrajectryMsgCorrect(ref jointTrajectory) == false){ return; }
+			
 			this.startPosition = this.GetCurrentRosPosition();
 			this.startRotation = this.GetCurrentRosRotation();
 
 			this.targetPointIndex    = 0;
 			this.targetPointIndexOld = 0;
 
-			if (IsTrajectryMsgCorrect(ref jointTrajectory) == false){ return; }
-			
 			this.SetTrajectoryInfoMap(ref jointTrajectory);
 			this.StopOmniIfOverLimitSpeed();
 		}
@@ -113,7 +123,7 @@ namespace SIGVerse.ToyotaHSR
 			Vector3 goalPosition = new Vector3();
 			goalPosition.x = trajectoryInfoX.GoalPositions[this.targetPointIndex];
 			goalPosition.y = trajectoryInfoY.GoalPositions[this.targetPointIndex];
-						
+			
 			Vector3 newPosition   = Vector3.Lerp(this.startPosition, goalPosition, this.progressTimeRatio);
 			Vector3 deltaPosition = newPosition - this.GetCurrentRosPosition();
 			
@@ -132,7 +142,7 @@ namespace SIGVerse.ToyotaHSR
 
 			//update position
 			this.baseFootprintRigidbody.position += GetUnityPositionFromRosPosition(deltaPosition);
-			this.baseFootprintPosNoise.position  += GetUnityPositionFromRosPosition(deltaNoisePos);
+			this.baseFootprintPosNoise .position += GetUnityPositionFromRosPosition(deltaNoisePos);
 		}
 
 
@@ -158,7 +168,7 @@ namespace SIGVerse.ToyotaHSR
 			
 			//update rotation.
 			this.baseFootprintRigidbody.rotation *= deltaRotQua;
-			this.baseFootprintRotNoise.rotation  *= deltaNoiseRotQua;
+			this.baseFootprintRotNoise .rotation *= deltaNoiseRotQua;
 		}
 
 
@@ -328,6 +338,11 @@ namespace SIGVerse.ToyotaHSR
 		{
 			float randomNumber = SIGVerseUtils.GetRandomNumberFollowingNormalDistribution(0.3f);
 			return val * Mathf.Clamp(randomNumber, -3.0f, +3.0f); // plus/minus 3.0 is sufficiently large.
+		}
+
+		public bool IsRunning()
+		{
+			return this.trajectoryInfoMap[HSRCommon.Joint.odom_x] != null;
 		}
 	}
 }

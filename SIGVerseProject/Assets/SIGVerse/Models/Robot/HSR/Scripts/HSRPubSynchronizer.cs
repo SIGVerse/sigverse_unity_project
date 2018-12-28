@@ -20,36 +20,36 @@ namespace SIGVerse.ToyotaHSR
 
 		void Start()
 		{
-			isInitialized = true;
+			this.isInitialized = true;
 		}
 
 		public int GetAssignedSequenceNumber()
 		{
-			if(isInitialized) { throw new Exception("Please call " + System.Reflection.MethodBase.GetCurrentMethod().Name + " in Awake. ("+this.GetType().FullName+")"); }
+			if(this.isInitialized) { throw new Exception("Please call " + System.Reflection.MethodBase.GetCurrentMethod().Name + " in Awake. ("+this.GetType().FullName+")"); }
 
-			sequenceNumberForAssignment++;
+			this.sequenceNumberForAssignment++;
 
-			return sequenceNumberForAssignment;
+			return this.sequenceNumberForAssignment;
 		}
 
 		public bool CanExecute(int sequenceNumber)
 		{
-			if (!executed && (waitingSequenceNumbers.Count==0 || waitingSequenceNumbers[0]==sequenceNumber))
+			if (!this.executed && (this.waitingSequenceNumbers.Count==0 || this.waitingSequenceNumbers[0]==sequenceNumber))
 			{
-				executed = true;
+				this.executed = true;
 
-				if(waitingSequenceNumbers.Count!=0)
+				if(this.waitingSequenceNumbers.Count!=0)
 				{
-					waitingSequenceNumbers.RemoveAt(0);
+					this.waitingSequenceNumbers.RemoveAt(0);
 				}
 
 				return true;
 			}
 			else
 			{
-				if(!waitingSequenceNumbers.Contains(sequenceNumber))
+				if(!this.waitingSequenceNumbers.Contains(sequenceNumber))
 				{
-					waitingSequenceNumbers.Add(sequenceNumber);
+					this.waitingSequenceNumbers.Add(sequenceNumber);
 				}
 
 				return false;
@@ -58,7 +58,7 @@ namespace SIGVerse.ToyotaHSR
 	
 		void LateUpdate()
 		{
-			executed = false;
+			this.executed = false;
 		}
 	}
 }
