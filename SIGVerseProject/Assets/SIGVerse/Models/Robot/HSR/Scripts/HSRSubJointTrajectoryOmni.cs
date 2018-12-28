@@ -29,7 +29,6 @@ namespace SIGVerse.ToyotaHSR
 		private const float wheelInclinationThreshold = 0.965f; // 75[deg]
 //		private const float wheelInclinationThreshold = 0.940f; // 70[deg]
 
-		private Transform odom;
 		private Transform baseFootprint;
 		private Transform baseFootprintRigidbody;
 		private Transform baseFootprintPosNoise;
@@ -37,8 +36,6 @@ namespace SIGVerse.ToyotaHSR
 
 		private Dictionary<HSRCommon.Joint, TrajectoryData> trajectoryInfoMap;
 				
-		private Vector3 world2OdomPositionUnity = new Vector3();
-		private float world2OdomRotationUnity;
 		private Vector3 startPosition = new Vector3();
 		private float startRotation;
 
@@ -51,7 +48,6 @@ namespace SIGVerse.ToyotaHSR
 
 		void Awake()
 		{
-			this.odom                   = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.OdomName);
 			this.baseFootprint          = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.Link.base_footprint.ToString());
 			this.baseFootprintRigidbody = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.BaseFootPrintRigidbodyName);
 			this.baseFootprintPosNoise  = SIGVerseUtils.FindTransformFromChild(this.transform.root, HSRCommon.BaseFootPrintPosNoiseName);
@@ -65,9 +61,6 @@ namespace SIGVerse.ToyotaHSR
 				{ HSRCommon.Joint.odom_y, null },
 				{ HSRCommon.Joint.odom_t, null },
 			};
-
-			this.world2OdomPositionUnity = this.odom.position;
-			this.world2OdomRotationUnity = this.odom.rotation.eulerAngles.y * Mathf.Deg2Rad;
 		}
 
 
@@ -127,7 +120,7 @@ namespace SIGVerse.ToyotaHSR
 			Vector3 newPosition   = Vector3.Lerp(this.startPosition, goalPosition, this.progressTimeRatio);
 			Vector3 deltaPosition = newPosition - this.GetCurrentRosPosition();
 			
-			float deltaLinearSpeed = Mathf.Sqrt(Mathf.Pow(deltaPosition.x, 2) + Mathf.Pow(deltaPosition.z, 2));
+			float deltaLinearSpeed = Mathf.Sqrt(Mathf.Pow(deltaPosition.x, 2) + Mathf.Pow(deltaPosition.y, 2));
 
 			if (deltaLinearSpeed > HSRCommon.MaxSpeedBase * Time.fixedDeltaTime)
 			{
@@ -141,18 +134,16 @@ namespace SIGVerse.ToyotaHSR
 			deltaNoisePos.y = this.GetPosNoise(deltaPosition.y);
 
 			//update position
-			this.baseFootprintRigidbody.position += GetUnityPositionFromRosPosition(deltaPosition);
-			this.baseFootprintPosNoise .position += GetUnityPositionFromRosPosition(deltaNoisePos);
+			this.baseFootprintRigidbody.localPosition += GetUnityPositionFromRosPosition(deltaPosition);
+			this.baseFootprintPosNoise .localPosition += GetUnityPositionFromRosPosition(deltaNoisePos);
 		}
 
 
 		private void UpdateOmniRotation(TrajectoryData trajectoryInfo)
 		{
-			Quaternion startRotQua = Quaternion.AngleAxis(this.startRotation * Mathf.Rad2Deg, Vector3.forward);
-			Quaternion goalRotQua = Quaternion.AngleAxis(-trajectoryInfo.GoalPositions[this.targetPointIndex] * Mathf.Rad2Deg, Vector3.forward);
-			Quaternion newRotQua   = Quaternion.Lerp(startRotQua, goalRotQua, this.progressTimeRatio);
+			float newRotation = Mathf.LerpAngle(this.startRotation * Mathf.Rad2Deg, trajectoryInfo.GoalPositions[this.targetPointIndex] * Mathf.Rad2Deg, this.progressTimeRatio) * Mathf.Deg2Rad;
 
-			float deltaAngle = (newRotQua.eulerAngles.z * Mathf.Deg2Rad) - this.GetCurrentRosRotation();
+			float deltaAngle = newRotation - this.GetCurrentRosRotation();
 
 			if (deltaAngle < -Math.PI) { deltaAngle += (float)(2 * Math.PI); }
 			if (deltaAngle >  Math.PI) { deltaAngle -= (float)(2 * Math.PI); }
@@ -163,12 +154,12 @@ namespace SIGVerse.ToyotaHSR
 				deltaAngle = Mathf.Clamp(deltaAngle, -maxSpeedBaseRadAtFixedDeltaTime, +maxSpeedBaseRadAtFixedDeltaTime);
 			}
 			
-			Quaternion deltaRotQua      = Quaternion.Euler(new Vector3(0.0f, 0.0f, deltaAngle * Mathf.Rad2Deg));
-			Quaternion deltaNoiseRotQua = Quaternion.Euler(new Vector3(0.0f, 0.0f, this.GetRotNoise(deltaAngle * Mathf.Rad2Deg)));
+			Quaternion deltaRotQua      = Quaternion.Euler(new Vector3(0.0f, 0.0f, -                 deltaAngle * Mathf.Rad2Deg));
+			Quaternion deltaNoiseRotQua = Quaternion.Euler(new Vector3(0.0f, 0.0f, -this.GetRotNoise(deltaAngle * Mathf.Rad2Deg)));
 			
 			//update rotation.
-			this.baseFootprintRigidbody.rotation *= deltaRotQua;
-			this.baseFootprintRotNoise .rotation *= deltaNoiseRotQua;
+			this.baseFootprintRigidbody.localRotation *= deltaRotQua;
+			this.baseFootprintRotNoise .localRotation *= deltaNoiseRotQua;
 		}
 
 
@@ -236,12 +227,12 @@ namespace SIGVerse.ToyotaHSR
 
 		private Vector3 GetCurrentRosPosition()
 		{
-			return GetRosPositionFromUnityPosition(this.baseFootprint.position - this.world2OdomPositionUnity);
+			return GetRosPositionFromUnityPosition(this.baseFootprintRigidbody.localPosition);
 		}
 
 		private float GetCurrentRosRotation()
 		{
-			float nowRosRotation = this.baseFootprint.rotation.eulerAngles.y * Mathf.Deg2Rad - this.world2OdomRotationUnity;
+			float nowRosRotation = -this.baseFootprintRigidbody.localRotation.eulerAngles.z * Mathf.Deg2Rad;
 
 			if (nowRosRotation > Math.PI) { nowRosRotation -= (float)(2 * Math.PI); }
 
@@ -251,13 +242,13 @@ namespace SIGVerse.ToyotaHSR
 
 		private static Vector3 GetRosPositionFromUnityPosition(Vector3 unityPosition)
 		{
-			return new Vector3(unityPosition.z, -unityPosition.x, unityPosition.y);
+			return new Vector3(-unityPosition.x, unityPosition.y, unityPosition.z);
 		}
 
 
-		private static Vector3 GetUnityPositionFromRosPosition(Vector3 rosPsition)
+		private static Vector3 GetUnityPositionFromRosPosition(Vector3 rosPosition)
 		{
-			return new Vector3(-rosPsition.y, rosPsition.z, rosPsition.x);
+			return new Vector3(-rosPosition.x, rosPosition.y, rosPosition.z);
 		}
 
 		
@@ -301,7 +292,7 @@ namespace SIGVerse.ToyotaHSR
 			
 			for (int i = 1; i < trajectoryInfoDurations.Count; i++)
 			{
-				double deltaTime       = (trajectoryInfoDurations[i] - trajectoryInfoDurations[i-1]);
+				double deltaTime       = trajectoryInfoDurations[i] - trajectoryInfoDurations[i-1];
 				double deltaDistanceX  = trajectoryInfoXGoalPositions[i] - trajectoryInfoXGoalPositions[i-1];
 				double deltaDistanceY  = trajectoryInfoYGoalPositions[i] - trajectoryInfoYGoalPositions[i-1];
 				double deltaDistanceXY = Math.Sqrt(Math.Pow(deltaDistanceX, 2) + Math.Pow(deltaDistanceY, 2));
