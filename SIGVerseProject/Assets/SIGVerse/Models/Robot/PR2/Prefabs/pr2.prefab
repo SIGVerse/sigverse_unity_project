@@ -5075,6 +5075,11 @@ GameObject:
   - component: {fileID: 4342184070323680}
   - component: {fileID: 114786000748880626}
   - component: {fileID: 114748695187212072}
+  - component: {fileID: 5654033935942356435}
+  - component: {fileID: 2512728677478072046}
+  - component: {fileID: 5114561143587824738}
+  - component: {fileID: 5053845908468542647}
+  - component: {fileID: 3514129666977001192}
   m_Layer: 0
   m_Name: RosBridgeScripts
   m_TagString: Untagged
@@ -5127,6 +5132,82 @@ MonoBehaviour:
   rosBridgeIP: 
   rosBridgePort: 0
   topicName: /base_controller/command
+--- !u!114 &5654033935942356435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572908258536576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e5061e041f906641ba319bff1372b55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rosBridgeIP: 
+  rosBridgePort: 0
+  topicName: /head_traj_controller/command
+--- !u!114 &2512728677478072046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572908258536576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e5061e041f906641ba319bff1372b55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rosBridgeIP: 
+  rosBridgePort: 0
+  topicName: /torso_controller/command
+--- !u!114 &5114561143587824738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572908258536576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e5061e041f906641ba319bff1372b55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rosBridgeIP: 
+  rosBridgePort: 0
+  topicName: /l_arm_controller/command
+--- !u!114 &5053845908468542647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572908258536576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e5061e041f906641ba319bff1372b55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rosBridgeIP: 
+  rosBridgePort: 0
+  topicName: /r_arm_controller/command
+--- !u!114 &3514129666977001192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572908258536576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3665d259a8a45184e85f0d268325f612, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rosBridgeIP: 
+  rosBridgePort: 0
+  topicName: /joint_states
+  sendingInterval: 100
 --- !u!1 &1626006023363630
 GameObject:
   m_ObjectHideFlags: 0
