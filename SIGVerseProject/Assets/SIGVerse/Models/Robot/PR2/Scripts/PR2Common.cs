@@ -11,6 +11,8 @@ namespace SIGVerse.PR2
 		public const float MaxSpeedBase    = 1.0f;  // [m/s]
 		public const float MaxSpeedBaseRad = 3.3f;  // [rad/s] Tentative 
 
+		public const string OdomName   = "odom_combined";
+
 		public enum Link
 		{
 			base_footprint,

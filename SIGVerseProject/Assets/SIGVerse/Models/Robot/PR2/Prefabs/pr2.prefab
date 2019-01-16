@@ -5080,6 +5080,8 @@ GameObject:
   - component: {fileID: 5114561143587824738}
   - component: {fileID: 5053845908468542647}
   - component: {fileID: 3514129666977001192}
+  - component: {fileID: 465571618175043362}
+  - component: {fileID: 633658176952628959}
   m_Layer: 0
   m_Name: RosBridgeScripts
   m_TagString: Untagged
@@ -5207,6 +5209,35 @@ MonoBehaviour:
   rosBridgeIP: 
   rosBridgePort: 0
   topicName: /joint_states
+  sendingInterval: 100
+--- !u!114 &465571618175043362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572908258536576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 705b2b3f703a9dc44ab0b43b72b7cb98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useThread: 0
+--- !u!114 &633658176952628959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572908258536576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 734f45a7c9445b344bd4df78a5fe771d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rosBridgeIP: 
+  sigverseBridgePort: 0
+  topicName: /sigverse/PR2/tf
   sendingInterval: 100
 --- !u!1 &1626006023363630
 GameObject:
