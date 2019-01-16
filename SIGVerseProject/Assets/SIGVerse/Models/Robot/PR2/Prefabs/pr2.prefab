@@ -5082,6 +5082,8 @@ GameObject:
   - component: {fileID: 3514129666977001192}
   - component: {fileID: 465571618175043362}
   - component: {fileID: 633658176952628959}
+  - component: {fileID: 1610845686059161911}
+  - component: {fileID: 2934928358494214698}
   m_Layer: 0
   m_Name: RosBridgeScripts
   m_TagString: Untagged
@@ -5239,6 +5241,38 @@ MonoBehaviour:
   sigverseBridgePort: 0
   topicName: /sigverse/PR2/tf
   sendingInterval: 100
+--- !u!114 &1610845686059161911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572908258536576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc69e5d69539b3148be199c4e62d56a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rosBridgeIP: 
+  rosBridgePort: 0
+  topicName: /l_gripper_controller/command
+  handType: 0
+--- !u!114 &2934928358494214698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572908258536576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc69e5d69539b3148be199c4e62d56a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rosBridgeIP: 
+  rosBridgePort: 0
+  topicName: /r_gripper_controller/command
+  handType: 1
 --- !u!1 &1626006023363630
 GameObject:
   m_ObjectHideFlags: 0
@@ -5796,7 +5830,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1740832781358528}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.09137, y: 0.00495, z: -1.0227886e-15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -6667,7 +6701,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1990912148937620}
-  m_LocalRotation: {x: 1, y: -0, z: 0, w: -1.0331197e-13}
+  m_LocalRotation: {x: -1, y: 0, z: 0, w: 0}
   m_LocalPosition: {x: -0.07691, y: -0.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

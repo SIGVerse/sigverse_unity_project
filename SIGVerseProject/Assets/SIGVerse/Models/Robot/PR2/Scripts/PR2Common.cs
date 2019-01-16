@@ -193,7 +193,8 @@ namespace SIGVerse.PR2
 
 //			{ Joint.r_gripper_motor_slider_joint, new JointRange( -0.10f, +0.10f) },
 			{ Joint.r_gripper_motor_screw_joint,  new JointRange( -3.15f, +3.15f) }, // Inf??
-//			{ Joint.r_gripper_l_finger_joint,     new JointRange( +0.00f, +0.55f) },
+			{ Joint.r_gripper_l_finger_joint,     new JointRange( -0.52f, +0.00f) },
+			{ Joint.r_gripper_r_finger_joint,     new JointRange( -0.52f, +0.00f) },
 			{ Joint.r_gripper_joint,              new JointRange( +0.00f, +0.086f) },
 
 			{ Joint.l_shoulder_pan_joint,         new JointRange( -0.69f, +2.26f) },
@@ -206,7 +207,8 @@ namespace SIGVerse.PR2
 
 //			{ Joint.l_gripper_motor_slider_joint, new JointRange( -0.10f, +0.10f) },
 			{ Joint.l_gripper_motor_screw_joint,  new JointRange( -3.15f, +3.15f) }, // Inf??
-//			{ Joint.l_gripper_l_finger_joint,     new JointRange( +0.00f, +0.55f) },
+			{ Joint.l_gripper_l_finger_joint,     new JointRange( -0.52f, +0.00f) },
+			{ Joint.l_gripper_r_finger_joint,     new JointRange( -0.52f, +0.00f) },
 			{ Joint.l_gripper_joint,              new JointRange( +0.00f, +0.086f) },
 		};
 
