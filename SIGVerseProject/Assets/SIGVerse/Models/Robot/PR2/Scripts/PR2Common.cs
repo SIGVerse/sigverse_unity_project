@@ -140,6 +140,9 @@ namespace SIGVerse.PR2
 			r_gripper_motor_slider_joint,
 			r_gripper_motor_screw_joint,
 			r_gripper_l_finger_joint,
+			r_gripper_r_finger_joint,
+			r_gripper_l_finger_tip_joint,
+			r_gripper_r_finger_tip_joint,
 			r_gripper_joint,
 
 			l_shoulder_pan_joint,
@@ -152,6 +155,9 @@ namespace SIGVerse.PR2
 			l_gripper_motor_slider_joint,
 			l_gripper_motor_screw_joint,
 			l_gripper_l_finger_joint,
+			l_gripper_r_finger_joint,
+			l_gripper_l_finger_tip_joint,
+			l_gripper_r_finger_tip_joint,
 			l_gripper_joint,
 		}
 
@@ -169,33 +175,37 @@ namespace SIGVerse.PR2
 
 		private static Dictionary<Joint, JointRange> jointRangeMap = new Dictionary<Joint, JointRange>()
 		{
-			{ Joint.torso_lift_joint,             new JointRange( +0.01f, +0.33f) },
+			{ Joint.torso_lift_joint,             new JointRange( +0.00f, +0.31f) },
 			{ Joint.torso_lift_motor_screw_joint, new JointRange( -3.15f, +3.15f) }, // Inf??
-			{ Joint.head_pan_joint,               new JointRange( -2.86f, +2.86f) },
-			{ Joint.head_tilt_joint,              new JointRange( -0.37f, +1.30f) },
-			{ Joint.laser_tilt_mount_joint,       new JointRange( -0.74f, +1.43f) },
-			{ Joint.r_shoulder_pan_joint,         new JointRange( -2.14f, +0.56f) },
-			{ Joint.r_shoulder_lift_joint,        new JointRange( -0.35f, +1.30f) },
-			{ Joint.r_upper_arm_roll_joint,       new JointRange( -3.75f, +0.65f) },
-			{ Joint.r_elbow_flex_joint,           new JointRange( -2.12f, -0.15f) },
+			{ Joint.head_pan_joint,               new JointRange( -2.93f, +2.93f) },
+			{ Joint.head_tilt_joint,              new JointRange( -0.52f, +1.04f) },
+			{ Joint.laser_tilt_mount_joint,       new JointRange( -0.78f, +1.48f) },
+
+			{ Joint.r_shoulder_pan_joint,         new JointRange( -2.26f, +0.69f) },
+			{ Joint.r_shoulder_lift_joint,        new JointRange( -0.52f, +1.39f) },
+			{ Joint.r_upper_arm_roll_joint,       new JointRange( -3.90f, +0.76f) },
+			{ Joint.r_elbow_flex_joint,           new JointRange( -2.32f, +0.00f) },
 			{ Joint.r_forearm_roll_joint,         new JointRange( -3.15f, +3.15f) }, // Inf
-			{ Joint.r_wrist_flex_joint,           new JointRange( -2.00f, -0.10f) },
+			{ Joint.r_wrist_flex_joint,           new JointRange( -2.26f, +0.00f) },
 			{ Joint.r_wrist_roll_joint,           new JointRange( -3.15f, +3.15f) }, // Inf
-			{ Joint.r_gripper_motor_slider_joint, new JointRange( -0.10f, +0.10f) },
+
+//			{ Joint.r_gripper_motor_slider_joint, new JointRange( -0.10f, +0.10f) },
 			{ Joint.r_gripper_motor_screw_joint,  new JointRange( -3.15f, +3.15f) }, // Inf??
-			{ Joint.r_gripper_l_finger_joint,     new JointRange( +0.00f, +0.55f) },
-			{ Joint.r_gripper_joint,              new JointRange( +0.00f, +0.09f) },
-			{ Joint.l_shoulder_pan_joint,         new JointRange( -0.56f, +2.14f) },
-			{ Joint.l_shoulder_lift_joint,        new JointRange( -0.35f, +1.30f) },
-			{ Joint.l_upper_arm_roll_joint,       new JointRange( -0.65f, +3.75f) },
-			{ Joint.l_elbow_flex_joint,           new JointRange( -2.12f, -0.15f) },
+//			{ Joint.r_gripper_l_finger_joint,     new JointRange( +0.00f, +0.55f) },
+			{ Joint.r_gripper_joint,              new JointRange( +0.00f, +0.086f) },
+
+			{ Joint.l_shoulder_pan_joint,         new JointRange( -0.69f, +2.26f) },
+			{ Joint.l_shoulder_lift_joint,        new JointRange( -0.52f, +1.39f) },
+			{ Joint.l_upper_arm_roll_joint,       new JointRange( -0.76f, +3.90f) },
+			{ Joint.l_elbow_flex_joint,           new JointRange( -2.32f, +0.00f) },
 			{ Joint.l_forearm_roll_joint,         new JointRange( -3.15f, +3.15f) }, // Inf
-			{ Joint.l_wrist_flex_joint,           new JointRange( -2.00f, -0.10f) },
+			{ Joint.l_wrist_flex_joint,           new JointRange( -2.26f, +0.00f) },
 			{ Joint.l_wrist_roll_joint,           new JointRange( -3.15f, +3.15f) }, // Inf
-			{ Joint.l_gripper_motor_slider_joint, new JointRange( -0.10f, +0.10f) },
+
+//			{ Joint.l_gripper_motor_slider_joint, new JointRange( -0.10f, +0.10f) },
 			{ Joint.l_gripper_motor_screw_joint,  new JointRange( -3.15f, +3.15f) }, // Inf??
-			{ Joint.l_gripper_l_finger_joint,     new JointRange( +0.00f, +0.55f) },
-			{ Joint.l_gripper_joint,              new JointRange( +0.00f, +0.09f) },
+//			{ Joint.l_gripper_l_finger_joint,     new JointRange( +0.00f, +0.55f) },
+			{ Joint.l_gripper_joint,              new JointRange( +0.00f, +0.086f) },
 		};
 
 
@@ -243,16 +253,16 @@ namespace SIGVerse.PR2
 				case Joint.r_upper_arm_roll_joint: 
 				case Joint.r_elbow_flex_joint:
 				case Joint.r_wrist_flex_joint:
-				case Joint.r_gripper_motor_slider_joint:
-				case Joint.r_gripper_l_finger_joint: 
+//				case Joint.r_gripper_motor_slider_joint:
+//				case Joint.r_gripper_l_finger_joint: 
 				case Joint.r_gripper_joint: 
 				case Joint.l_shoulder_pan_joint: 
 				case Joint.l_shoulder_lift_joint: 
 				case Joint.l_upper_arm_roll_joint: 
 				case Joint.l_elbow_flex_joint: 
 				case Joint.l_wrist_flex_joint: 
-				case Joint.l_gripper_motor_slider_joint:
-				case Joint.l_gripper_l_finger_joint: 
+//				case Joint.l_gripper_motor_slider_joint:
+//				case Joint.l_gripper_l_finger_joint: 
 				case Joint.l_gripper_joint: 
 				{
 					return Mathf.Clamp(value, GetMinJointVal(joint), GetMaxJointVal(joint));
@@ -280,16 +290,16 @@ namespace SIGVerse.PR2
 				case Joint.r_upper_arm_roll_joint: 
 				case Joint.r_elbow_flex_joint:
 				case Joint.r_wrist_flex_joint:
-				case Joint.r_gripper_motor_slider_joint:
-				case Joint.r_gripper_l_finger_joint: 
+//				case Joint.r_gripper_motor_slider_joint:
+//				case Joint.r_gripper_l_finger_joint: 
 				case Joint.r_gripper_joint: 
 				case Joint.l_shoulder_pan_joint: 
 				case Joint.l_shoulder_lift_joint: 
 				case Joint.l_upper_arm_roll_joint: 
 				case Joint.l_elbow_flex_joint: 
 				case Joint.l_wrist_flex_joint: 
-				case Joint.l_gripper_motor_slider_joint:
-				case Joint.l_gripper_l_finger_joint: 
+//				case Joint.l_gripper_motor_slider_joint:
+//				case Joint.l_gripper_l_finger_joint: 
 				case Joint.l_gripper_joint: 
 				{
 					return GetCorrectedEulerAngle(value, GetMinJointVal(joint) * Mathf.Rad2Deg, GetMaxJointVal(joint) * Mathf.Rad2Deg);

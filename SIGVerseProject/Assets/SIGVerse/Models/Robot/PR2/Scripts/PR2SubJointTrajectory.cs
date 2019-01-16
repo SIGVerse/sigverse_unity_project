@@ -7,7 +7,7 @@ using static SIGVerse.PR2.PR2Common;
 
 namespace SIGVerse.PR2
 {
-	public class HPR2SubJointTrajectory : RosSubMessage<SIGVerse.RosBridge.trajectory_msgs.JointTrajectory>
+	public class PR2SubJointTrajectory : RosSubMessage<SIGVerse.RosBridge.trajectory_msgs.JointTrajectory>
 	{
 		public class TrajectoryInfo
 		{
@@ -137,24 +137,24 @@ namespace SIGVerse.PR2
 				{
 					case PR2Common.Joint.torso_lift_joint:      { this.UpdateLinkPosition(this.torsoLiftLink, joint, Vector3.forward, this.torsoLiftLinkIniPosZ); break; }
 
-					case PR2Common.Joint.head_pan_joint:        { this.UpdateLinkAngle(this.headPanLink,       joint, Vector3.back);   break; }
-					case PR2Common.Joint.head_tilt_joint:       { this.UpdateLinkAngle(this.headTiltLink,      joint, Vector3.up);     break; }
+					case PR2Common.Joint.head_pan_joint:        { this.UpdateLinkAngle(this.headPanLink,       joint, Vector3.back);  break; }
+					case PR2Common.Joint.head_tilt_joint:       { this.UpdateLinkAngle(this.headTiltLink,      joint, Vector3.down);  break; }
 
-					case PR2Common.Joint.l_shoulder_pan_joint:  { this.UpdateLinkAngle(this.lShoulderPanLink,  joint, Vector3.back);   break; }
-					case PR2Common.Joint.l_shoulder_lift_joint: { this.UpdateLinkAngle(this.lShoulderLiftLink, joint, Vector3.up);     break; }
-					case PR2Common.Joint.l_upper_arm_roll_joint:{ this.UpdateLinkAngle(this.lUpperArmRollLink, joint, Vector3.right);  break; }
-					case PR2Common.Joint.l_elbow_flex_joint:    { this.UpdateLinkAngle(this.lElbowFlexLink,    joint, Vector3.up);     break; }
-					case PR2Common.Joint.l_forearm_roll_joint:  { this.UpdateLinkAngle(this.lForearmRollLink,  joint, Vector3.right);  break; }
-					case PR2Common.Joint.l_wrist_flex_joint:    { this.UpdateLinkAngle(this.lWristFlexLink,    joint, Vector3.up);     break; }
-					case PR2Common.Joint.l_wrist_roll_joint:    { this.UpdateLinkAngle(this.lWristRollLink,    joint, Vector3.right);  break; }
+					case PR2Common.Joint.l_shoulder_pan_joint:  { this.UpdateLinkAngle(this.lShoulderPanLink,  joint, Vector3.back);  break; }
+					case PR2Common.Joint.l_shoulder_lift_joint: { this.UpdateLinkAngle(this.lShoulderLiftLink, joint, Vector3.down);  break; }
+					case PR2Common.Joint.l_upper_arm_roll_joint:{ this.UpdateLinkAngle(this.lUpperArmRollLink, joint, Vector3.right); break; }
+					case PR2Common.Joint.l_elbow_flex_joint:    { this.UpdateLinkAngle(this.lElbowFlexLink,    joint, Vector3.down);  break; }
+					case PR2Common.Joint.l_forearm_roll_joint:  { this.UpdateLinkAngle(this.lForearmRollLink,  joint, Vector3.right); break; }
+					case PR2Common.Joint.l_wrist_flex_joint:    { this.UpdateLinkAngle(this.lWristFlexLink,    joint, Vector3.down);  break; }
+					case PR2Common.Joint.l_wrist_roll_joint:    { this.UpdateLinkAngle(this.lWristRollLink,    joint, Vector3.right); break; }
 
-					case PR2Common.Joint.r_shoulder_pan_joint:  { this.UpdateLinkAngle(this.rShoulderPanLink,  joint, Vector3.forward);break; }
-					case PR2Common.Joint.r_shoulder_lift_joint: { this.UpdateLinkAngle(this.rShoulderLiftLink, joint, Vector3.up);     break; }
-					case PR2Common.Joint.r_upper_arm_roll_joint:{ this.UpdateLinkAngle(this.rUpperArmRollLink, joint, Vector3.left);   break; }
-					case PR2Common.Joint.r_elbow_flex_joint:    { this.UpdateLinkAngle(this.rElbowFlexLink,    joint, Vector3.up);     break; }
-					case PR2Common.Joint.r_forearm_roll_joint:  { this.UpdateLinkAngle(this.rForearmRollLink,  joint, Vector3.right);  break; }
-					case PR2Common.Joint.r_wrist_flex_joint:    { this.UpdateLinkAngle(this.rWristFlexLink,    joint, Vector3.up);     break; }
-					case PR2Common.Joint.r_wrist_roll_joint:    { this.UpdateLinkAngle(this.rWristRollLink,    joint, Vector3.right);  break; }
+					case PR2Common.Joint.r_shoulder_pan_joint:  { this.UpdateLinkAngle(this.rShoulderPanLink,  joint, Vector3.back);  break; }
+					case PR2Common.Joint.r_shoulder_lift_joint: { this.UpdateLinkAngle(this.rShoulderLiftLink, joint, Vector3.down);  break; }
+					case PR2Common.Joint.r_upper_arm_roll_joint:{ this.UpdateLinkAngle(this.rUpperArmRollLink, joint, Vector3.right); break; }
+					case PR2Common.Joint.r_elbow_flex_joint:    { this.UpdateLinkAngle(this.rElbowFlexLink,    joint, Vector3.down);  break; }
+					case PR2Common.Joint.r_forearm_roll_joint:  { this.UpdateLinkAngle(this.rForearmRollLink,  joint, Vector3.right); break; }
+					case PR2Common.Joint.r_wrist_flex_joint:    { this.UpdateLinkAngle(this.rWristFlexLink,    joint, Vector3.down);  break; }
+					case PR2Common.Joint.r_wrist_roll_joint:    { this.UpdateLinkAngle(this.rWristRollLink,    joint, Vector3.right); break; }
 				}
 			}
 		}
@@ -321,35 +321,35 @@ namespace SIGVerse.PR2
 					case PR2Common.Joint.torso_lift_joint: { this.SetJointTrajectoryPosition(joint, durations, positions, this.torsoLiftLink.localPosition.z - this.torsoLiftLinkIniPosZ); break; }
 
 					case PR2Common.Joint.head_pan_joint:        { this.SetJointTrajectoryRotation(joint, durations, positions, -this.headPanLink      .localEulerAngles.z); break; }
-					case PR2Common.Joint.head_tilt_joint:       { this.SetJointTrajectoryRotation(joint, durations, positions, +this.headTiltLink     .localEulerAngles.y); break; }
+					case PR2Common.Joint.head_tilt_joint:       { this.SetJointTrajectoryRotation(joint, durations, positions, -this.headTiltLink     .localEulerAngles.y); break; }
 
 					case PR2Common.Joint.l_shoulder_pan_joint:  { this.SetJointTrajectoryRotation(joint, durations, positions, -this.lShoulderPanLink .localEulerAngles.z); break; }
-					case PR2Common.Joint.l_shoulder_lift_joint: { this.SetJointTrajectoryRotation(joint, durations, positions, +this.lShoulderLiftLink.localEulerAngles.y); break; }
+					case PR2Common.Joint.l_shoulder_lift_joint: { this.SetJointTrajectoryRotation(joint, durations, positions, -this.lShoulderLiftLink.localEulerAngles.y); break; }
 					case PR2Common.Joint.l_upper_arm_roll_joint:{ this.SetJointTrajectoryRotation(joint, durations, positions, +this.lUpperArmRollLink.localEulerAngles.x); break; }
-					case PR2Common.Joint.l_elbow_flex_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, +this.lElbowFlexLink   .localEulerAngles.y); break; }
+					case PR2Common.Joint.l_elbow_flex_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, -this.lElbowFlexLink   .localEulerAngles.y); break; }
 					case PR2Common.Joint.l_forearm_roll_joint:  { this.SetJointTrajectoryRotation(joint, durations, positions, +this.lForearmRollLink .localEulerAngles.x); break; }
-					case PR2Common.Joint.l_wrist_flex_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, +this.lWristFlexLink   .localEulerAngles.y); break; }
+					case PR2Common.Joint.l_wrist_flex_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, -this.lWristFlexLink   .localEulerAngles.y); break; }
 					case PR2Common.Joint.l_wrist_roll_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, +this.lWristRollLink   .localEulerAngles.x); break; }
 
-					case PR2Common.Joint.r_shoulder_pan_joint:  { this.SetJointTrajectoryRotation(joint, durations, positions, +this.rShoulderPanLink .localEulerAngles.z); break; }
-					case PR2Common.Joint.r_shoulder_lift_joint: { this.SetJointTrajectoryRotation(joint, durations, positions, +this.rShoulderLiftLink.localEulerAngles.y); break; }
-					case PR2Common.Joint.r_upper_arm_roll_joint:{ this.SetJointTrajectoryRotation(joint, durations, positions, -this.rUpperArmRollLink.localEulerAngles.x); break; }
-					case PR2Common.Joint.r_elbow_flex_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, +this.rElbowFlexLink   .localEulerAngles.y); break; }
+					case PR2Common.Joint.r_shoulder_pan_joint:  { this.SetJointTrajectoryRotation(joint, durations, positions, -this.rShoulderPanLink .localEulerAngles.z); break; }
+					case PR2Common.Joint.r_shoulder_lift_joint: { this.SetJointTrajectoryRotation(joint, durations, positions, -this.rShoulderLiftLink.localEulerAngles.y); break; }
+					case PR2Common.Joint.r_upper_arm_roll_joint:{ this.SetJointTrajectoryRotation(joint, durations, positions, +this.rUpperArmRollLink.localEulerAngles.x); break; }
+					case PR2Common.Joint.r_elbow_flex_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, -this.rElbowFlexLink   .localEulerAngles.y); break; }
 					case PR2Common.Joint.r_forearm_roll_joint:  { this.SetJointTrajectoryRotation(joint, durations, positions, +this.rForearmRollLink .localEulerAngles.x); break; }
-					case PR2Common.Joint.r_wrist_flex_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, +this.rWristFlexLink   .localEulerAngles.y); break; }
+					case PR2Common.Joint.r_wrist_flex_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, -this.rWristFlexLink   .localEulerAngles.y); break; }
 					case PR2Common.Joint.r_wrist_roll_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, +this.rWristRollLink   .localEulerAngles.x); break; }
 				}
 			}
 		}
 
-		private void SetJointTrajectoryPosition(PR2Common.Joint joint, List<float> durations, List<float> goalPositions, float value)
+		private void SetJointTrajectoryPosition(PR2Common.Joint joint, List<float> durations, List<float> goalPositions, float currentPosition)
 		{
-			this.trajectoryInfoMap[joint] = new TrajectoryInfo(durations, goalPositions, value);
+			this.trajectoryInfoMap[joint] = new TrajectoryInfo(durations, goalPositions, currentPosition);
 		}
 
-		private void SetJointTrajectoryRotation(PR2Common.Joint joint, List<float> durations, List<float> goalPositions, float value)
+		private void SetJointTrajectoryRotation(PR2Common.Joint joint, List<float> durations, List<float> goalPositions, float currentPosition)
 		{
-			this.trajectoryInfoMap[joint] = new TrajectoryInfo(durations, goalPositions, PR2Common.GetNormalizedJointEulerAngle(value, joint) * Mathf.Deg2Rad);
+			this.trajectoryInfoMap[joint] = new TrajectoryInfo(durations, goalPositions, PR2Common.GetNormalizedJointEulerAngle(currentPosition, joint) * Mathf.Deg2Rad);
 		}
 
 		private void CheckOverLimitSpeed()

@@ -302,14 +302,14 @@ namespace SIGVerse.ToyotaHSR
 			}
 		}
 
-		private void SetJointTrajectoryPosition(HSRCommon.Joint joint, List<float> durations, List<float> goalPositions, float value)
+		private void SetJointTrajectoryPosition(HSRCommon.Joint joint, List<float> durations, List<float> goalPositions, float currentPosition)
 		{
-			this.trajectoryInfoMap[joint] = new TrajectoryInfo(durations, goalPositions, value);
+			this.trajectoryInfoMap[joint] = new TrajectoryInfo(durations, goalPositions, currentPosition);
 		}
 
-		private void SetJointTrajectoryRotation(HSRCommon.Joint joint, List<float> durations, List<float> goalPositions, float value)
+		private void SetJointTrajectoryRotation(HSRCommon.Joint joint, List<float> durations, List<float> goalPositions, float currentPosition)
 		{
-			this.trajectoryInfoMap[joint] = new TrajectoryInfo(durations, goalPositions, HSRCommon.GetNormalizedJointEulerAngle(value, joint) * Mathf.Deg2Rad);
+			this.trajectoryInfoMap[joint] = new TrajectoryInfo(durations, goalPositions, HSRCommon.GetNormalizedJointEulerAngle(currentPosition, joint) * Mathf.Deg2Rad);
 		}
 
 
