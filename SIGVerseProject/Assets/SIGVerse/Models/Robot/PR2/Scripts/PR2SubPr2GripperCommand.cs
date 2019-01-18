@@ -8,14 +8,8 @@ using SIGVerse.RosBridge.pr2_controllers_msgs;
 
 namespace SIGVerse.PR2
 {
-	public class PR2SubPr2GripperCommand : RosSubMessage<SIGVerse.RosBridge.pr2_controllers_msgs.Pr2GripperCommand>, IGraspedObjectHandler
+	public class PR2SubPr2GripperCommand : RosSubMessage<SIGVerse.RosBridge.pr2_controllers_msgs.Pr2GripperCommand>, IPr2GraspedObjectHandler
 	{
-		public enum HandType
-		{
-			Left,
-			Right,
-		}
-
 		public HandType handType = HandType.Left;
 
 		//--------------------------------------------------
@@ -50,12 +44,10 @@ namespace SIGVerse.PR2
 			}
 		}
 
-
-		protected override void Start()
-		{
-			base.Start();
-		}
-
+		//protected override void Start()
+		//{
+		//	base.Start();
+		//}
 
 		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.pr2_controllers_msgs.Pr2GripperCommand gripperCommand)
 		{
@@ -69,7 +61,7 @@ namespace SIGVerse.PR2
 
 			float newPos = this.GetGripperNewPosition();
 
-			if(Mathf.Abs(newPos - this.gripperCurrentPos) < 0.001f) // Movement is small
+			if(Mathf.Abs(newPos - this.gripperCurrentPos) < 0.0001f) // Movement is small
 			{
 				this.gripperCommand = null;
 				return;
@@ -100,16 +92,19 @@ namespace SIGVerse.PR2
 		{
 			PR2Common.Joint joint = (this.handType==HandType.Left)? PR2Common.Joint.l_gripper_joint : PR2Common.Joint.r_gripper_joint;
 
-			float maxDistance = PR2Common.GetMaxJointSpeed(joint) * Time.fixedDeltaTime;
+			float maxDistance = 0.05f * Time.fixedDeltaTime;  // speed=0.05[m/s]
 
 			float newPos = Mathf.Clamp((float)this.gripperCommand.position, this.gripperCurrentPos-maxDistance, this.gripperCurrentPos+maxDistance);
 
 			return PR2Common.GetClampedPosition(newPos, joint);
 		}
 
-		public void OnChangeGraspedObject(GameObject graspedObject)
+		public void OnChangeGraspedObject(HandType handType, GameObject graspedObject)
 		{
-			this.graspedObject = graspedObject;
+			if(this.handType==handType)
+			{
+				this.graspedObject = graspedObject;
+			}
 		}
 	}
 }

@@ -30,9 +30,9 @@ namespace SIGVerse.Common
 
 		public GameObject eventDestination;
 
-		private Dictionary<Collider, Rigidbody> rigidbodyMap;
+		protected Dictionary<Collider, Rigidbody> rigidbodyMap;
 
-		void Awake()
+		protected virtual void Awake()
 		{
 			if(eventDestination==null)
 			{
@@ -40,23 +40,14 @@ namespace SIGVerse.Common
 			}
 		}
 
-		void Start()
+		protected virtual void Start()
 		{
 			this.rigidbodyMap = new Dictionary<Collider, Rigidbody>();
 		}
 
-		void OnTriggerEnter(Collider other)
+		protected virtual void OnTriggerEnter(Collider other)
 		{
-			if(other.isTrigger) { return; }
-
-			if(other.attachedRigidbody == null) { return; }
-
-			if(this.rigidbodyMap.ContainsKey(other))
-			{
-				SIGVerseLogger.Warn("This Collider has already been added. ("+this.GetType().FullName+")  name=" + SIGVerseUtils.GetHierarchyPath(other.transform));
-				return;
-			}
-
+			if(!this.IsValidTriggerEnter(other)){ return; }
 
 			if(this.triggerType==TriggerType.Entrance && !this.rigidbodyMap.ContainsValue(other.attachedRigidbody))
 			{
@@ -71,17 +62,9 @@ namespace SIGVerse.Common
 			this.rigidbodyMap.Add(other, other.attachedRigidbody);
 		}
 
-		void OnTriggerExit(Collider other)
+		protected virtual void OnTriggerExit(Collider other)
 		{
-			if(other.isTrigger) { return; }
-
-			if(other.attachedRigidbody == null) { return; }
-
-			if(!this.rigidbodyMap.ContainsKey(other))
-			{
-				SIGVerseLogger.Warn("This Collider does not exist in the Dictionary. ("+this.GetType().FullName+")  name=" + SIGVerseUtils.GetHierarchyPath(other.transform));
-				return;
-			}
+			if(!this.IsValidTriggerExit(other)){ return; }
 
 			this.rigidbodyMap.Remove(other);
 
@@ -94,6 +77,36 @@ namespace SIGVerse.Common
 					functor: (reciever, eventData) => reciever.OnTransferredTriggerExit(other.attachedRigidbody, this.gripperType)
 				);
 			}
+		}
+
+		protected bool IsValidTriggerEnter(Collider other)
+		{
+			if(other.isTrigger) { return false; }
+
+			if(other.attachedRigidbody == null) { return false; }
+
+			if(this.rigidbodyMap.ContainsKey(other))
+			{
+				SIGVerseLogger.Warn("This Collider has already been added. ("+this.GetType().FullName+")  name=" + SIGVerseUtils.GetHierarchyPath(other.transform));
+				return false;
+			}
+
+			return true;
+		}
+
+		protected bool IsValidTriggerExit(Collider other)
+		{
+			if(other.isTrigger) { return false; }
+
+			if(other.attachedRigidbody == null) { return false; }
+
+			if(!this.rigidbodyMap.ContainsKey(other))
+			{
+				SIGVerseLogger.Warn("This Collider does not exist in the Dictionary. ("+this.GetType().FullName+")  name=" + SIGVerseUtils.GetHierarchyPath(other.transform));
+				return false;
+			}
+
+			return true;
 		}
 	}
 }

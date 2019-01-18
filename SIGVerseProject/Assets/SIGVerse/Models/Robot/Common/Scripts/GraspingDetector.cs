@@ -14,11 +14,11 @@ namespace SIGVerse.Common
 
 	public class GraspingDetector : MonoBehaviour, IGripperTriggerHandler
 	{
-		private const float OpeningAngleThreshold = 0.0f; // This parameter is meaningless currently.
+		protected const float OpeningAngleThreshold = 0.0f; // This parameter is meaningless currently.
 
 		public GameObject handPalm;
-		public GameObject leftGripper;  // 0   -- +34
-		public GameObject rightGripper; // -34 -- 0
+		public GameObject leftGripper;
+		public GameObject rightGripper;
 
 		public List<string> graspableTags;
 
@@ -26,27 +26,27 @@ namespace SIGVerse.Common
 
 		//------------------------
 
-		private float leftGripperAngle;
-		private float rightGripperAngle;
+		protected float leftGripperAngle;
+		protected float rightGripperAngle;
 
-		private float preLeftGripperAngle;
-		private float preRightGripperAngle;
+		protected float preLeftGripperAngle;
+		protected float preRightGripperAngle;
 
-		private List<Rigidbody> graspableRigidbodies;
+		protected List<Rigidbody> graspableRigidbodies;
 
-		private Rigidbody graspedRigidbody;
-		private Transform savedParentObj;
+		protected Rigidbody graspedRigidbody;
+		protected Transform savedParentObj;
 
-		private bool  isGripperClosing;
-		private float openingAngle;
+		protected bool  isGripperClosing;
+		protected float openingAngle;
 
-		private HashSet<Rigidbody> leftCollidingObjects;
-		private HashSet<Rigidbody> rightCollidingObjects;
+		protected HashSet<Rigidbody> leftCollidingObjects;
+		protected HashSet<Rigidbody> rightCollidingObjects;
 
-		private float latestReleaseTime = 0.0f;
+		protected float latestReleaseTime = 0.0f;
 
 
-		protected void Awake()
+		protected virtual void Awake()
 		{
 			this.graspableRigidbodies = new List<Rigidbody>();
 
@@ -62,14 +62,12 @@ namespace SIGVerse.Common
 				}
 			}
 
-//			Debug.Log("(GraspingDetector)graspable collider num=" + this.graspableColliders.Count);
-
 			this.leftCollidingObjects  = new HashSet<Rigidbody>();
 			this.rightCollidingObjects = new HashSet<Rigidbody>();
 		}
 		
 		// Use this for initialization
-		void Start()
+		protected virtual void Start()
 		{
 			this.leftGripperAngle  = this.leftGripper .transform.localEulerAngles.x;
 			this.rightGripperAngle = this.rightGripper.transform.localEulerAngles.x;
@@ -84,7 +82,7 @@ namespace SIGVerse.Common
 		}
 
 		// Update is called once per frame
-		void Update()
+		protected virtual void FixedUpdate()
 		{
 			this.leftGripperAngle  = this.leftGripper .transform.localEulerAngles.x;
 			this.rightGripperAngle = this.rightGripper.transform.localEulerAngles.x;
@@ -162,7 +160,7 @@ namespace SIGVerse.Common
 			}
 		}
 
-		private bool IsGraspable(Rigidbody targetRigidbody)
+		protected bool IsGraspable(Rigidbody targetRigidbody)
 		{
 			foreach(Rigidbody graspableRigidbody in this.graspableRigidbodies)
 			{
@@ -172,7 +170,7 @@ namespace SIGVerse.Common
 			return false;
 		}
 
-		private void Grasp(Rigidbody collidedRigidbody)
+		protected void Grasp(Rigidbody collidedRigidbody)
 		{
 			this.savedParentObj = collidedRigidbody.gameObject.transform.parent;
 
@@ -193,7 +191,7 @@ namespace SIGVerse.Common
 			this.latestReleaseTime = 0.0f;
 		}
 
-		private void Release()
+		protected void Release()
 		{
 			this.graspedRigidbody.transform.parent = this.savedParentObj;
 
@@ -216,7 +214,7 @@ namespace SIGVerse.Common
 			this.latestReleaseTime = Time.time;
 		}
 
-		private void SendGraspedObjectInfo(GameObject graspedObject)
+		protected virtual void SendGraspedObjectInfo(GameObject graspedObject)
 		{
 			foreach(GameObject graspingNotificationDestination in graspingNotificationDestinations)
 			{
