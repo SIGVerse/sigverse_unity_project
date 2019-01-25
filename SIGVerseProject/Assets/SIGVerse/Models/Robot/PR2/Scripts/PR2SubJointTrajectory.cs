@@ -179,20 +179,9 @@ namespace SIGVerse.PR2
 
 		private void UpdateLinkAngle(Transform link, PR2Common.Joint joint, Vector3 axis)
 		{
-			float newPos = PR2Common.GetNormalizedJointEulerAngle(GetPositionAndUpdateTrajectory(this.trajectoryInfoMap, joint) * Mathf.Rad2Deg, joint);
+			float newPos = GetPositionAndUpdateTrajectory(this.trajectoryInfoMap, joint) * Mathf.Rad2Deg;
 
-			if(Mathf.Abs(axis.x)==1)
-			{
-				link.localEulerAngles = new Vector3(0.0f, link.localEulerAngles.y, link.localEulerAngles.z) + newPos * axis;
-			}
-			else if(Mathf.Abs(axis.y)==1)
-			{
-				link.localEulerAngles = new Vector3(link.localEulerAngles.x, 0.0f, link.localEulerAngles.z) + newPos * axis;
-			}
-			else if(Mathf.Abs(axis.z)==1)
-			{
-				link.localEulerAngles = new Vector3(link.localEulerAngles.x, link.localEulerAngles.y, 0.0f) + newPos * axis;
-			}
+			link.localEulerAngles = newPos * axis;
 		}
 
 		private static float GetPositionAndUpdateTrajectory(Dictionary<PR2Common.Joint, TrajectoryInfo> trajectoryInfoMap, PR2Common.Joint joint)
@@ -204,6 +193,14 @@ namespace SIGVerse.PR2
 
 			int targetPointIndex = GetTargetPointIndex(trajectoryInfo);
 
+			float goalPosition = trajectoryInfo.GoalPositions[targetPointIndex];
+			
+			if(PR2Common.continuousJoints.Contains(joint))
+			{
+				if(goalPosition-trajectoryInfo.CurrentPosition >  +Mathf.PI){ goalPosition -= 2*Mathf.PI; }
+				if(goalPosition-trajectoryInfo.CurrentPosition <= -Mathf.PI){ goalPosition += 2*Mathf.PI; }
+			}
+
 			float speed = 0.0f;
 
 			if (trajectoryInfo.CurrentTime - trajectoryInfo.StartTime >= trajectoryInfo.Durations[targetPointIndex])
@@ -212,7 +209,7 @@ namespace SIGVerse.PR2
 			}
 			else
 			{
-				speed = Mathf.Abs((trajectoryInfo.GoalPositions[targetPointIndex] - trajectoryInfo.CurrentPosition) / (trajectoryInfo.Durations[targetPointIndex] - (trajectoryInfo.CurrentTime - trajectoryInfo.StartTime)));
+				speed = Mathf.Abs((goalPosition - trajectoryInfo.CurrentPosition) / (trajectoryInfo.Durations[targetPointIndex] - (trajectoryInfo.CurrentTime - trajectoryInfo.StartTime)));
 				speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
 			}
 
@@ -220,25 +217,27 @@ namespace SIGVerse.PR2
 			float newPosition;
 			float movingDistance = speed * (Time.time - trajectoryInfo.CurrentTime);
 
-			if (movingDistance > Mathf.Abs(trajectoryInfo.GoalPositions[targetPointIndex] - trajectoryInfo.CurrentPosition))
+			if (movingDistance > Mathf.Abs(goalPosition - trajectoryInfo.CurrentPosition))
 			{
-				newPosition = trajectoryInfo.GoalPositions[targetPointIndex];
+				newPosition = goalPosition;
 				trajectoryInfoMap[joint] = null;
 			}
 			else
 			{
 				trajectoryInfo.CurrentTime = Time.time;
 
-				if (trajectoryInfo.GoalPositions[targetPointIndex] > trajectoryInfo.CurrentPosition)
+				if (goalPosition > trajectoryInfo.CurrentPosition)
 				{
 					trajectoryInfo.CurrentPosition = trajectoryInfo.CurrentPosition + movingDistance;
-					newPosition = trajectoryInfo.CurrentPosition;
 				}
 				else
 				{
 					trajectoryInfo.CurrentPosition = trajectoryInfo.CurrentPosition - movingDistance;
-					newPosition = trajectoryInfo.CurrentPosition;
 				}
+
+				if (PR2Common.continuousJoints.Contains(joint)){ trajectoryInfo.CurrentPosition = GetNormalizedRadian(trajectoryInfo.CurrentPosition); }
+
+				newPosition = trajectoryInfo.CurrentPosition;
 			}
 
 			return newPosition;
@@ -316,31 +315,32 @@ namespace SIGVerse.PR2
 					durations.Add((float)msg.points[pointIndex].time_from_start.secs + (float)msg.points[pointIndex].time_from_start.nsecs * 1.0e-9f);
 				}
 
-				switch(joint)
+				switch (joint)
 				{
 					case PR2Common.Joint.torso_lift_joint: { this.SetJointTrajectoryPosition(joint, durations, positions, this.torsoLiftLink.localPosition.z - this.torsoLiftLinkIniPosZ); break; }
+					
+					case PR2Common.Joint.head_pan_joint:        { this.SetJointTrajectoryRotation(joint, durations, positions, PR2Common.GetRosAngleRad(joint, Vector3.back, this.headPanLink));  break; }
+					case PR2Common.Joint.head_tilt_joint:       { this.SetJointTrajectoryRotation(joint, durations, positions, PR2Common.GetRosAngleRad(joint, Vector3.down, this.headTiltLink)); break; }
 
-					case PR2Common.Joint.head_pan_joint:        { this.SetJointTrajectoryRotation(joint, durations, positions, -this.headPanLink      .localEulerAngles.z); break; }
-					case PR2Common.Joint.head_tilt_joint:       { this.SetJointTrajectoryRotation(joint, durations, positions, -this.headTiltLink     .localEulerAngles.y); break; }
+					case PR2Common.Joint.l_shoulder_pan_joint:  { this.SetJointTrajectoryRotation(joint, durations, positions, PR2Common.GetRosAngleRad(joint, Vector3.back,  this.lShoulderPanLink ));  break; }
+					case PR2Common.Joint.l_shoulder_lift_joint: { this.SetJointTrajectoryRotation(joint, durations, positions, PR2Common.GetRosAngleRad(joint, Vector3.down,  this.lShoulderLiftLink )); break; }
+					case PR2Common.Joint.l_upper_arm_roll_joint:{ this.SetJointTrajectoryRotation(joint, durations, positions, PR2Common.GetRosAngleRad(joint, Vector3.right, this.lUpperArmRollLink));  break; }
+					case PR2Common.Joint.l_elbow_flex_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, PR2Common.GetRosAngleRad(joint, Vector3.down,  this.lElbowFlexLink ));    break; }
+					case PR2Common.Joint.l_forearm_roll_joint:  { this.SetJointTrajectoryRotation(joint, durations, positions, PR2Common.GetRosAngleRad(joint, Vector3.right, this.lForearmRollLink));   break; }
+					case PR2Common.Joint.l_wrist_flex_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, PR2Common.GetRosAngleRad(joint, Vector3.down,  this.lWristFlexLink ));    break; }
+					case PR2Common.Joint.l_wrist_roll_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, PR2Common.GetRosAngleRad(joint, Vector3.right, this.lWristRollLink));     break; }
 
-					case PR2Common.Joint.l_shoulder_pan_joint:  { this.SetJointTrajectoryRotation(joint, durations, positions, -this.lShoulderPanLink .localEulerAngles.z); break; }
-					case PR2Common.Joint.l_shoulder_lift_joint: { this.SetJointTrajectoryRotation(joint, durations, positions, -this.lShoulderLiftLink.localEulerAngles.y); break; }
-					case PR2Common.Joint.l_upper_arm_roll_joint:{ this.SetJointTrajectoryRotation(joint, durations, positions, +this.lUpperArmRollLink.localEulerAngles.x); break; }
-					case PR2Common.Joint.l_elbow_flex_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, -this.lElbowFlexLink   .localEulerAngles.y); break; }
-					case PR2Common.Joint.l_forearm_roll_joint:  { this.SetJointTrajectoryRotation(joint, durations, positions, +this.lForearmRollLink .localEulerAngles.x); break; }
-					case PR2Common.Joint.l_wrist_flex_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, -this.lWristFlexLink   .localEulerAngles.y); break; }
-					case PR2Common.Joint.l_wrist_roll_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, +this.lWristRollLink   .localEulerAngles.x); break; }
-
-					case PR2Common.Joint.r_shoulder_pan_joint:  { this.SetJointTrajectoryRotation(joint, durations, positions, -this.rShoulderPanLink .localEulerAngles.z); break; }
-					case PR2Common.Joint.r_shoulder_lift_joint: { this.SetJointTrajectoryRotation(joint, durations, positions, -this.rShoulderLiftLink.localEulerAngles.y); break; }
-					case PR2Common.Joint.r_upper_arm_roll_joint:{ this.SetJointTrajectoryRotation(joint, durations, positions, +this.rUpperArmRollLink.localEulerAngles.x); break; }
-					case PR2Common.Joint.r_elbow_flex_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, -this.rElbowFlexLink   .localEulerAngles.y); break; }
-					case PR2Common.Joint.r_forearm_roll_joint:  { this.SetJointTrajectoryRotation(joint, durations, positions, +this.rForearmRollLink .localEulerAngles.x); break; }
-					case PR2Common.Joint.r_wrist_flex_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, -this.rWristFlexLink   .localEulerAngles.y); break; }
-					case PR2Common.Joint.r_wrist_roll_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, +this.rWristRollLink   .localEulerAngles.x); break; }
+					case PR2Common.Joint.r_shoulder_pan_joint:  { this.SetJointTrajectoryRotation(joint, durations, positions, PR2Common.GetRosAngleRad(joint, Vector3.back,  this.rShoulderPanLink ));  break; }
+					case PR2Common.Joint.r_shoulder_lift_joint: { this.SetJointTrajectoryRotation(joint, durations, positions, PR2Common.GetRosAngleRad(joint, Vector3.down,  this.rShoulderLiftLink )); break; }
+					case PR2Common.Joint.r_upper_arm_roll_joint:{ this.SetJointTrajectoryRotation(joint, durations, positions, PR2Common.GetRosAngleRad(joint, Vector3.right, this.rUpperArmRollLink));  break; }
+					case PR2Common.Joint.r_elbow_flex_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, PR2Common.GetRosAngleRad(joint, Vector3.down,  this.rElbowFlexLink ));    break; }
+					case PR2Common.Joint.r_forearm_roll_joint:  { this.SetJointTrajectoryRotation(joint, durations, positions, PR2Common.GetRosAngleRad(joint, Vector3.right, this.rForearmRollLink));   break; }
+					case PR2Common.Joint.r_wrist_flex_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, PR2Common.GetRosAngleRad(joint, Vector3.down,  this.rWristFlexLink ));    break; }
+					case PR2Common.Joint.r_wrist_roll_joint:    { this.SetJointTrajectoryRotation(joint, durations, positions, PR2Common.GetRosAngleRad(joint, Vector3.right, this.rWristRollLink));     break; }
 				}
 			}
 		}
+
 
 		private void SetJointTrajectoryPosition(PR2Common.Joint joint, List<float> durations, List<float> goalPositions, float currentPosition)
 		{
@@ -349,7 +349,21 @@ namespace SIGVerse.PR2
 
 		private void SetJointTrajectoryRotation(PR2Common.Joint joint, List<float> durations, List<float> goalPositions, float currentPosition)
 		{
-			this.trajectoryInfoMap[joint] = new TrajectoryInfo(durations, goalPositions, PR2Common.GetNormalizedJointEulerAngle(currentPosition, joint) * Mathf.Deg2Rad);
+			if(PR2Common.continuousJoints.Contains(joint))
+			{
+				for(int i=0; i<goalPositions.Count; i++)
+				{
+					goalPositions[i] = GetNormalizedRadian(goalPositions[i]);
+				}
+
+				currentPosition = GetNormalizedRadian(currentPosition);
+			}
+			this.trajectoryInfoMap[joint] = new TrajectoryInfo(durations, goalPositions, currentPosition);
+		}
+
+		public static float GetNormalizedRadian(float radian)
+		{
+			return Mathf.Atan2(Mathf.Sin(radian), Mathf.Cos(radian));
 		}
 
 		private void CheckOverLimitSpeed()

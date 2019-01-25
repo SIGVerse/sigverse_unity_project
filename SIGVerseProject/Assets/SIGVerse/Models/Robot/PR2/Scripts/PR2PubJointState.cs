@@ -11,10 +11,29 @@ namespace SIGVerse.PR2
 {
 	public class PR2PubJointState : RosPubMessage<JointState>
 	{
+		private class ContinuousJointInfo
+		{
+			public PR2Common.Joint Joint { get; set; }
+			public int     SeqNo         { get; set; }
+			public double  PreviousPos   { get; set; }
+			public int     RotationCount { get; set; }
+
+			public ContinuousJointInfo(PR2Common.Joint joint, int listNum)
+			{
+				this.Joint       = joint;
+				this.SeqNo       = listNum;
+				this.PreviousPos = 0.0;
+				this.RotationCount = 0;
+			}
+		}
+
 		[TooltipAttribute("milliseconds")]
 		public float sendingInterval = 100;
 
 		//--------------------------------------------------
+
+		private List<ContinuousJointInfo> continuousJointInfoList = new List<ContinuousJointInfo>();
+
 		private Transform torsoLiftLink;
 		private Transform headPanLink;
 		private Transform headTiltLink;
@@ -156,12 +175,24 @@ namespace SIGVerse.PR2
 				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 				0.0, 0.0, 0.0, 0.0, 0.0,
 			};
-			this.jointState.effort   = new List<double>
+			this.jointState.effort = new List<double>
 			{
 				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 				0.0, 0.0, 0.0, 0.0, 0.0,
 			};
+
+			foreach(PR2Common.Joint continuousJoint in PR2Common.continuousJoints)
+			{
+				switch(continuousJoint)
+				{
+					case PR2Common.Joint.r_forearm_roll_joint: { this.continuousJointInfoList.Add(new ContinuousJointInfo(continuousJoint, 21)); break; }
+					case PR2Common.Joint.r_wrist_roll_joint:   { this.continuousJointInfoList.Add(new ContinuousJointInfo(continuousJoint, 24)); break; }
+					case PR2Common.Joint.l_forearm_roll_joint: { this.continuousJointInfoList.Add(new ContinuousJointInfo(continuousJoint, 35)); break; }
+					case PR2Common.Joint.l_wrist_roll_joint:   { this.continuousJointInfoList.Add(new ContinuousJointInfo(continuousJoint, 38)); break; }
+					default: { throw new Exception("Initialization of continuousJointInfoList failed."); }
+				}
+			}
 		}
 
 
@@ -184,45 +215,63 @@ namespace SIGVerse.PR2
 
 				this.torsoLiftLink.localPosition.z - this.torsoLiftLinkIniPosZ , // 13 
 				0.0, // 14
-				PR2Common.GetNormalizedJointEulerAngle(-this.headPanLink       .localEulerAngles.z, PR2Common.Joint.head_pan_joint)         * Mathf.Deg2Rad, // 15
-				PR2Common.GetNormalizedJointEulerAngle(-this.headTiltLink      .localEulerAngles.y, PR2Common.Joint.head_tilt_joint)        * Mathf.Deg2Rad, // 16
+				PR2Common.GetRosAngleRad(PR2Common.Joint.head_pan_joint,  Vector3.back, this.headPanLink) , // 15
+				PR2Common.GetRosAngleRad(PR2Common.Joint.head_tilt_joint, Vector3.down, this.headTiltLink), // 16
 				0.0, // 17
 
-				PR2Common.GetNormalizedJointEulerAngle(+this.rUpperArmRollLink     .localEulerAngles.x, PR2Common.Joint.r_upper_arm_roll_joint)       * Mathf.Deg2Rad, // 18
-				PR2Common.GetNormalizedJointEulerAngle(-this.rShoulderPanLink      .localEulerAngles.z, PR2Common.Joint.r_shoulder_pan_joint)         * Mathf.Deg2Rad, // 19
-				PR2Common.GetNormalizedJointEulerAngle(-this.rShoulderLiftLink     .localEulerAngles.y, PR2Common.Joint.r_shoulder_lift_joint)        * Mathf.Deg2Rad, // 20
-				PR2Common.GetNormalizedJointEulerAngle(+this.rForearmRollLink      .localEulerAngles.x, PR2Common.Joint.r_forearm_roll_joint)         * Mathf.Deg2Rad, // 21
-				PR2Common.GetNormalizedJointEulerAngle(-this.rElbowFlexLink        .localEulerAngles.y, PR2Common.Joint.r_elbow_flex_joint)           * Mathf.Deg2Rad, // 22
-				PR2Common.GetNormalizedJointEulerAngle(-this.rWristFlexLink        .localEulerAngles.y, PR2Common.Joint.r_wrist_flex_joint)           * Mathf.Deg2Rad, // 23
-				PR2Common.GetNormalizedJointEulerAngle(+this.rWristRollLink        .localEulerAngles.x, PR2Common.Joint.r_wrist_roll_joint)           * Mathf.Deg2Rad, // 24
-				PR2Common.GetNormalizedJointEulerAngle(-this.rGripperPalmLink      .localEulerAngles.y, PR2Common.Joint.r_gripper_joint)              * Mathf.Deg2Rad, // 25
-				PR2Common.GetNormalizedJointEulerAngle(-this.rGripperLFingerLink   .localEulerAngles.z, PR2Common.Joint.r_gripper_l_finger_joint)     * Mathf.Deg2Rad, // 26
-				PR2Common.GetNormalizedJointEulerAngle(-this.rGripperRFingerLink   .localEulerAngles.z, PR2Common.Joint.r_gripper_r_finger_joint)     * Mathf.Deg2Rad, // 27
-				PR2Common.GetNormalizedJointEulerAngle(-this.rGripperRFingerTipLink.localEulerAngles.z, PR2Common.Joint.r_gripper_r_finger_tip_joint) * Mathf.Deg2Rad, // 28
-				PR2Common.GetNormalizedJointEulerAngle(-this.rGripperLFingerTipLink.localEulerAngles.z, PR2Common.Joint.r_gripper_l_finger_tip_joint) * Mathf.Deg2Rad, // 29
+				PR2Common.GetRosAngleRad(PR2Common.Joint.r_upper_arm_roll_joint,       Vector3.right, this.rUpperArmRollLink)     , // 18
+				PR2Common.GetRosAngleRad(PR2Common.Joint.r_shoulder_pan_joint,         Vector3.back,  this.rShoulderPanLink)      , // 19
+				PR2Common.GetRosAngleRad(PR2Common.Joint.r_shoulder_lift_joint,        Vector3.down,  this.rShoulderLiftLink)     , // 20
+				PR2Common.GetRosAngleRad(PR2Common.Joint.r_forearm_roll_joint,         Vector3.right, this.rForearmRollLink)      , // 21
+				PR2Common.GetRosAngleRad(PR2Common.Joint.r_elbow_flex_joint,           Vector3.down,  this.rElbowFlexLink)        , // 22
+				PR2Common.GetRosAngleRad(PR2Common.Joint.r_wrist_flex_joint,           Vector3.down,  this.rWristFlexLink)        , // 23
+				PR2Common.GetRosAngleRad(PR2Common.Joint.r_wrist_roll_joint,           Vector3.right, this.rWristRollLink)        , // 24
+				PR2Common.GetRosAngleRad(PR2Common.Joint.r_gripper_joint,              Vector3.down,  this.rGripperPalmLink)      , // 25
+				PR2Common.GetRosAngleRad(PR2Common.Joint.r_gripper_l_finger_joint,     Vector3.back,  this.rGripperLFingerLink)   , // 26
+				PR2Common.GetRosAngleRad(PR2Common.Joint.r_gripper_r_finger_joint,     Vector3.back,  this.rGripperRFingerLink)   , // 27
+				PR2Common.GetRosAngleRad(PR2Common.Joint.r_gripper_r_finger_tip_joint, Vector3.back,  this.rGripperRFingerTipLink), // 28
+				PR2Common.GetRosAngleRad(PR2Common.Joint.r_gripper_l_finger_tip_joint, Vector3.back,  this.rGripperLFingerTipLink), // 29
 				0.0, // 30
 				0.0, // 31
 
-				PR2Common.GetNormalizedJointEulerAngle(+this.lUpperArmRollLink     .localEulerAngles.x, PR2Common.Joint.l_upper_arm_roll_joint)       * Mathf.Deg2Rad, // 32
-				PR2Common.GetNormalizedJointEulerAngle(-this.lShoulderPanLink      .localEulerAngles.z, PR2Common.Joint.l_shoulder_pan_joint)         * Mathf.Deg2Rad, // 33
-				PR2Common.GetNormalizedJointEulerAngle(-this.lShoulderLiftLink     .localEulerAngles.y, PR2Common.Joint.l_shoulder_lift_joint)        * Mathf.Deg2Rad, // 34
-				PR2Common.GetNormalizedJointEulerAngle(+this.lForearmRollLink      .localEulerAngles.x, PR2Common.Joint.l_forearm_roll_joint)         * Mathf.Deg2Rad, // 35
-				PR2Common.GetNormalizedJointEulerAngle(-this.lElbowFlexLink        .localEulerAngles.y, PR2Common.Joint.l_elbow_flex_joint)           * Mathf.Deg2Rad, // 36
-				PR2Common.GetNormalizedJointEulerAngle(-this.lWristFlexLink        .localEulerAngles.y, PR2Common.Joint.l_wrist_flex_joint)           * Mathf.Deg2Rad, // 37
-				PR2Common.GetNormalizedJointEulerAngle(+this.lWristRollLink        .localEulerAngles.x, PR2Common.Joint.l_wrist_roll_joint)           * Mathf.Deg2Rad, // 38
-				PR2Common.GetNormalizedJointEulerAngle(-this.lGripperPalmLink      .localEulerAngles.y, PR2Common.Joint.l_gripper_joint)              * Mathf.Deg2Rad, // 39
-				PR2Common.GetNormalizedJointEulerAngle(-this.lGripperLFingerLink   .localEulerAngles.z, PR2Common.Joint.l_gripper_l_finger_joint)     * Mathf.Deg2Rad, // 40
-				PR2Common.GetNormalizedJointEulerAngle(-this.lGripperRFingerLink   .localEulerAngles.z, PR2Common.Joint.l_gripper_r_finger_joint)     * Mathf.Deg2Rad, // 41
-				PR2Common.GetNormalizedJointEulerAngle(-this.lGripperRFingerTipLink.localEulerAngles.z, PR2Common.Joint.l_gripper_r_finger_tip_joint) * Mathf.Deg2Rad, // 42
-				PR2Common.GetNormalizedJointEulerAngle(-this.lGripperLFingerTipLink.localEulerAngles.z, PR2Common.Joint.l_gripper_l_finger_tip_joint) * Mathf.Deg2Rad, // 43
+				PR2Common.GetRosAngleRad(PR2Common.Joint.l_upper_arm_roll_joint,       Vector3.right, this.lUpperArmRollLink)     , // 32
+				PR2Common.GetRosAngleRad(PR2Common.Joint.l_shoulder_pan_joint,         Vector3.back,  this.lShoulderPanLink)      , // 33
+				PR2Common.GetRosAngleRad(PR2Common.Joint.l_shoulder_lift_joint,        Vector3.down,  this.lShoulderLiftLink)     , // 34
+				PR2Common.GetRosAngleRad(PR2Common.Joint.l_forearm_roll_joint,         Vector3.right, this.lForearmRollLink)      , // 35
+				PR2Common.GetRosAngleRad(PR2Common.Joint.l_elbow_flex_joint,           Vector3.down,  this.lElbowFlexLink)        , // 36
+				PR2Common.GetRosAngleRad(PR2Common.Joint.l_wrist_flex_joint,           Vector3.down,  this.lWristFlexLink)        , // 37
+				PR2Common.GetRosAngleRad(PR2Common.Joint.l_wrist_roll_joint,           Vector3.right, this.lWristRollLink)        , // 38
+				PR2Common.GetRosAngleRad(PR2Common.Joint.l_gripper_joint,              Vector3.down,  this.lGripperPalmLink)      , // 39
+				PR2Common.GetRosAngleRad(PR2Common.Joint.l_gripper_l_finger_joint,     Vector3.back,  this.lGripperLFingerLink)   , // 40
+				PR2Common.GetRosAngleRad(PR2Common.Joint.l_gripper_r_finger_joint,     Vector3.back,  this.lGripperRFingerLink)   , // 41
+				PR2Common.GetRosAngleRad(PR2Common.Joint.l_gripper_r_finger_tip_joint, Vector3.back,  this.lGripperRFingerTipLink), // 42
+				PR2Common.GetRosAngleRad(PR2Common.Joint.l_gripper_l_finger_tip_joint, Vector3.back,  this.lGripperLFingerTipLink), // 43
 				0.0, // 44
 				0.0, // 45
 			};
+
+			this.UpdateContinuousJointVal(ref positions);
 
 			this.jointState.header.Update();
 			this.jointState.position = positions;
 
 			this.publisher.Publish(this.jointState);
+		}
+
+
+		private void UpdateContinuousJointVal(ref List<double> positions)
+		{
+			foreach(ContinuousJointInfo continuousJoint in this.continuousJointInfoList)
+			{
+				double position = positions[continuousJoint.SeqNo-1];
+
+				if(continuousJoint.PreviousPos > +Mathf.PI/2 && position < -Mathf.PI/2 ){ continuousJoint.RotationCount++; }
+				if(continuousJoint.PreviousPos < -Mathf.PI/2 && position > +Mathf.PI/2 ){ continuousJoint.RotationCount--; }
+
+				continuousJoint.PreviousPos = position;
+
+				positions[continuousJoint.SeqNo-1] += continuousJoint.RotationCount * 2* Mathf.PI;
+			}
 		}
 	}
 }
