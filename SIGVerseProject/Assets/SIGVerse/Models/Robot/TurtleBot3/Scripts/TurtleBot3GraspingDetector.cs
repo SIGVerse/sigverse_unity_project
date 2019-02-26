@@ -12,7 +12,7 @@ namespace SIGVerse.TurtleBot3
 		void OnChangeGraspedObject(GameObject graspedObject);
 	}
 
-	public class TurtleBot3GraspingDetector : MonoBehaviour, IFingerTriggerHandler
+	public class TurtleBot3GraspingDetector : MonoBehaviour, IGripperTriggerHandler
 	{
 		private const float GripDistanceThreshold = 0.0f; // This parameter is meaningless currently.
 
@@ -37,7 +37,7 @@ namespace SIGVerse.TurtleBot3
 		private Rigidbody graspedRigidbody;
 		private Transform savedParentObj;
 
-		private bool  isGripClosing;
+		private bool  isGripperClosing;
 		private float gripDistance;
 
 		private HashSet<Rigidbody> leftCollidingObjects;
@@ -75,7 +75,7 @@ namespace SIGVerse.TurtleBot3
 			this.preGripRightY = this.gripRightY;
 
 			this.graspedRigidbody    = null;
-			this.isGripClosing = false;
+			this.isGripperClosing = false;
 
 			this.gripDistance = 0.0f;
 		}
@@ -89,11 +89,11 @@ namespace SIGVerse.TurtleBot3
 			// Check hand closing
 			if(this.gripLeftY < this.preGripLeftY && this.gripRightY > this.preGripRightY)
 			{
-				this.isGripClosing = true;
+				this.isGripperClosing = true;
 			}
 			else
 			{
-				this.isGripClosing = false;
+				this.isGripperClosing = false;
 			}
 
 			// Calc distance between grips
@@ -116,34 +116,34 @@ namespace SIGVerse.TurtleBot3
 		}
 
 
-		public void OnTransferredTriggerEnter(Rigidbody targetRigidbody, FingerType fingerType)
+		public void OnTransferredTriggerEnter(Rigidbody targetRigidbody, GripperType gripperType)
 		{
 			if(!this.IsGraspable(targetRigidbody)) { return; }
 
-			if(fingerType==FingerType.Left)
+			if(gripperType==GripperType.Left)
 			{
 				this.leftCollidingObjects.Add(targetRigidbody);
 			}
-			if(fingerType==FingerType.Right)
+			if(gripperType==GripperType.Right)
 			{
 				this.rightCollidingObjects.Add(targetRigidbody);
 			}
 
-			if(this.isGripClosing && this.graspedRigidbody==null && this.leftCollidingObjects.Contains(targetRigidbody) && this.rightCollidingObjects.Contains(targetRigidbody))
+			if(this.isGripperClosing && this.graspedRigidbody==null && this.leftCollidingObjects.Contains(targetRigidbody) && this.rightCollidingObjects.Contains(targetRigidbody))
 			{
 				this.Grasp(targetRigidbody);
 			}
 		}
 
-		public void OnTransferredTriggerExit(Rigidbody targetRigidbody, FingerType fingerType)
+		public void OnTransferredTriggerExit(Rigidbody targetRigidbody, GripperType gripperType)
 		{
 			if(!this.IsGraspable(targetRigidbody)) { return; }
 
-			if(fingerType==FingerType.Left)
+			if(gripperType==GripperType.Left)
 			{
 				this.leftCollidingObjects.Remove(targetRigidbody);
 			}
-			if(fingerType==FingerType.Right)
+			if(gripperType==GripperType.Right)
 			{
 				this.rightCollidingObjects.Remove(targetRigidbody);
 			}

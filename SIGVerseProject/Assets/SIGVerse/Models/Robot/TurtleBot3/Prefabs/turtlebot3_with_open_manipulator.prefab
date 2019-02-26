@@ -2364,6 +2364,7 @@ GameObject:
   - component: {fileID: 4235658820087008}
   - component: {fileID: 33413464781101982}
   - component: {fileID: 23154916944172938}
+  - component: {fileID: 8969503457132797846}
   m_Layer: 0
   m_Name: grip_link_sub
   m_TagString: Untagged
@@ -2389,6 +2390,7 @@ Transform:
   - {fileID: 4505796680727596}
   - {fileID: 4229631215267264}
   - {fileID: 4100868043533780}
+  - {fileID: 8432449553571015278}
   m_Father: {fileID: 4117210589417312}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2437,6 +2439,24 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &8969503457132797846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1235563205687304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ac8293384fd74b4095b523169423141, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gripperType: 1
+  eventDestination: {fileID: 0}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 257
+  enableDebugRay: 0
 --- !u!1 &1256638657190230
 GameObject:
   m_ObjectHideFlags: 0
@@ -5247,7 +5267,7 @@ GameObject:
   - component: {fileID: 114000075054918274}
   m_Layer: 0
   m_Name: turtlebot3_with_open_manipulator
-  m_TagString: Untagged
+  m_TagString: Robot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6287,7 +6307,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4717530860067134
 Transform:
   m_ObjectHideFlags: 0
@@ -7495,7 +7515,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4100868043533780
 Transform:
   m_ObjectHideFlags: 0
@@ -7826,6 +7846,7 @@ GameObject:
   - component: {fileID: 4124257687964960}
   - component: {fileID: 33021263095047420}
   - component: {fileID: 23980866727953766}
+  - component: {fileID: 8740285294486939669}
   m_Layer: 0
   m_Name: grip_link
   m_TagString: Untagged
@@ -7851,6 +7872,7 @@ Transform:
   - {fileID: 4047799407579730}
   - {fileID: 4430432336899918}
   - {fileID: 4717530860067134}
+  - {fileID: 9129556135814450594}
   m_Father: {fileID: 4117210589417312}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7899,6 +7921,24 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &8740285294486939669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1983366099552680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ac8293384fd74b4095b523169423141, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gripperType: 0
+  eventDestination: {fileID: 0}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 257
+  enableDebugRay: 0
 --- !u!1 &1986275468099102
 GameObject:
   m_ObjectHideFlags: 0
@@ -8054,3 +8094,91 @@ Transform:
   m_Father: {fileID: 4420067185025678}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2999476541377236332
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9129556135814450594}
+  - component: {fileID: 5439998435816077039}
+  m_Layer: 0
+  m_Name: RaySourceBox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9129556135814450594
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2999476541377236332}
+  m_LocalRotation: {x: 0.70710677, y: 0, z: 0, w: 0.70710677}
+  m_LocalPosition: {x: -0.05, y: 0.0362, z: -0.0018}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4124257687964960}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 90, y: 90, z: 90}
+--- !u!65 &5439998435816077039
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2999476541377236332}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.05, y: 0.025, z: 0.0001}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &6330054532572183051
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8432449553571015278}
+  - component: {fileID: 3652957672402607449}
+  m_Layer: 0
+  m_Name: RaySourceBox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8432449553571015278
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6330054532572183051}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0.7071068, w: 0}
+  m_LocalPosition: {x: -0.05, y: -0.0362, z: -0.0018}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4235658820087008}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: -180}
+--- !u!65 &3652957672402607449
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6330054532572183051}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.05, y: 0.025, z: 0.0001}
+  m_Center: {x: 0, y: 0, z: 0}
