@@ -191,7 +191,7 @@ namespace SIGVerse.SampleScenes.Playbacker
 #if !SIGVERSE_MYSQL
 				if(this.modeType == ModeType.DatabaseRecorder)
 				{
-					throw new Exception("Don't define SIGVERSE_MYSQL");
+					throw new Exception("SIGVERSE_MYSQL is NOT defined.");
 				}
 #endif
 				if (!this.isRecording)
@@ -428,6 +428,8 @@ namespace SIGVerse.SampleScenes.Playbacker
 				"database=" + MysqlSchemaName+";"+
 				"userid  =" + this.mysqlUserInputField.text+";"+
 				"password=" + this.mysqlPassInputField.text;
+
+			Debug.Log("Connection String=" + connString);
 
 			MySqlConnection mysqlConn = new MySqlConnection(connString);
 			mysqlConn.Open();

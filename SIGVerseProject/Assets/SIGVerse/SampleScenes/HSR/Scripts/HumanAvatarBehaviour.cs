@@ -2,12 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using SIGVerse.Common;
-using SIGVerse.ToyotaHSR;
 using UnityEngine.UI;
 using SIGVerse.RosBridge;
 
@@ -19,6 +16,8 @@ namespace SIGVerse.SampleScenes.Hsr
 		public GameObject rosbridgeScripts;
 
 		//-----------------------------
+
+		public bool go = false;
 
 		private const string MsgTellMe  = "Please tell me";
 		private const string MsgPointIt = "Please point it";
@@ -41,6 +40,9 @@ namespace SIGVerse.SampleScenes.Hsr
 
 		private Rigidbody graspingTargetRigidbody;
 
+		private CleanupAvatarVRHandController avatarLeftHandController;
+		private CleanupAvatarVRHandController avatarRightHandController;
+		
 		private string taskMessage;
 
 		private PlacementChecker placementChecker;
@@ -89,6 +91,9 @@ namespace SIGVerse.SampleScenes.Hsr
 			SIGVerseLogger.Info("Destination is "     + destination.name);
 
 			this.graspingTargetRigidbody = this.graspingTarget.GetComponentInChildren<Rigidbody>();
+
+			this.avatarLeftHandController  = this.GetComponentsInChildren<CleanupAvatarVRHandController>().Where(item=>item.handType==CleanupAvatarVRHandController.HandType.LeftHand) .First();
+			this.avatarRightHandController = this.GetComponentsInChildren<CleanupAvatarVRHandController>().Where(item=>item.handType==CleanupAvatarVRHandController.HandType.RightHand).First();
 		}
 
 
@@ -141,6 +146,23 @@ namespace SIGVerse.SampleScenes.Hsr
 
 				this.receivedMessageMap[MsgTellMe] = false;
 			}
+
+			if (this.receivedMessageMap[MsgPointIt] || this.go)
+			{
+				if(UnityEngine.Random.Range(0, 2) == 0)
+				{
+					// Left Hand
+					this.avatarLeftHandController.PointTargetObject(this.graspingTarget);
+				}
+				else
+				{
+					// Right Hand
+					this.avatarRightHandController.PointTargetObject(this.graspingTarget);
+				}
+
+				this.receivedMessageMap[MsgPointIt] = false;
+				this.go = false;
+			}
 		}
 
 
@@ -175,11 +197,19 @@ namespace SIGVerse.SampleScenes.Hsr
 
 				if(this.IsPlaced())
 				{
-					this.SendRosMessage("Good Job!");
-					this.SendPanelNotice("Good Job!");
+					StartCoroutine(this.SendMessage("Good Job!", 1.0f));
+					StartCoroutine(this.SendMessage("Task Finished!", 3.0f));
 					break;
 				}
 			}
+		}
+
+		private IEnumerator SendMessage(string message, float waitingTime)
+		{
+			yield return new WaitForSeconds(waitingTime);
+
+			this.SendRosMessage(message);
+			this.SendPanelNotice(message);
 		}
 
 		private bool IsPlaced()

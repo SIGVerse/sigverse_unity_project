@@ -1119,7 +1119,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 14
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
@@ -2827,7 +2827,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: localhost
+  m_Text: 127.0.0.1
 --- !u!222 &221739573
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11152,7 +11152,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: localhost
+  m_Text: 127.0.0.1
 --- !u!222 &806797212
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -12651,7 +12651,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: localhost
+  m_Text: 127.0.0.1
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -13418,10 +13418,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1000012380255514, guid: cd16f7aea3c00f34eb4d3cde9968707a, type: 3}
-      propertyPath: m_TagString
-      value: Untagged
-      objectReference: {fileID: 0}
     - target: {fileID: 4000012149729720, guid: cd16f7aea3c00f34eb4d3cde9968707a, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0.53267515
@@ -13470,11 +13466,6 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 20000013006332368, guid: cd16f7aea3c00f34eb4d3cde9968707a,
-        type: 3}
-      propertyPath: m_Depth
-      value: -1
-      objectReference: {fileID: 0}
     - target: {fileID: 54000010768107002, guid: cd16f7aea3c00f34eb4d3cde9968707a,
         type: 3}
       propertyPath: m_UseGravity
@@ -13485,20 +13476,25 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 114000010115996754, guid: cd16f7aea3c00f34eb4d3cde9968707a,
+    - target: {fileID: 136000010636004252, guid: cd16f7aea3c00f34eb4d3cde9968707a,
         type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114000010115996754, guid: cd16f7aea3c00f34eb4d3cde9968707a,
+    - target: {fileID: 136000010636004252, guid: cd16f7aea3c00f34eb4d3cde9968707a,
         type: 3}
-      propertyPath: walk_speed
-      value: 0.75
+      propertyPath: m_Radius
+      value: 0.13656783
       objectReference: {fileID: 0}
-    - target: {fileID: 114000010115996754, guid: cd16f7aea3c00f34eb4d3cde9968707a,
+    - target: {fileID: 136000010636004252, guid: cd16f7aea3c00f34eb4d3cde9968707a,
         type: 3}
-      propertyPath: useMainCamera
-      value: 1
+      propertyPath: m_Center.x
+      value: -0.0049741566
+      objectReference: {fileID: 0}
+    - target: {fileID: 136000010636004252, guid: cd16f7aea3c00f34eb4d3cde9968707a,
+        type: 3}
+      propertyPath: m_Center.z
+      value: -0.03238526
       objectReference: {fileID: 0}
     - target: {fileID: 114000010777094548, guid: cd16f7aea3c00f34eb4d3cde9968707a,
         type: 3}
@@ -13520,30 +13516,34 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 124000013208295670, guid: cd16f7aea3c00f34eb4d3cde9968707a,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 136000010636004252, guid: cd16f7aea3c00f34eb4d3cde9968707a,
+    - target: {fileID: 114000010115996754, guid: cd16f7aea3c00f34eb4d3cde9968707a,
         type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 136000010636004252, guid: cd16f7aea3c00f34eb4d3cde9968707a,
+    - target: {fileID: 114000010115996754, guid: cd16f7aea3c00f34eb4d3cde9968707a,
         type: 3}
-      propertyPath: m_Radius
-      value: 0.13656783
+      propertyPath: walk_speed
+      value: 0.75
       objectReference: {fileID: 0}
-    - target: {fileID: 136000010636004252, guid: cd16f7aea3c00f34eb4d3cde9968707a,
+    - target: {fileID: 114000010115996754, guid: cd16f7aea3c00f34eb4d3cde9968707a,
         type: 3}
-      propertyPath: m_Center.x
-      value: -0.0049741566
+      propertyPath: useMainCamera
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 136000010636004252, guid: cd16f7aea3c00f34eb4d3cde9968707a,
+    - target: {fileID: 20000013006332368, guid: cd16f7aea3c00f34eb4d3cde9968707a,
         type: 3}
-      propertyPath: m_Center.z
-      value: -0.03238526
+      propertyPath: m_Depth
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000012380255514, guid: cd16f7aea3c00f34eb4d3cde9968707a, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 124000013208295670, guid: cd16f7aea3c00f34eb4d3cde9968707a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114000012306985470, guid: cd16f7aea3c00f34eb4d3cde9968707a, type: 3}
@@ -18251,7 +18251,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: localhost
+  m_Text: 127.0.0.1
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -27230,7 +27230,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 14
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
