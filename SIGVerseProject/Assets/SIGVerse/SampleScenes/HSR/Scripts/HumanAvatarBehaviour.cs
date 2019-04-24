@@ -26,8 +26,8 @@ namespace SIGVerse.SampleScenes.Hsr
 		private const string TagGraspables            = "Graspable";
 		private const string TagDestinationCandidates = "DestinationCandidate";
 
-		private const string JudgeTriggersForOnName = "JudgeTriggerForOn";
-		private const string JudgeTriggersForInName = "JudgeTriggerForIn";
+		private const string JudgeTriggerNameOn = "JudgeTriggerOn";
+		private const string JudgeTriggerNameIn = "JudgeTriggerIn";
 
 		private Dictionary<string, bool> receivedMessageMap;
 
@@ -105,22 +105,22 @@ namespace SIGVerse.SampleScenes.Hsr
 			this.receivedMessageMap.Add(MsgPointIt, false);
 
 			// Add Placement checker to triggers
-			Transform judgeTriggerForOn = this.destination.transform.Find(JudgeTriggersForOnName);
-			Transform judgeTriggerForIn = this.destination.transform.Find(JudgeTriggersForInName);
+			Transform judgeTriggerOn = this.destination.transform.Find(JudgeTriggerNameOn);
+			Transform judgeTriggerIn = this.destination.transform.Find(JudgeTriggerNameIn);
 
-			if (judgeTriggerForOn == null && judgeTriggerForIn == null) { throw new Exception("No JudgeTrigger. name=" + this.destination.name); }
-			if (judgeTriggerForOn != null && judgeTriggerForIn != null) { throw new Exception("Too many JudgeTrigger. name=" + this.destination.name); }
+			if (judgeTriggerOn == null && judgeTriggerIn == null) { throw new Exception("No JudgeTrigger. name=" + this.destination.name); }
+			if (judgeTriggerOn != null && judgeTriggerIn != null) { throw new Exception("Too many JudgeTrigger. name=" + this.destination.name); }
 
-			if (judgeTriggerForOn != null)
+			if (judgeTriggerOn != null)
 			{
-				this.placementChecker = judgeTriggerForOn.gameObject.AddComponent<PlacementChecker>();
+				this.placementChecker = judgeTriggerOn.gameObject.AddComponent<PlacementChecker>();
 				this.placementChecker.Initialize(PlacementChecker.JudgeType.On);
 
 				this.taskMessage = this.CreateTaskMessage("on");
 			}
-			if (judgeTriggerForIn != null)
+			if (judgeTriggerIn != null)
 			{
-				this.placementChecker = judgeTriggerForIn.gameObject.AddComponent<PlacementChecker>();
+				this.placementChecker = judgeTriggerIn.gameObject.AddComponent<PlacementChecker>();
 				this.placementChecker.Initialize(PlacementChecker.JudgeType.In);
 
 				this.taskMessage = this.CreateTaskMessage("in");
