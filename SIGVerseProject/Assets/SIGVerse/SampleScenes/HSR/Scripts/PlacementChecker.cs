@@ -47,7 +47,7 @@ namespace SIGVerse.SampleScenes.Hsr
 
 		public IEnumerator<bool?> IsPlaced(GameObject targetObj)
 		{
-			if(!this.isInitialized){ throw new Exception("Please use PlacementChecker.Instantiate()."); }
+			if(!this.isInitialized){ throw new Exception("Please use PlacementChecker.Initialize()."); }
 
 			Rigidbody targetRigidbody = targetObj.GetComponent<Rigidbody>();
 
@@ -73,7 +73,7 @@ namespace SIGVerse.SampleScenes.Hsr
 
 		public bool IsPlacedNow(Rigidbody targetRigidbody)
 		{
-			if(!this.isInitialized){ throw new Exception("Please use PlacementChecker.Instantiate()."); }
+			if(!this.isInitialized){ throw new Exception("Please use PlacementChecker.Initialize()."); }
 
 			switch(this.judgeType)
 			{
