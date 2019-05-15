@@ -7,9 +7,9 @@ using UnityEngine.EventSystems;
 
 namespace SIGVerse.Common
 {
-	public interface ICollisionHandler : IEventSystemHandler
+	public interface IRobotCollisionHandler : IEventSystemHandler
 	{
-		void OnCollisionEnter(Collision collision, float collisionVelocity, float effectScale);
+		void OnRobotCollisionEnter(Collision collision, float collisionVelocity, float effectScale);
 	}
 
 
@@ -134,11 +134,11 @@ namespace SIGVerse.Common
 			// Send the collision notification
 			foreach(GameObject destination in this.collisionNotificationDestinations)
 			{
-				ExecuteEvents.Execute<ICollisionHandler>
+				ExecuteEvents.Execute<IRobotCollisionHandler>
 				(
 					target: destination,
 					eventData: null,
-					functor: (reciever, eventData) => reciever.OnCollisionEnter(collision, collisionVelocity,  0.5f)
+					functor: (reciever, eventData) => reciever.OnRobotCollisionEnter(collision, collisionVelocity,  0.5f)
 				);
 			}
 
