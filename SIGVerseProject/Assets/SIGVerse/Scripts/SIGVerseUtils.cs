@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -109,15 +110,43 @@ namespace SIGVerse.Common
 			{
 				hasInitializeRandom = true;
 
-				Random.InitState(System.DateTime.Now.Millisecond);
+				UnityEngine.Random.InitState(System.DateTime.Now.Millisecond);
 			}
 
-			float x = Random.value;
-			float y = Random.value;
+			float x = UnityEngine.Random.value;
+			float y = UnityEngine.Random.value;
 
-			while(x==0.0f){ x = Random.value; }
+			while(x==0.0f){ x = UnityEngine.Random.value; }
 
 			return (Mathf.Sqrt(-2.0f * Mathf.Log(x)) * Mathf.Cos(2.0f * Mathf.PI * y)) * sigma + mu;
+		}
+
+
+		/// <summary>
+		/// Get an ordinal number.
+		/// </summary>
+		public static string GetOrdinal(int number)
+		{
+			string suffix = String.Empty;
+
+			int ones = number % 10;
+			int tens = (int)Math.Floor(number / 10M) % 10;
+
+			if (tens == 1)
+			{
+				suffix = "th";
+			}
+			else
+			{
+				switch (ones)
+				{
+					case 1:  { suffix = "st"; break; }
+					case 2:  { suffix = "nd"; break; }
+					case 3:  { suffix = "rd"; break; }
+					default: { suffix = "th"; break; }
+				}
+			}
+			return String.Format("{0}{1}", number, suffix);
 		}
 	}
 }

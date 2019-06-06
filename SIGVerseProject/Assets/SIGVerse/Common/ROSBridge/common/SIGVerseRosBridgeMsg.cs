@@ -27,7 +27,7 @@ namespace SIGVerse.SIGVerseRosBridge
 		public void SendMsg(NetworkStream networkStream)
 		{
 			MemoryStream memoryStream = new MemoryStream();
-			BsonWriter writer = new BsonWriter(memoryStream);
+			BsonDataWriter writer = new BsonDataWriter(memoryStream);
 
 			JsonSerializer serializer = new JsonSerializer();
 			serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;

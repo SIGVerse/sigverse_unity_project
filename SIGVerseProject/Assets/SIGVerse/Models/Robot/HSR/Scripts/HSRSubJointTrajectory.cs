@@ -333,7 +333,7 @@ namespace SIGVerse.ToyotaHSR
 					
 					if(IsOverLimitSpeed(joint, tempSpeed))
 					{
-						SIGVerseLogger.Warn("Trajectry speed error. (" + this.topicName + ")");
+						SIGVerseLogger.Warn("Trajectry speed error. (" + this.topicName + ", Joint Name=" + joint.ToString() + ", Speed=" + tempSpeed + ", Max Speed=" + HSRCommon.GetMaxJointSpeed(joint) + ")");
 						return;
 					}
 				}
