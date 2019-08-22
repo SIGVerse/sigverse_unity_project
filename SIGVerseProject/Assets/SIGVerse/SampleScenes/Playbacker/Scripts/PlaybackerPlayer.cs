@@ -256,7 +256,7 @@ namespace SIGVerse.SampleScenes.Playbacker
 		{
 			SIGVerseLogger.Info("Player : Initialise");
 
-			if (!File.Exists(inputFilePathInputField.text))
+			if (this.modeType == ModeType.TextPlayer && !File.Exists(inputFilePathInputField.text))
 			{
 				throw new Exception("Input File NOT found. File path="+inputFilePathInputField.text);
 			}
