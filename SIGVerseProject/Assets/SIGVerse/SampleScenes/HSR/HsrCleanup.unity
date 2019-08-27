@@ -6038,8 +6038,8 @@ GameObject:
   - component: {fileID: 248067373}
   - component: {fileID: 248067372}
   - component: {fileID: 248067371}
-  - component: {fileID: 248067369}
   - component: {fileID: 248067370}
+  - component: {fileID: 248067369}
   m_Layer: 0
   m_Name: Ethan
   m_TagString: Untagged
@@ -6404,7 +6404,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 75}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &266503823
@@ -22600,10 +22600,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1872639706377518, guid: 52e4f49510f5e83429982d5221396009, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 114346628091449176, guid: 52e4f49510f5e83429982d5221396009,
         type: 3}
       propertyPath: collisionNotificationDestinations.Array.size
@@ -22637,11 +22633,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4565211342487820, guid: 52e4f49510f5e83429982d5221396009, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114247472335588442, guid: 52e4f49510f5e83429982d5221396009,
-        type: 3}
-      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 20914192319057956, guid: 52e4f49510f5e83429982d5221396009,
@@ -22679,27 +22670,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114049945588189110, guid: 52e4f49510f5e83429982d5221396009,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114613339065414956, guid: 52e4f49510f5e83429982d5221396009,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114626428202431274, guid: 52e4f49510f5e83429982d5221396009,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114242712182628556, guid: 52e4f49510f5e83429982d5221396009,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114247472335588442, guid: 52e4f49510f5e83429982d5221396009, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 52e4f49510f5e83429982d5221396009, type: 3}
 --- !u!4 &963807019 stripped
 Transform:
@@ -24309,7 +24281,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainMenu: {fileID: 1184521181}
   rosbridgeScripts: {fileID: 264860289}
-  go: 0
 --- !u!114 &1040411340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34207,7 +34178,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1200, y: 300}
+  m_SizeDelta: {x: 1200, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1493102021
 MonoBehaviour:
@@ -38655,8 +38626,8 @@ MonoBehaviour:
   subviewPositionType: 1
   offsetX: 0
   offsetY: 0
-  sizeX: 640
-  sizeY: 480
+  sizeX: 480
+  sizeY: 320
 --- !u!114 &1705101563
 MonoBehaviour:
   m_ObjectHideFlags: 0

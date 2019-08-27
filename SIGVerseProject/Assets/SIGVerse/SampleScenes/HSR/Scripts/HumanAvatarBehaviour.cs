@@ -12,15 +12,32 @@ namespace SIGVerse.SampleScenes.Hsr
 {
 	public class HumanAvatarBehaviour : MonoBehaviour, IRosReceivingStringMsgHandler
 	{
+		public enum PointingStep
+		{
+			PointTarget,
+			WaitForPointingTarget,
+			Stay1,
+			SpeechPickItUp,
+			Stay2,
+			PointDestination,
+			WaitForPointingDestination,
+			Stay3,
+			SpeechCleanUp,
+			Stay4,
+			Return,
+			WaitForReturn,
+		}
+
 		public GameObject mainMenu;
 		public GameObject rosbridgeScripts;
 
 		//-----------------------------
 
-		public bool go = false;
-
 		private const string MsgTellMe  = "Please tell me";
 		private const string MsgPointIt = "Please point it";
+
+		private const string MsgPickItUp = "Pick it up!";
+		private const string MsgCleanUp  = "Clean up!";
 
 		private const string TagRobot                 = "Robot";
 		private const string TagGraspables            = "Graspable";
@@ -40,6 +57,9 @@ namespace SIGVerse.SampleScenes.Hsr
 
 		private Rigidbody graspingTargetRigidbody;
 
+		private PointingStep pointingStep = PointingStep.PointTarget;
+
+		private CleanupAvatarVRHandController avatarHandController;
 		private CleanupAvatarVRHandController avatarLeftHandController;
 		private CleanupAvatarVRHandController avatarRightHandController;
 		
@@ -47,8 +67,11 @@ namespace SIGVerse.SampleScenes.Hsr
 
 		private PlacementChecker placementChecker;
 
-//		private GameObject mainMenu;
+		private bool isTaskFinished = false;
 
+		private StepTimer stepTimer;
+
+//		public bool go = false;
 
 		void Awake()
 		{
@@ -94,6 +117,10 @@ namespace SIGVerse.SampleScenes.Hsr
 
 			this.avatarLeftHandController  = this.GetComponentsInChildren<CleanupAvatarVRHandController>().Where(item=>item.handType==CleanupAvatarVRHandController.HandType.LeftHand) .First();
 			this.avatarRightHandController = this.GetComponentsInChildren<CleanupAvatarVRHandController>().Where(item=>item.handType==CleanupAvatarVRHandController.HandType.RightHand).First();
+
+			this.avatarHandController = this.avatarLeftHandController; // Set default
+
+			this.stepTimer = new StepTimer();
 		}
 
 
@@ -140,6 +167,13 @@ namespace SIGVerse.SampleScenes.Hsr
 		// Update is called once per frame
 		void Update()
 		{
+			//if (this.go)
+			//{
+			//	this.receivedMessageMap[MsgPointIt] = true;
+
+			//	this.go = false;
+			//}
+
 			if (this.receivedMessageMap[MsgTellMe])
 			{
 				this.SendRosMessage(this.taskMessage);
@@ -147,21 +181,119 @@ namespace SIGVerse.SampleScenes.Hsr
 				this.receivedMessageMap[MsgTellMe] = false;
 			}
 
-			if (this.receivedMessageMap[MsgPointIt] || this.go)
+			if (this.receivedMessageMap[MsgPointIt])
 			{
-				if(UnityEngine.Random.Range(0, 2) == 0)
+				switch (this.pointingStep)
 				{
-					// Left Hand
-					this.avatarLeftHandController.PointTargetObject(this.graspingTarget);
-				}
-				else
-				{
-					// Right Hand
-					this.avatarRightHandController.PointTargetObject(this.graspingTarget);
-				}
+					case PointingStep.PointTarget:
+					{
+						if (UnityEngine.Random.Range(0, 2) == 0)
+						{
+							// Left Hand
+							this.avatarHandController = this.avatarLeftHandController;
+						}
+						else
+						{
+							// Right Hand
+							this.avatarHandController = this.avatarRightHandController;
+						}
 
-				this.receivedMessageMap[MsgPointIt] = false;
-				this.go = false;
+						this.avatarHandController.PointTarget(this.graspingTarget);
+
+						this.pointingStep++;
+						break;
+					}
+					case PointingStep.WaitForPointingTarget:
+					{
+						if(this.avatarHandController.IsWaiting())
+						{
+							this.pointingStep++;
+						}
+
+						break;
+					}
+					case PointingStep.Stay1:
+					{
+						if (this.stepTimer.IsTimePassed((int)this.pointingStep, 3000))
+						{
+							this.pointingStep++;
+						}
+						break;
+					}
+					case PointingStep.SpeechPickItUp:
+					{
+						this.SendRosMessage(MsgPickItUp);
+						this.pointingStep++;
+						
+						break;
+					}
+					case PointingStep.Stay2:
+					{
+						if (this.stepTimer.IsTimePassed((int)this.pointingStep, 3000))
+						{
+							this.pointingStep++;
+						}
+						break;
+					}
+					case PointingStep.PointDestination:
+					{
+						this.avatarHandController.PointDestination(this.destination);
+
+						this.pointingStep++;
+						break;
+					}
+					case PointingStep.WaitForPointingDestination:
+					{
+						if (this.avatarHandController.IsWaiting())
+						{
+							this.pointingStep++;
+						}
+
+						break;
+					}
+					case PointingStep.Stay3:
+					{
+						if (this.stepTimer.IsTimePassed((int)this.pointingStep, 3000))
+						{
+							this.pointingStep++;
+						}
+						break;
+					}
+					case PointingStep.SpeechCleanUp:
+					{
+						this.SendRosMessage(MsgCleanUp);
+						this.pointingStep++;
+
+						break;
+					}
+					case PointingStep.Stay4:
+					{
+						if (this.stepTimer.IsTimePassed((int)this.pointingStep, 3000))
+						{
+							this.pointingStep++;
+						}
+						break;
+					}
+					case PointingStep.Return:
+					{
+						this.avatarHandController.Return();
+
+						this.pointingStep++;
+						break;
+					}
+					case PointingStep.WaitForReturn:
+					{
+						if (this.avatarHandController.IsWaiting())
+						{
+							this.avatarHandController.Wait();
+
+							this.pointingStep = PointingStep.PointTarget;
+
+							this.receivedMessageMap[MsgPointIt] = false;
+						}
+						break;
+					}
+				}
 			}
 		}
 
@@ -199,6 +331,8 @@ namespace SIGVerse.SampleScenes.Hsr
 				{
 					StartCoroutine(this.SendMessage("Good Job!", 1.0f));
 					StartCoroutine(this.SendMessage("Task Finished!", 3.0f));
+
+					this.isTaskFinished = true;
 					break;
 				}
 			}
@@ -228,13 +362,30 @@ namespace SIGVerse.SampleScenes.Hsr
 
 		public void OnReceiveRosStringMsg(SIGVerse.RosBridge.std_msgs.String rosMsg)
 		{
-			if (this.receivedMessageMap.ContainsKey(rosMsg.data))
+			if(this.isTaskFinished)
 			{
+				this.SendRosMessage("Task was finished");
+				return;
+			}
+
+			if(rosMsg.data == MsgTellMe)
+			{
+				this.receivedMessageMap[rosMsg.data] = true;
+			}
+			else if(rosMsg.data == MsgPointIt)
+			{
+				if(this.receivedMessageMap[MsgPointIt])
+				{
+					SIGVerseLogger.Warn("Now pointing");
+					return;
+				}
+
 				this.receivedMessageMap[rosMsg.data] = true;
 			}
 			else
 			{
 				SIGVerseLogger.Warn("Received Illegal message : " + rosMsg.data);
+				return;
 			}
 		}
 	}

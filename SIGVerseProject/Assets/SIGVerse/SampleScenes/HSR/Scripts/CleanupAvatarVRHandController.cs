@@ -8,19 +8,31 @@ namespace SIGVerse.SampleScenes.Hsr
 {
 	public class CleanupAvatarVRHandController : MonoBehaviour
 	{
+		private const float PointingDuration = 3.0f;
+
 		public enum HandType
 		{
 			LeftHand,
 			RightHand,
 		}
 
+		private enum State
+		{
+			Wait,
+			PointTarget,
+			PointDestination,
+			Return,
+		}
+
 		public HandType  handType;
+
+		//-----------
+		private State state = State.Wait;
 
 		private Animator animator;
 
-		private AvatarIKGoal avatarIkGoal;
+		private AvatarIKGoal avatarIkGoalHand;
 
-		//-----------
 		private Transform upperArm;
 
 		private Transform thumb1, index1, middle1, ring1, little1;
@@ -34,16 +46,17 @@ namespace SIGVerse.SampleScenes.Hsr
 		private Quaternion little1End, little2End, little3End;
 
 		private GameObject graspingTarget;
+		private GameObject destination;
 
-		private float? pointingRatio = null;
+		private float pointingRatio = 0.0f;
 
 		void Awake()
 		{
-			this.animator = GetComponent<Animator>();
+			this.animator = this.GetComponent<Animator>();
 
 			if(this.handType == HandType.LeftHand)
 			{
-				this.avatarIkGoal = AvatarIKGoal.LeftHand;
+				this.avatarIkGoalHand = AvatarIKGoal.LeftHand;
 
 				this.upperArm = this.animator.GetBoneTransform(HumanBodyBones.LeftUpperArm);
 
@@ -69,7 +82,7 @@ namespace SIGVerse.SampleScenes.Hsr
 			}
 			else
 			{
-				this.avatarIkGoal = AvatarIKGoal.RightHand;
+				this.avatarIkGoalHand = AvatarIKGoal.RightHand;
 
 				this.upperArm = this.animator.GetBoneTransform(HumanBodyBones.RightUpperArm);
 
@@ -124,54 +137,120 @@ namespace SIGVerse.SampleScenes.Hsr
 
 		private void Update()
 		{
-			if(this.pointingRatio!=null)
+			if(this.state == State.PointTarget || this.state == State.PointDestination)
 			{
-				this.pointingRatio = Mathf.Min(1.0f, (float)this.pointingRatio+Time.deltaTime);
+				this.pointingRatio = Mathf.Min(1.0f, this.pointingRatio + Time.deltaTime / PointingDuration);
+			}
+			if (this.state == State.Return)
+			{
+				this.pointingRatio = Mathf.Max(0.0f, this.pointingRatio - Time.deltaTime / PointingDuration);
 			}
 		}
 
-		public void PointTargetObject(GameObject graspingTarget)
+		public void PointTarget(GameObject graspingTarget)
 		{
 			this.graspingTarget = graspingTarget;
 
-			this.pointingRatio = 0.0f;
+			this.SetState(State.PointTarget, 0.0f);
+		}
+
+		public void PointDestination(GameObject destination)
+		{
+			this.destination = destination;
+
+			this.SetState(State.PointDestination, 0.0f);
+		}
+
+		public void Return()
+		{
+			this.SetState(State.Return, 1.0f);
+		}
+
+		public void Wait()
+		{
+			this.SetState(State.Wait, 0.0f);
+		}
+
+		private void SetState(State state, float pointingRatio)
+		{
+			this.state = state;
+
+			this.pointingRatio = pointingRatio;
 		}
 
 
 		void OnAnimatorIK()
 		{
-			if(this.pointingRatio==null){ return; }
+			if(this.state == State.Wait) { return; }
 
-			this.animator.SetIKPositionWeight(this.avatarIkGoal, (float)this.pointingRatio);
-			this.animator.SetIKRotationWeight(this.avatarIkGoal, (float)this.pointingRatio);
-			this.animator.SetIKPosition(this.avatarIkGoal, this.graspingTarget.transform.position);
-			this.animator.SetIKRotation(this.avatarIkGoal, Quaternion.LookRotation(this.graspingTarget.transform.position - this.upperArm.position));
+			// Move arm
+			if (this.state == State.PointTarget)
+			{
+				this.animator.SetIKPositionWeight(this.avatarIkGoalHand, this.pointingRatio);
+				this.animator.SetIKRotationWeight(this.avatarIkGoalHand, this.pointingRatio);
+				this.animator.SetIKPosition(this.avatarIkGoalHand, this.graspingTarget.transform.position);
+				this.animator.SetIKRotation(this.avatarIkGoalHand, Quaternion.LookRotation(this.graspingTarget.transform.position - this.upperArm.position));
+
+				this.animator.SetLookAtWeight(Mathf.Min(this.pointingRatio * 2, 0.7f), Mathf.Min(this.pointingRatio * 2, 0.7f));
+				this.animator.SetLookAtPosition(this.graspingTarget.transform.position);
+			}
+			if (this.state == State.PointDestination)
+			{
+				Vector3 pos = (1.0f - this.pointingRatio) * this.graspingTarget.transform.position + this.pointingRatio * this.destination.transform.position;
+
+				this.animator.SetIKPositionWeight(this.avatarIkGoalHand, 1.0f);
+				this.animator.SetIKRotationWeight(this.avatarIkGoalHand, 1.0f);
+				this.animator.SetIKPosition(this.avatarIkGoalHand, pos);
+				this.animator.SetIKRotation(this.avatarIkGoalHand, Quaternion.LookRotation(pos - this.upperArm.position));
+
+				this.animator.SetLookAtWeight(0.7f, 0.7f);
+				this.animator.SetLookAtPosition(pos);
+			}
+			if (this.state == State.Return)
+			{
+				this.animator.SetIKPositionWeight(this.avatarIkGoalHand, this.pointingRatio);
+				this.animator.SetIKRotationWeight(this.avatarIkGoalHand, this.pointingRatio);
+				this.animator.SetIKPosition(this.avatarIkGoalHand, this.destination.transform.position);
+				this.animator.SetIKRotation(this.avatarIkGoalHand, Quaternion.LookRotation(this.destination.transform.position - this.upperArm.position));
+
+				this.animator.SetLookAtWeight(Mathf.Min(this.pointingRatio * 2, 0.7f), Mathf.Min(this.pointingRatio * 2, 0.7f));
+				this.animator.SetLookAtPosition(this.destination.transform.position);
+			}
 		}
 
 		private void LateUpdate()
 		{
-			if(this.pointingRatio==null){ return; }
+			if(this.state == State.Wait) { return; }
+
+			float ratio = this.state != State.PointDestination ? this.pointingRatio : 1.0f;
 
 			// Change hand posture
-			this.thumb1 .localRotation = Quaternion.Slerp(this.thumb1 .localRotation, this.thumb1End , (float)this.pointingRatio);
-			this.thumb2 .localRotation = Quaternion.Slerp(this.thumb2 .localRotation, this.thumb2End , (float)this.pointingRatio);
-			this.thumb3 .localRotation = Quaternion.Slerp(this.thumb3 .localRotation, this.thumb3End , (float)this.pointingRatio);
+			this.thumb1.localRotation = Quaternion.Slerp(this.thumb1.localRotation, this.thumb1End, ratio);
+			this.thumb2.localRotation = Quaternion.Slerp(this.thumb2.localRotation, this.thumb2End, ratio);
+			this.thumb3.localRotation = Quaternion.Slerp(this.thumb3.localRotation, this.thumb3End, ratio);
 
-			this.index1 .localRotation = Quaternion.Slerp(this.index1 .localRotation, this.index1End , (float)this.pointingRatio);
-			this.index2 .localRotation = Quaternion.Slerp(this.index2 .localRotation, this.index2End , (float)this.pointingRatio);
-			this.index3 .localRotation = Quaternion.Slerp(this.index3 .localRotation, this.index3End , (float)this.pointingRatio);
+			this.index1.localRotation = Quaternion.Slerp(this.index1.localRotation, this.index1End, ratio);
+			this.index2.localRotation = Quaternion.Slerp(this.index2.localRotation, this.index2End, ratio);
+			this.index3.localRotation = Quaternion.Slerp(this.index3.localRotation, this.index3End, ratio);
 
-			this.middle1.localRotation = Quaternion.Slerp(this.middle1.localRotation, this.middle1End, (float)this.pointingRatio);
-			this.middle2.localRotation = Quaternion.Slerp(this.middle2.localRotation, this.middle2End, (float)this.pointingRatio);
-			this.middle3.localRotation = Quaternion.Slerp(this.middle3.localRotation, this.middle3End, (float)this.pointingRatio);
+			this.middle1.localRotation = Quaternion.Slerp(this.middle1.localRotation, this.middle1End, ratio);
+			this.middle2.localRotation = Quaternion.Slerp(this.middle2.localRotation, this.middle2End, ratio);
+			this.middle3.localRotation = Quaternion.Slerp(this.middle3.localRotation, this.middle3End, ratio);
 
-			this.ring1  .localRotation = Quaternion.Slerp(this.ring1  .localRotation, this.ring1End  , (float)this.pointingRatio);
-			this.ring2  .localRotation = Quaternion.Slerp(this.ring2  .localRotation, this.ring2End  , (float)this.pointingRatio);
-			this.ring3  .localRotation = Quaternion.Slerp(this.ring3  .localRotation, this.ring3End  , (float)this.pointingRatio);
+			this.ring1.localRotation = Quaternion.Slerp(this.ring1.localRotation, this.ring1End, ratio);
+			this.ring2.localRotation = Quaternion.Slerp(this.ring2.localRotation, this.ring2End, ratio);
+			this.ring3.localRotation = Quaternion.Slerp(this.ring3.localRotation, this.ring3End, ratio);
 
-			this.little1.localRotation = Quaternion.Slerp(this.little1.localRotation, this.little1End, (float)this.pointingRatio);
-			this.little2.localRotation = Quaternion.Slerp(this.little2.localRotation, this.little2End, (float)this.pointingRatio);
-			this.little3.localRotation = Quaternion.Slerp(this.little3.localRotation, this.little3End, (float)this.pointingRatio);
+			this.little1.localRotation = Quaternion.Slerp(this.little1.localRotation, this.little1End, ratio);
+			this.little2.localRotation = Quaternion.Slerp(this.little2.localRotation, this.little2End, ratio);
+			this.little3.localRotation = Quaternion.Slerp(this.little3.localRotation, this.little3End, ratio);
+		}
+
+		public bool IsWaiting()
+		{
+			return (this.state == State.PointTarget      && this.pointingRatio >= 1.0f) || 
+			       (this.state == State.PointDestination && this.pointingRatio >= 1.0f) ||
+			       (this.state == State.Return           && this.pointingRatio <= 0.0f);
 		}
 	}
 }
