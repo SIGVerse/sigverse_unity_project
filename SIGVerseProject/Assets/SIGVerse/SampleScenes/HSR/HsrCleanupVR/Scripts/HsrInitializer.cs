@@ -12,10 +12,10 @@ using Photon.Pun;
 
 namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 {
-#if SIGVERSE_PUN
-
 	public class HsrInitializer : MonoBehaviour
 	{
+#if SIGVERSE_PUN
+
 		public GameObject rosBridgeScripts;
 
 		void Awake()
@@ -42,40 +42,31 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 //			this.AddPhotonComponentsToRobot(photonView);
 		}
 
-//		private void AddPhotonComponentsToRobot(PhotonView photonView)
-//		{
-////			photonView.Synchronization = ViewSynchronization.UnreliableOnChange;
-////			photonView.ObservedComponents.Clear();
+		//		private void AddPhotonComponentsToRobot(PhotonView photonView)
+		//		{
+		////			photonView.Synchronization = ViewSynchronization.UnreliableOnChange;
+		////			photonView.ObservedComponents.Clear();
 
-//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.BaseFootPrintPosNoiseName), true, false);
-//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.BaseFootPrintRigidbodyName), true, true);
-//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.BaseFootPrintRotNoiseName), false, true);
+		//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.BaseFootPrintPosNoiseName), true, false);
+		//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.BaseFootPrintRigidbodyName), true, true);
+		//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.BaseFootPrintRotNoiseName), false, true);
 
-//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.torso_lift_link.ToString()), true, false);
-//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.arm_lift_link.ToString()), true, false);
+		//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.torso_lift_link.ToString()), true, false);
+		//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.arm_lift_link.ToString()), true, false);
 
-//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.arm_flex_link.ToString()));
-//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.arm_roll_link.ToString()));
-//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.wrist_flex_link.ToString()));
-//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.wrist_roll_link.ToString()));
-//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.head_pan_link.ToString()));
-//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.head_tilt_link.ToString()));
+		//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.arm_flex_link.ToString()));
+		//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.arm_roll_link.ToString()));
+		//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.wrist_flex_link.ToString()));
+		//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.wrist_roll_link.ToString()));
+		//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.head_pan_link.ToString()));
+		//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.head_tilt_link.ToString()));
 
-//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.hand_motor_dummy_link.ToString()));
-//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.hand_l_proximal_link.ToString()));
-//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.hand_r_proximal_link.ToString()));
-//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.hand_l_distal_link.ToString()));
-//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.hand_r_distal_link.ToString()));
-//		}
-	}
-
-#else
-	public class HsrInitializer : MonoBehaviour
-	{
-		void Start()
-		{
-			throw new Exception("SIGVERSE_PUN is NOT defined.");
-		}
-	}
+		//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.hand_motor_dummy_link.ToString()));
+		//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.hand_l_proximal_link.ToString()));
+		//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.hand_r_proximal_link.ToString()));
+		//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.hand_l_distal_link.ToString()));
+		//			PunLauncher.AddPhotonTransformView(photonView, SIGVerseUtils.FindGameObjectFromChild(this.transform.root, HSRCommon.Link.hand_r_distal_link.ToString()));
+		//		}
 #endif
+	}
 }

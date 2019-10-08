@@ -12,8 +12,6 @@ using Photon.Pun;
 
 namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 {
-#if SIGVERSE_PUN
-
 	public interface IChatRegistrationHandler : IEventSystemHandler
 	{
 		void OnAddChatUser(string userName);
@@ -25,8 +23,11 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 		void OnReceiveChatMessage(string senderName, string message);
 	}
 
+#if SIGVERSE_PUN
+
 	public class ChatManager : MonoBehaviour, IChatRegistrationHandler, IChatMessageHandler
 	{
+
 		public const string ChatManagerName = "ChatManager";
 
 		//-----------------------------

@@ -79,14 +79,6 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 			);
 		}
 	}
-#else
-	public class HumanAvatarChat : MonoBehaviour
-	{
-		void Start()
-		{
-			SIGVerseLogger.Error("SIGVERSE_PUN is NOT defined.");
-		}
-	}
 #endif
 }
 

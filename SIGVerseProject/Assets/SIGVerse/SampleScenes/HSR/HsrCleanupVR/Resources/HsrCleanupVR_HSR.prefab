@@ -760,6 +760,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b30bae3e6d6a7b0428ee7f72ed09028c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncLocalPosition: 1
+  syncLocalRotation: 0
 --- !u!1 &6287899521486121416
 GameObject:
   m_ObjectHideFlags: 0
@@ -909,7 +911,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6291035016251688250}
   - component: {fileID: 919001495257134299}
-  - component: {fileID: 2585472612633506688}
   - component: {fileID: 4687171639928281408}
   m_Layer: 9
   m_Name: torso_lift_link
@@ -957,21 +958,6 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &2585472612633506688
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6287941979403733542}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 0
-  m_SynchronizeScale: 0
 --- !u!114 &4687171639928281408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -984,6 +970,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b30bae3e6d6a7b0428ee7f72ed09028c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncLocalPosition: 1
+  syncLocalRotation: 0
 --- !u!1 &6287943808358023110
 GameObject:
   m_ObjectHideFlags: 0
@@ -4127,7 +4115,7 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 3
+  Synchronization: 1
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: 6155835498947561236}

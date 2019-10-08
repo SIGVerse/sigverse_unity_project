@@ -13,9 +13,8 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 #if (SIGVERSE_PUN)
 	public class LocalTransformView : MonoBehaviour, IPunObservable
 	{
-		//public bool syncLocalPositionX;
-		//public bool syncLocalPositionY;
-		//public bool syncLocalPositionZ;
+		public bool syncLocalPosition = true;
+		public bool syncLocalRotation = true;
 
 		void Start()
 		{
@@ -25,17 +24,27 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 		{
 			if (stream.IsWriting)
 			{
-				stream.SendNext(this.transform.localPosition);
+				if(this.syncLocalPosition)
+				{
+					stream.SendNext(this.transform.localPosition);
+				}
+				if (this.syncLocalRotation)
+				{
+					stream.SendNext(this.transform.localRotation);
+				}
 			}
 			else
 			{
-				this.transform.localPosition = (Vector3)stream.ReceiveNext();
+				if (this.syncLocalPosition)
+				{
+					this.transform.localPosition = (Vector3)stream.ReceiveNext();
+				}
+				if (this.syncLocalRotation)
+				{
+					this.transform.localRotation = (Quaternion)stream.ReceiveNext();
+				}
 			}
 		}
-	}
-#else
-	public class LocalTransformView : MonoBehaviour
-	{
 	}
 #endif
 }

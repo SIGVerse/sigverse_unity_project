@@ -32,9 +32,9 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 
 			Rigidbody graspedRigidbody = this.graspedObject.GetComponent<Rigidbody>();
 
-//			graspedRigidbody.useGravity = false;
-			graspedRigidbody.isKinematic = true;
-//			graspedRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+			graspedRigidbody.useGravity = false;
+//			graspedRigidbody.isKinematic = true;
+			graspedRigidbody.constraints = RigidbodyConstraints.FreezeAll;
 
 			SIGVerseLogger.Info("Grasp by GraspingDetectorRPC :" + objectName);
 		}
@@ -53,9 +53,9 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 
 			Rigidbody graspedRigidbody = this.graspedObject.GetComponent<Rigidbody>();
 
-//			graspedRigidbody.useGravity = false;
-			graspedRigidbody.isKinematic = false;
-//			graspedRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+			graspedRigidbody.useGravity = true;
+//			graspedRigidbody.isKinematic = false;
+			graspedRigidbody.constraints = RigidbodyConstraints.None;
 
 			this.graspedObject = null;
 			this.graspedParentObject = null;

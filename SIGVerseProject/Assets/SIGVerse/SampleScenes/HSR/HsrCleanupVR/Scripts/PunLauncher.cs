@@ -167,14 +167,6 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 		//}
 	}
 
-#else
-	public class PunLauncher : MonoBehaviour
-	{
-		void Start()
-		{
-			throw new Exception("SIGVERSE_PUN is NOT defined.");
-		}
-	}
 #endif
 
 #if SIGVERSE_PUN && UNITY_EDITOR
@@ -203,6 +195,7 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 
 					// Remove photon scripts
 					RemoveScripts<PhotonTransformView>();
+					RemoveScripts<LocalTransformView>();
 					RemoveScripts<PhotonRigidbodyView>();
 					RemoveScripts<PhotonView>();
 					RemoveScripts<PunOwnerChangerForObject>();
@@ -226,13 +219,15 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 					{
 						PhotonView photonView = Undo.AddComponent<PhotonView>(roomObject);
 						photonView.OwnershipTransfer = OwnershipOption.Takeover;
-						photonView.Synchronization = ViewSynchronization.UnreliableOnChange;
+						photonView.Synchronization = ViewSynchronization.ReliableDeltaCompressed;
 						photonView.ObservedComponents = new List<Component>();
 
-						PhotonTransformView photonTransformView = Undo.AddComponent<PhotonTransformView>(roomObject);
+//						PhotonTransformView photonTransformView = Undo.AddComponent<PhotonTransformView>(roomObject);
+						LocalTransformView  localTransformView  = Undo.AddComponent<LocalTransformView>(roomObject);
 //						PhotonRigidbodyView photonRigidbodyView = Undo.AddComponent<PhotonRigidbodyView>(roomObject);
 
-						photonView.ObservedComponents.Add(photonTransformView);
+//						photonView.ObservedComponents.Add(photonTransformView);
+						photonView.ObservedComponents.Add(localTransformView);
 //						photonView.ObservedComponents.Add(photonRigidbodyView);
 
 						Undo.AddComponent<PunOwnerChangerForObject>(roomObject);

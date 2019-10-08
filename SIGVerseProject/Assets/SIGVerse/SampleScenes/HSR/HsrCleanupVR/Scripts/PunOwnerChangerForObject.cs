@@ -45,6 +45,11 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 				return;
 			}
 
+			if(this.photonView.Owner == ownerPhotonView.Owner)
+			{
+				return;
+			}
+
 			this.photonView.TransferOwnership(ownerPhotonView.Owner);
 		}
 
@@ -62,13 +67,5 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 		}
 	}
 
-#else
-	public class PunOwnerChangerForObject : MonoBehaviour
-	{
-		void Start()
-		{
-			SIGVerseLogger.Error("SIGVERSE_PUN is NOT defined.");
-		}
-	}
 #endif
 }

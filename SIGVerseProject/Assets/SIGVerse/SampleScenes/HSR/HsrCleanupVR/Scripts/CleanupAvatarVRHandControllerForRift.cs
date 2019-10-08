@@ -170,10 +170,6 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 			this.little3.localRotation = Quaternion.Slerp(this.little3Start, this.little3End, ratio);
 		}
 	}
-#else
-	public class CleanupAvatarVRHandControllerForRift : MonoBehaviour
-	{
-	}
 #endif
 }
 

@@ -42,13 +42,5 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 			SIGVerseLogger.Info("Robot: Sent the message. user=" + this.nickName + ", message=" + rosMsg.data);
 		}
 	}
-#else
-	public class HsrChat : MonoBehaviour
-	{
-		void Start()
-		{
-			SIGVerseLogger.Error("SIGVERSE_PUN is NOT defined.");
-		}
-	}
 #endif
 }

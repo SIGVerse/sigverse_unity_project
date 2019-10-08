@@ -12,10 +12,8 @@ using Photon.Pun;
 namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 {
 #if SIGVERSE_PUN
-
 	public abstract class CommonChat : MonoBehaviour, IChatMessageHandler
 	{
-		//-----------------------------
 
 		protected GameObject chatManager;
 
@@ -70,14 +68,6 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 		}
 
 		public abstract void OnReceiveChatMessage(string userName, string message);
-	}
-#else
-	public class CommonChat : MonoBehaviour
-	{
-		void Start()
-		{
-			SIGVerseLogger.Error("SIGVERSE_PUN is NOT defined.");
-		}
 	}
 #endif
 }

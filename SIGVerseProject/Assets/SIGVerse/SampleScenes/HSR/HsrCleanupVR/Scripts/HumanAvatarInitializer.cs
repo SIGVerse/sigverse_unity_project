@@ -13,7 +13,7 @@ using static Photon.Pun.PhotonAnimatorView;
 
 namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 {
-#if SIGVERSE_PUN
+#if SIGVERSE_PUN && SIGVERSE_OCULUS
 
 	public class HumanAvatarInitializer : MonoBehaviour
 	{
@@ -109,15 +109,6 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 //				photonView.ObservedComponents.Add(cleanupAvatarVRHandControllerForRift);
 //			}
 //		}
-	}
-
-#else
-	public class HumanAvatarInitializer : MonoBehaviour
-	{
-		void Start()
-		{
-			throw new Exception("SIGVERSE_PUN is NOT defined.");
-		}
 	}
 #endif
 }

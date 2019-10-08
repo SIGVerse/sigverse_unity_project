@@ -11,9 +11,10 @@ using Photon.Pun;
 
 namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 {
-#if SIGVERSE_PUN
 	public class GraspingDetectorForPun : GraspingDetector
 	{
+#if SIGVERSE_PUN
+
 		PhotonView photonView;
 
 		protected override void Start()
@@ -36,15 +37,7 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 
 			this.photonView.RPC("ReleaseRPC", RpcTarget.Others);
 		}
-	}
-#else
-	public class GraspingDetectorForPun : MonoBehaviour
-	{
-		void Start()
-		{
-			SIGVerseLogger.Error("SIGVERSE_PUN is NOT defined.");
-		}
-	}
 #endif
+	}
 }
 
