@@ -232,7 +232,7 @@ namespace SIGVerse.SampleScenes.Playbacker
 #if !SIGVERSE_MYSQL
 				if(this.modeType == ModeType.DatabasePlayer)
 				{
-					throw new Exception("Don't define SIGVERSE_MYSQL");
+					throw new Exception("SIGVERSE_MYSQL is NOT defined.");
 				}
 #endif
 				if(!this.isPlaying)

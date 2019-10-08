@@ -117,7 +117,7 @@ namespace SIGVerse.Common
 		}
 
 
-		public void OnTransferredTriggerEnter(Rigidbody targetRigidbody, GripperType gripperType)
+		public virtual void OnTransferredTriggerEnter(Rigidbody targetRigidbody, GripperType gripperType)
 		{
 			if(!this.IsGraspable(targetRigidbody)) { return; }
 
@@ -136,7 +136,7 @@ namespace SIGVerse.Common
 			}
 		}
 
-		public void OnTransferredTriggerExit(Rigidbody targetRigidbody, GripperType gripperType)
+		public virtual void OnTransferredTriggerExit(Rigidbody targetRigidbody, GripperType gripperType)
 		{
 			if(!this.IsGraspable(targetRigidbody)) { return; }
 
@@ -160,7 +160,7 @@ namespace SIGVerse.Common
 			}
 		}
 
-		protected bool IsGraspable(Rigidbody targetRigidbody)
+		protected virtual bool IsGraspable(Rigidbody targetRigidbody)
 		{
 			foreach(Rigidbody graspableRigidbody in this.graspableRigidbodies)
 			{
@@ -170,7 +170,7 @@ namespace SIGVerse.Common
 			return false;
 		}
 
-		protected void Grasp(Rigidbody collidedRigidbody)
+		protected virtual void Grasp(Rigidbody collidedRigidbody)
 		{
 			this.savedParentObj = collidedRigidbody.gameObject.transform.parent;
 
@@ -191,7 +191,7 @@ namespace SIGVerse.Common
 			this.latestReleaseTime = 0.0f;
 		}
 
-		protected void Release()
+		protected virtual void Release()
 		{
 			this.graspedRigidbody.transform.parent = this.savedParentObj;
 
@@ -228,14 +228,14 @@ namespace SIGVerse.Common
 		}
 
 
-		public GameObject GetGraspedObject()
+		public virtual GameObject GetGraspedObject()
 		{
 			if(this.graspedRigidbody==null) { return null; }
 
 			return this.graspedRigidbody.gameObject;
 		}
 
-		public float GetLatestReleaseTime()
+		public virtual float GetLatestReleaseTime()
 		{
 			return this.latestReleaseTime;
 		}

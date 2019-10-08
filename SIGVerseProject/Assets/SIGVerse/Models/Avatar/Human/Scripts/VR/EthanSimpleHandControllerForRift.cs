@@ -8,7 +8,7 @@ namespace SIGVerse.Human.VR
 {
 	public class EthanSimpleHandControllerForRift : MonoBehaviour
 	{
-#if SIGVERSE_USING_OCULUS_RIFT
+#if SIGVERSE_OCULUS
 		public enum HandType
 		{
 			LeftHand,

@@ -26,6 +26,9 @@ namespace SIGVerse.SampleScenes.Hsr
 
 		public HandType  handType;
 
+		public GameObject avatarBase;
+		public GameObject avatarPointing;
+
 		//-----------
 		private State state = State.Wait;
 
@@ -39,10 +42,16 @@ namespace SIGVerse.SampleScenes.Hsr
 		private Transform thumb2, index2, middle2, ring2, little2;
 		private Transform thumb3, index3, middle3, ring3, little3;
 
-		private Quaternion thumb1End , thumb2End , thumb3End;
-		private Quaternion index1End , index2End , index3End;
+		private Quaternion thumb1Start, thumb2Start, thumb3Start;
+		private Quaternion index1Start, index2Start, index3Start;
+		private Quaternion middle1Start, middle2Start, middle3Start;
+		private Quaternion ring1Start, ring2Start, ring3Start;
+		private Quaternion little1Start, little2Start, little3Start;
+
+		private Quaternion thumb1End, thumb2End, thumb3End;
+		private Quaternion index1End, index2End, index3End;
 		private Quaternion middle1End, middle2End, middle3End;
-		private Quaternion ring1End  , ring2End  , ring3End;
+		private Quaternion ring1End, ring2End, ring3End;
 		private Quaternion little1End, little2End, little3End;
 
 		private GameObject graspingTarget;
@@ -54,85 +63,103 @@ namespace SIGVerse.SampleScenes.Hsr
 		{
 			this.animator = this.GetComponent<Animator>();
 
-			if(this.handType == HandType.LeftHand)
+		}
+
+		// Use this for initialization
+		void Start()
+		{
+			if (this.handType == HandType.LeftHand)
 			{
 				this.avatarIkGoalHand = AvatarIKGoal.LeftHand;
 
 				this.upperArm = this.animator.GetBoneTransform(HumanBodyBones.LeftUpperArm);
-
-				this.thumb1 = this.animator.GetBoneTransform(HumanBodyBones.LeftThumbProximal);
-				this.thumb2 = this.animator.GetBoneTransform(HumanBodyBones.LeftThumbIntermediate);
-				this.thumb3 = this.animator.GetBoneTransform(HumanBodyBones.LeftThumbDistal);
-
-				this.index1 = this.animator.GetBoneTransform(HumanBodyBones.LeftIndexProximal);
-				this.index2 = this.animator.GetBoneTransform(HumanBodyBones.LeftIndexIntermediate);
-				this.index3 = this.animator.GetBoneTransform(HumanBodyBones.LeftIndexDistal);
-
-				this.middle1 = this.animator.GetBoneTransform(HumanBodyBones.LeftMiddleProximal);
-				this.middle2 = this.animator.GetBoneTransform(HumanBodyBones.LeftMiddleIntermediate);
-				this.middle3 = this.animator.GetBoneTransform(HumanBodyBones.LeftMiddleDistal);
-
-				this.ring1 = this.animator.GetBoneTransform(HumanBodyBones.LeftRingProximal);
-				this.ring2 = this.animator.GetBoneTransform(HumanBodyBones.LeftRingIntermediate);
-				this.ring3 = this.animator.GetBoneTransform(HumanBodyBones.LeftRingDistal);
-
-				this.little1 = this.animator.GetBoneTransform(HumanBodyBones.LeftLittleProximal);
-				this.little2 = this.animator.GetBoneTransform(HumanBodyBones.LeftLittleIntermediate);
-				this.little3 = this.animator.GetBoneTransform(HumanBodyBones.LeftLittleDistal);
 			}
 			else
 			{
 				this.avatarIkGoalHand = AvatarIKGoal.RightHand;
 
 				this.upperArm = this.animator.GetBoneTransform(HumanBodyBones.RightUpperArm);
-
-				this.thumb1 = this.animator.GetBoneTransform(HumanBodyBones.RightThumbProximal);
-				this.thumb2 = this.animator.GetBoneTransform(HumanBodyBones.RightThumbIntermediate);
-				this.thumb3 = this.animator.GetBoneTransform(HumanBodyBones.RightThumbDistal);
-
-				this.index1 = this.animator.GetBoneTransform(HumanBodyBones.RightIndexProximal);
-				this.index2 = this.animator.GetBoneTransform(HumanBodyBones.RightIndexIntermediate);
-				this.index3 = this.animator.GetBoneTransform(HumanBodyBones.RightIndexDistal);
-
-				this.middle1 = this.animator.GetBoneTransform(HumanBodyBones.RightMiddleProximal);
-				this.middle2 = this.animator.GetBoneTransform(HumanBodyBones.RightMiddleIntermediate);
-				this.middle3 = this.animator.GetBoneTransform(HumanBodyBones.RightMiddleDistal);
-
-				this.ring1 = this.animator.GetBoneTransform(HumanBodyBones.RightRingProximal);
-				this.ring2 = this.animator.GetBoneTransform(HumanBodyBones.RightRingIntermediate);
-				this.ring3 = this.animator.GetBoneTransform(HumanBodyBones.RightRingDistal);
-
-				this.little1 = this.animator.GetBoneTransform(HumanBodyBones.RightLittleProximal);
-				this.little2 = this.animator.GetBoneTransform(HumanBodyBones.RightLittleIntermediate);
-				this.little3 = this.animator.GetBoneTransform(HumanBodyBones.RightLittleDistal);
 			}
+
+			Transform[] baseTransforms;
+
+			this.GetFingerRotations(out baseTransforms, this.avatarBase.GetComponent<Animator>());
+
+			this.thumb1Start = baseTransforms[0].localRotation; this.thumb2Start = baseTransforms[1].localRotation; this.thumb3Start = baseTransforms[2].localRotation;
+			this.index1Start = baseTransforms[3].localRotation; this.index2Start = baseTransforms[4].localRotation; this.index3Start = baseTransforms[5].localRotation;
+			this.middle1Start = baseTransforms[6].localRotation; this.middle2Start = baseTransforms[7].localRotation; this.middle3Start = baseTransforms[8].localRotation;
+			this.ring1Start = baseTransforms[9].localRotation; this.ring2Start = baseTransforms[10].localRotation; this.ring3Start = baseTransforms[11].localRotation;
+			this.little1Start = baseTransforms[12].localRotation; this.little2Start = baseTransforms[13].localRotation; this.little3Start = baseTransforms[14].localRotation;
+
+			Transform[] pointingTransforms;
+
+			this.GetFingerRotations(out pointingTransforms, this.avatarPointing.GetComponent<Animator>());
+
+			this.thumb1End = pointingTransforms[0].localRotation; this.thumb2End = pointingTransforms[1].localRotation; this.thumb3End = pointingTransforms[2].localRotation;
+			this.index1End = pointingTransforms[3].localRotation; this.index2End = pointingTransforms[4].localRotation; this.index3End = pointingTransforms[5].localRotation;
+			this.middle1End = pointingTransforms[6].localRotation; this.middle2End = pointingTransforms[7].localRotation; this.middle3End = pointingTransforms[8].localRotation;
+			this.ring1End = pointingTransforms[9].localRotation; this.ring2End = pointingTransforms[10].localRotation; this.ring3End = pointingTransforms[11].localRotation;
+			this.little1End = pointingTransforms[12].localRotation; this.little2End = pointingTransforms[13].localRotation; this.little3End = pointingTransforms[14].localRotation;
+
+			Transform[] targetTransforms;
+
+			this.GetFingerRotations(out targetTransforms, this.GetComponent<Animator>());
+
+			this.thumb1 = targetTransforms[0]; this.thumb2 = targetTransforms[1]; this.thumb3 = targetTransforms[2];
+			this.index1 = targetTransforms[3]; this.index2 = targetTransforms[4]; this.index3 = targetTransforms[5];
+			this.middle1 = targetTransforms[6]; this.middle2 = targetTransforms[7]; this.middle3 = targetTransforms[8];
+			this.ring1 = targetTransforms[9]; this.ring2 = targetTransforms[10]; this.ring3 = targetTransforms[11];
+			this.little1 = targetTransforms[12]; this.little2 = targetTransforms[13]; this.little3 = targetTransforms[14];
 		}
 
-
-		// Use this for initialization
-		void Start()
+		private void GetFingerRotations(out Transform[] transforms, Animator animator)
 		{
-			float xySign = (this.handType == HandType.LeftHand)? 1.0f : -1.0f;
+			transforms = new Transform[15];
 
-			this.thumb1End  = Quaternion.Euler(xySign*(+63), xySign*(-102), -53);
-			this.thumb2End  = Quaternion.Euler(xySign*(- 6), xySign*(- 24), +24);
-			this.thumb3End  = Quaternion.Euler(xySign*(  1), xySign*(-  3), +14);
+			if (this.handType == HandType.LeftHand)
+			{
+				transforms[0] = animator.GetBoneTransform(HumanBodyBones.LeftThumbProximal);
+				transforms[1] = animator.GetBoneTransform(HumanBodyBones.LeftThumbIntermediate);
+				transforms[2] = animator.GetBoneTransform(HumanBodyBones.LeftThumbDistal);
 
-			this.index1End  = Quaternion.Euler(xySign*(-10), xySign*(+10), -16);
-			this.index2End  = Quaternion.Euler(xySign*( 0), xySign*(  0), -30);
-			this.index3End  = Quaternion.Euler(xySign*(+2), xySign*(+ 5), -30);
+				transforms[3] = animator.GetBoneTransform(HumanBodyBones.LeftIndexProximal);
+				transforms[4] = animator.GetBoneTransform(HumanBodyBones.LeftIndexIntermediate);
+				transforms[5] = animator.GetBoneTransform(HumanBodyBones.LeftIndexDistal);
 
-			this.middle1End = Quaternion.Euler(xySign*(+ 2), xySign*(+12), +60);
-			this.middle2End = Quaternion.Euler(xySign*(+34), xySign*(-34), +26);
-			this.middle3End = Quaternion.Euler(xySign*(  0), xySign*(  0), +19);
+				transforms[6] = animator.GetBoneTransform(HumanBodyBones.LeftMiddleProximal);
+				transforms[7] = animator.GetBoneTransform(HumanBodyBones.LeftMiddleIntermediate);
+				transforms[8] = animator.GetBoneTransform(HumanBodyBones.LeftMiddleDistal);
 
-			this.ring1End   = Quaternion.Euler(xySign*(+33), xySign*(- 2), +29);
-			this.ring2End   = Quaternion.Euler(xySign*(+25), xySign*(+13), +29);
-			this.ring3End   = Quaternion.Euler(xySign*(+17), xySign*(+ 5), +14);
+				transforms[9] = animator.GetBoneTransform(HumanBodyBones.LeftRingProximal);
+				transforms[10] = animator.GetBoneTransform(HumanBodyBones.LeftRingIntermediate);
+				transforms[11] = animator.GetBoneTransform(HumanBodyBones.LeftRingDistal);
 
-			this.little1End = Quaternion.Euler(xySign*(+34), xySign*(+17), + 4);
-			this.little2End = Quaternion.Euler(xySign*(+47), xySign*(+30), +19);
-			this.little3End = Quaternion.Euler(xySign*(-20), xySign*(+41), +12);
+				transforms[12] = animator.GetBoneTransform(HumanBodyBones.LeftLittleProximal);
+				transforms[13] = animator.GetBoneTransform(HumanBodyBones.LeftLittleIntermediate);
+				transforms[14] = animator.GetBoneTransform(HumanBodyBones.LeftLittleDistal);
+			}
+			else
+			{
+				transforms[0] = animator.GetBoneTransform(HumanBodyBones.RightThumbProximal);
+				transforms[1] = animator.GetBoneTransform(HumanBodyBones.RightThumbIntermediate);
+				transforms[2] = animator.GetBoneTransform(HumanBodyBones.RightThumbDistal);
+
+				transforms[3] = animator.GetBoneTransform(HumanBodyBones.RightIndexProximal);
+				transforms[4] = animator.GetBoneTransform(HumanBodyBones.RightIndexIntermediate);
+				transforms[5] = animator.GetBoneTransform(HumanBodyBones.RightIndexDistal);
+
+				transforms[6] = animator.GetBoneTransform(HumanBodyBones.RightMiddleProximal);
+				transforms[7] = animator.GetBoneTransform(HumanBodyBones.RightMiddleIntermediate);
+				transforms[8] = animator.GetBoneTransform(HumanBodyBones.RightMiddleDistal);
+
+				transforms[9] = animator.GetBoneTransform(HumanBodyBones.RightRingProximal);
+				transforms[10] = animator.GetBoneTransform(HumanBodyBones.RightRingIntermediate);
+				transforms[11] = animator.GetBoneTransform(HumanBodyBones.RightRingDistal);
+
+				transforms[12] = animator.GetBoneTransform(HumanBodyBones.RightLittleProximal);
+				transforms[13] = animator.GetBoneTransform(HumanBodyBones.RightLittleIntermediate);
+				transforms[14] = animator.GetBoneTransform(HumanBodyBones.RightLittleDistal);
+			}
 		}
 
 		private void Update()
@@ -225,25 +252,25 @@ namespace SIGVerse.SampleScenes.Hsr
 			float ratio = this.state != State.PointDestination ? this.pointingRatio : 1.0f;
 
 			// Change hand posture
-			this.thumb1.localRotation = Quaternion.Slerp(this.thumb1.localRotation, this.thumb1End, ratio);
-			this.thumb2.localRotation = Quaternion.Slerp(this.thumb2.localRotation, this.thumb2End, ratio);
-			this.thumb3.localRotation = Quaternion.Slerp(this.thumb3.localRotation, this.thumb3End, ratio);
+			this.thumb1.localRotation = Quaternion.Slerp(this.thumb1Start, this.thumb1End, ratio);
+			this.thumb2.localRotation = Quaternion.Slerp(this.thumb2Start, this.thumb2End, ratio);
+			this.thumb3.localRotation = Quaternion.Slerp(this.thumb3Start, this.thumb3End, ratio);
 
-			this.index1.localRotation = Quaternion.Slerp(this.index1.localRotation, this.index1End, ratio);
-			this.index2.localRotation = Quaternion.Slerp(this.index2.localRotation, this.index2End, ratio);
-			this.index3.localRotation = Quaternion.Slerp(this.index3.localRotation, this.index3End, ratio);
+			this.index1.localRotation = Quaternion.Slerp(this.index1Start, this.index1End, ratio);
+			this.index2.localRotation = Quaternion.Slerp(this.index2Start, this.index2End, ratio);
+			this.index3.localRotation = Quaternion.Slerp(this.index3Start, this.index3End, ratio);
 
-			this.middle1.localRotation = Quaternion.Slerp(this.middle1.localRotation, this.middle1End, ratio);
-			this.middle2.localRotation = Quaternion.Slerp(this.middle2.localRotation, this.middle2End, ratio);
-			this.middle3.localRotation = Quaternion.Slerp(this.middle3.localRotation, this.middle3End, ratio);
+			this.middle1.localRotation = Quaternion.Slerp(this.middle1Start, this.middle1End, ratio);
+			this.middle2.localRotation = Quaternion.Slerp(this.middle2Start, this.middle2End, ratio);
+			this.middle3.localRotation = Quaternion.Slerp(this.middle3Start, this.middle3End, ratio);
 
-			this.ring1.localRotation = Quaternion.Slerp(this.ring1.localRotation, this.ring1End, ratio);
-			this.ring2.localRotation = Quaternion.Slerp(this.ring2.localRotation, this.ring2End, ratio);
-			this.ring3.localRotation = Quaternion.Slerp(this.ring3.localRotation, this.ring3End, ratio);
+			this.ring1.localRotation = Quaternion.Slerp(this.ring1Start, this.ring1End, ratio);
+			this.ring2.localRotation = Quaternion.Slerp(this.ring2Start, this.ring2End, ratio);
+			this.ring3.localRotation = Quaternion.Slerp(this.ring3Start, this.ring3End, ratio);
 
-			this.little1.localRotation = Quaternion.Slerp(this.little1.localRotation, this.little1End, ratio);
-			this.little2.localRotation = Quaternion.Slerp(this.little2.localRotation, this.little2End, ratio);
-			this.little3.localRotation = Quaternion.Slerp(this.little3.localRotation, this.little3End, ratio);
+			this.little1.localRotation = Quaternion.Slerp(this.little1Start, this.little1End, ratio);
+			this.little2.localRotation = Quaternion.Slerp(this.little2Start, this.little2End, ratio);
+			this.little3.localRotation = Quaternion.Slerp(this.little3Start, this.little3End, ratio);
 		}
 
 		public bool IsWaiting()

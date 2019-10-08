@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using System.IO;
 using System;
+using UnityEngine.XR;
 
 namespace SIGVerse.Common
 {
@@ -13,7 +14,9 @@ namespace SIGVerse.Common
 		private const char   SymbolSeparator = ';';
 		private const string SIGVerseScriptingDefineSymbolsKey = "sigverse_scripting_define_symbols";
 
-		private const string DefineSIGVerseMySQL = "SIGVERSE_MYSQL";
+		private const string DefineSIGVerseMySQL  = "SIGVERSE_MYSQL";
+		private const string DefineSIGVerseOculus = "SIGVERSE_OCULUS";
+		private const string DefineSIGVersePun    = "SIGVERSE_PUN";
 
 		private const string WindowName   = "SIGVerse";
 		private const string MenuItemName = "SIGVerse/SIGVerse Settings"; 
@@ -39,7 +42,9 @@ namespace SIGVerse.Common
 		private bool   isAutoStartWithMenu;
 		private bool   setUpRosTimestamp;
 
-		private bool   isUsingMySQL;
+		private bool isUsingMySQL;
+		private bool isUsingOculus;
+		private bool isUsingPun;
 
 
 		void OnEnable ()
@@ -76,7 +81,9 @@ namespace SIGVerse.Common
 
 			string[] defineSymbols = defineSymbolsStr.Split(SymbolSeparator);
 
-			this.isUsingMySQL = Array.IndexOf(defineSymbols, DefineSIGVerseMySQL) >= 0;
+			this.isUsingMySQL  = Array.IndexOf(defineSymbols, DefineSIGVerseMySQL)  >= 0;
+			this.isUsingOculus = Array.IndexOf(defineSymbols, DefineSIGVerseOculus) >= 0;
+			this.isUsingPun    = Array.IndexOf(defineSymbols, DefineSIGVersePun)    >= 0;
 		}
 
 
@@ -141,7 +148,25 @@ namespace SIGVerse.Common
 			{
 				this.isUsingMySQL = EditorGUILayout.Toggle("Use MySQL", this.isUsingMySQL);
 				GUILayout.Space(20);
-				GUILayout.Label("* Please add some libraries(MySql.Data.dll) if you want to use MySQL.");
+				GUILayout.Label("* Please import MySQL library (MySql.Data.dll)");
+				GUILayout.FlexibleSpace();
+			}
+			EditorGUILayout.EndHorizontal();
+
+			EditorGUILayout.BeginHorizontal();
+			{
+				this.isUsingOculus = EditorGUILayout.Toggle("Use Oculus", this.isUsingOculus);
+				GUILayout.Space(20);
+				GUILayout.Label("* Please import Oculus libraries");
+				GUILayout.FlexibleSpace();
+			}
+			EditorGUILayout.EndHorizontal();
+
+			EditorGUILayout.BeginHorizontal();
+			{
+				this.isUsingPun = EditorGUILayout.Toggle("Use PUN", this.isUsingPun);
+				GUILayout.Space(20);
+				GUILayout.Label("* Please import Photon Unity Networking libraries");
 				GUILayout.FlexibleSpace();
 			}
 			EditorGUILayout.EndHorizontal();
@@ -156,6 +181,12 @@ namespace SIGVerse.Common
 
 					// Add/Remove MySQL define
 					this.UpdateScriptingDefineSymbolList(ref scriptingDefineSymbolList, this.isUsingMySQL, DefineSIGVerseMySQL);
+
+					// Add/Remove Oculus define
+					this.UpdateScriptingDefineSymbolList(ref scriptingDefineSymbolList, this.isUsingOculus, DefineSIGVerseOculus);
+
+					// Add/Remove PUN define
+					this.UpdateScriptingDefineSymbolList(ref scriptingDefineSymbolList, this.isUsingPun, DefineSIGVersePun);
 
 					string defineSymbolsStr = String.Join(SymbolSeparator.ToString(), scriptingDefineSymbolList.ToArray());
 

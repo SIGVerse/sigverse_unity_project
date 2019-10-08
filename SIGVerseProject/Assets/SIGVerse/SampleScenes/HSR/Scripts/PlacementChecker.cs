@@ -95,7 +95,9 @@ namespace SIGVerse.SampleScenes.Hsr
 
 		private void OnTriggerEnter(Collider other)
 		{
-			if(other.attachedRigidbody==null){ return; }
+			if (other.attachedRigidbody == null) { return; }
+
+			if (this.placedRigidbodyMap == null) { return; }
 
 			if(!this.placedRigidbodyMap.ContainsKey(other.attachedRigidbody))
 			{

@@ -26,7 +26,6 @@ namespace SIGVerse.SampleScenes.Hsr
 		//-----------------------------
 
 		private const string TagRobot = "Robot";
-		private const float  InvincibleTime = 1.0f;
 
 		private List<GameObject> destinations;
 		private float velocityThreshold;
@@ -37,28 +36,9 @@ namespace SIGVerse.SampleScenes.Hsr
 
 		private GameObject collisionEffect;
 
-		private List<Collider> hsrBaseColliders;
-		private List<Collider> hsrHandColliders;
-
-		private bool hasCollidedWithHsrBase = false;
-
-		private GraspingDetector hsrGraspingDetector;
-
-
 		protected void Awake()
 		{
 			this.collisionEffect = (GameObject)Resources.Load(SIGVerseUtils.CollisionEffectPath);
-
-			GameObject robot = GameObject.FindGameObjectWithTag(TagRobot);
-
-			this.hsrBaseColliders = new List<Collider>();
-			this.hsrBaseColliders.AddRange(SIGVerseUtils.FindTransformFromChild(robot.transform.root, HSRCommon.BaseName)  .GetComponentsInChildren<Collider>());
-			this.hsrBaseColliders.AddRange(SIGVerseUtils.FindTransformFromChild(robot.transform.root, HSRCommon.BumperName).GetComponentsInChildren<Collider>());
-
-			this.hsrHandColliders = new List<Collider>();
-			this.hsrHandColliders.AddRange(SIGVerseUtils.FindTransformFromChild(robot.transform.root, Link.wrist_roll_link.ToString()).GetComponentsInChildren<Collider>());
-
-			this.hsrGraspingDetector = robot.GetComponent<GraspingDetector>();
 		}
 
 
@@ -78,28 +58,20 @@ namespace SIGVerse.SampleScenes.Hsr
 
 		void OnCollisionEnter(Collision collision)
 		{
-			// It is run over by HSR base
-			if(collision.relativeVelocity.magnitude < this.velocityThreshold)
+			if (collision.relativeVelocity.magnitude < this.velocityThreshold)
 			{
-				if(this.IsRunOverByHsrBase(collision))
-				{
-					this.ExecCollisionProcess(CollisionType.WithHsrBase, collision);
-				}
-
 				return;
 			}
 
-			// Ignore when it is collided with hand immediately after release
-			if(Time.time - this.hsrGraspingDetector.GetLatestReleaseTime() < InvincibleTime && this.IsCollidedWithHsrHand(collision))
+			// Ignore when it is collided with robot
+			if (this.IsCollidedWithHsr(collision))
 			{
-				SIGVerseLogger.Info("Ignore the collision with the HSR hand. Elapsed time since release = " + (Time.time - this.hsrGraspingDetector.GetLatestReleaseTime()));
-//				SIGVerseLogger.Info("Ignore the collision with the HSR hand. Velocity="+collision.relativeVelocity.magnitude + ", Elapsed time since release = " + (Time.time - this.hsrGraspingDetector.GetLatestReleaseTime()));
+//				SIGVerseLogger.Info("Ignore the collision with the HSR.");
 				return;
 			}
-
 
 			// Normal collision
-			if(Time.time - this.lastSendingTime < this.minimumSendingInterval){ return; }
+			if (Time.time - this.lastSendingTime < this.minimumSendingInterval){ return; }
 
 			foreach(ContactPoint contactPoint in collision.contacts)
 			{
@@ -146,44 +118,11 @@ namespace SIGVerse.SampleScenes.Hsr
 			}
 		}
 
-		private bool IsRunOverByHsrBase(Collision collision)
+		private bool IsCollidedWithHsr(Collision collision)
 		{
-			if(this.hasCollidedWithHsrBase){ return false; }
-
-			foreach(ContactPoint contactPoint in collision.contacts)
+			foreach (ContactPoint contactPoint in collision.contacts)
 			{
-				foreach(Collider hsrBaseCollider in this.hsrBaseColliders)
-				{
-					if(contactPoint.otherCollider==hsrBaseCollider)
-					{
-						this.hasCollidedWithHsrBase = true;
-
-						return true;
-					}
-				}
-			}
-
-			return false;
-		}
-
-		private bool IsCollidedWithHsrHand(Collision collision)
-		{
-			foreach(ContactPoint contactPoint in collision.contacts)
-			{
-				if(!this.IsCollidedWithHsrHand(contactPoint))
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-		private bool IsCollidedWithHsrHand(ContactPoint contactPoint)
-		{
-			foreach(Collider hsrHandCollider in this.hsrHandColliders)
-			{
-				if(contactPoint.otherCollider==hsrHandCollider)
+				if(contactPoint.otherCollider.transform.root.tag== TagRobot)
 				{
 					return true;
 				}

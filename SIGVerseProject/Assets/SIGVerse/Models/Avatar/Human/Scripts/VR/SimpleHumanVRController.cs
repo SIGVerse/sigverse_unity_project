@@ -22,7 +22,7 @@ namespace SIGVerse.Human.VR
 		private Transform[]  fixedTransforms;
 		private Quaternion[] fixedQuaternionsOrg;
 
-		private void Awake()
+		protected virtual void Awake()
 		{
 			this.animator = GetComponent<Animator>();
 
@@ -36,7 +36,7 @@ namespace SIGVerse.Human.VR
 			this.fixedTransforms = fixedTransformList.ToArray();
 		}
 
-		private void Start()
+		protected virtual void Start()
 		{
 			this.fixedQuaternionsOrg = new Quaternion[this.fixedTransforms.Length];
 
@@ -46,7 +46,7 @@ namespace SIGVerse.Human.VR
 			}
 		}
 
-		private void Update()
+		protected virtual void Update()
 		{
 			if(Time.time > 0.1f && this.eyeAnchor.up.y > 0.1f)
 			{
@@ -96,7 +96,7 @@ namespace SIGVerse.Human.VR
 		}
 
 		// Update is called once per frame
-		void LateUpdate()
+		protected virtual void LateUpdate()
 		{
 			for (int i=0; i<this.fixedTransforms.Length; i++)
 			{
