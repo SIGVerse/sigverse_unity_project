@@ -30,17 +30,32 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 
 		private const string SubViewControllerStr = "SubviewController";
 
+		[HeaderAttribute("Spawn Info")]
+		public int humanMaxNumber;
+		public Vector3[] humanPosisions;
+		public Vector3[] humanEulerAngles;
+
+		public int robotMaxNumber;
+		public Vector3[] robotPosisions;
+		public Vector3[] robotEulerAngles;
+
+
 		[HeaderAttribute("Objects")]
 		public GameObject humanSource;
 		public GameObject robotSource;
-
 		public GameObject[] rootsOfSyncTarget;
 
+		[HeaderAttribute("Scripts")]
+		public ChatManager chatManager;
+
 		[HeaderAttribute("UI")]
+		public Button humanLoginButton;
+		public Button robotLoginButton;
 		public GameObject mainPanel;
 		public GameObject noticePanel;
 		public Text roomNameText;
 		public Text roomNameDefaultText;
+		public Text errorMessageText;
 
 //		[HideInInspector]
 		public List<GameObject> roomObjects;
@@ -58,8 +73,6 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 		void Start()
 		{
 			PhotonNetwork.AutomaticallySyncScene = true;
-
-			this.roomName = (roomNameText.text!=string.Empty) ? roomNameText.text : roomNameDefaultText.text;
 
 			// Check for duplication
 			List<string> duplicateNames = roomObjects.GroupBy(obj => obj.name).Where(g => g.Count() > 1).Select(g => g.Key).ToList();
@@ -81,6 +94,8 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 		{
 			this.isHuman = isHuman;
 
+			this.roomName = (roomNameText.text != string.Empty) ? roomNameText.text : roomNameDefaultText.text;
+
 			PhotonNetwork.GameVersion = PhotonNetwork.PhotonServerSettings.AppSettings.AppVersion;
 
 			PhotonNetwork.ConnectUsingSettings();
@@ -95,7 +110,7 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 
 		public override void OnConnectedToMaster()
 		{
-//			Debug.Log("OnConnectedToMaster");
+//			Debug.Log("OnConnectedToMaster RoomName=" + this.roomName);
 
 			PhotonNetwork.JoinOrCreateRoom(this.roomName, new RoomOptions(), TypedLobby.Default);
 		}
@@ -103,15 +118,23 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 		public override void OnDisconnected(DisconnectCause cause)
 		{
 //			Debug.Log("OnDisconnected");
+
+			this.chatManager.ClearChatUserList();
 		}
 
 		public override void OnJoinedRoom()
 		{
-			if(this.isHuman)
+			if (this.ShouldDisconnect(out int numberOfLogins))
+			{
+				this.StartCoroutine(this.Disconnect());
+				return;
+			}
+
+			if (this.isHuman)
 			{
 				PhotonNetwork.NickName = HumanNamePrefix + "#" + PhotonNetwork.LocalPlayer.ActorNumber;
 
-				PhotonNetwork.Instantiate(this.humanSource.name, this.humanSource.transform.position, this.humanSource.transform.rotation);
+				PhotonNetwork.Instantiate(this.humanSource.name, this.humanPosisions[numberOfLogins], Quaternion.Euler(this.humanEulerAngles[numberOfLogins]));
 			}
 			else
 			{
@@ -119,11 +142,49 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 
 				XRSettings.enabled = false;
 
-				PhotonNetwork.Instantiate(this.robotSource.name, this.robotSource.transform.position, this.robotSource.transform.rotation);
+				PhotonNetwork.Instantiate(this.robotSource.name, this.robotPosisions[numberOfLogins], Quaternion.Euler(this.robotEulerAngles[numberOfLogins]));
 			}
 
 			this.mainPanel.SetActive(false);
 		}
+
+		private bool ShouldDisconnect(out int numberOfLogins)
+		{
+			Player[] players = PhotonNetwork.PlayerListOthers;
+
+			numberOfLogins = this.isHuman? players.Count(p => p.NickName.StartsWith(HumanNamePrefix)) : players.Count(p => p.NickName.StartsWith(RobotNamePrefix));
+
+			if ((this.isHuman && numberOfLogins>=this.humanMaxNumber) || (!this.isHuman && numberOfLogins >= this.robotMaxNumber))
+			{
+				string errorMessage = "Over capacity - logs you out.";
+
+				SIGVerseLogger.Warn(errorMessage);
+
+				this.errorMessageText.text = errorMessage;
+				this.errorMessageText.gameObject.SetActive(true);
+
+				this.humanLoginButton.interactable = false;
+				this.robotLoginButton.interactable = false;
+
+				return true;
+			}
+
+			return false;
+		}
+
+		private IEnumerator Disconnect()
+		{
+			yield return new WaitForSeconds(3.0f);
+
+			PhotonNetwork.LeaveRoom();
+			PhotonNetwork.Disconnect();
+
+			this.errorMessageText.gameObject.SetActive(false);
+
+			this.humanLoginButton.interactable = true;
+			this.robotLoginButton.interactable = true;
+		}
+
 
 		public void SetRoomObjects(List<GameObject> roomObjects)
 		{
@@ -173,12 +234,28 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 	[CustomEditor(typeof(PunLauncher))]
 	public class PunLauncherEditor : Editor
 	{
-		void OnEnable()
-		{
-		}
+		//void OnEnable()
+		//{
+		//}
 
 		public override void OnInspectorGUI()
 		{
+			PunLauncher punLauncher = (PunLauncher)target;
+
+			if(punLauncher.humanMaxNumber != punLauncher.humanPosisions.Length || punLauncher.humanMaxNumber != punLauncher.humanEulerAngles.Length)
+			{
+				Undo.RecordObject(target, "Update Human Spawn Info");
+				Array.Resize(ref punLauncher.humanPosisions,   punLauncher.humanMaxNumber);
+				Array.Resize(ref punLauncher.humanEulerAngles, punLauncher.humanMaxNumber);
+			}
+
+			if (punLauncher.robotMaxNumber != punLauncher.robotPosisions.Length || punLauncher.robotMaxNumber != punLauncher.robotEulerAngles.Length)
+			{
+				Undo.RecordObject(target, "Update Robot Spawn Info");
+				Array.Resize(ref punLauncher.robotPosisions,   punLauncher.robotMaxNumber);
+				Array.Resize(ref punLauncher.robotEulerAngles, punLauncher.robotMaxNumber);
+			}
+
 			base.OnInspectorGUI();
 
 			GUILayout.Space(10);
@@ -190,8 +267,6 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 				if (GUILayout.Button("Update Photon View", GUILayout.Width(200), GUILayout.Height(40)))
 				{
 					Undo.RecordObject(target, "Update Photon View");
-
-					PunLauncher punLauncher = (PunLauncher)target;
 
 					// Remove photon scripts
 					RemoveScripts<PhotonTransformView>();

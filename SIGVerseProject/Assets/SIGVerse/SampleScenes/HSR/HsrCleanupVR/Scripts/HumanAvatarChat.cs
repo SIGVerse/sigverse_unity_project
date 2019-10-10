@@ -23,6 +23,8 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 
 		private const string MsgPickItUp = "Pick it up!";
 		private const string MsgCleanUp  = "Clean up!";
+		private const string MsgGood     = "Good!";
+		private const string MsgBad      = "Bad!";
 
 		private const float SendingMessageInterval = 0.5f;
 
@@ -41,6 +43,14 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 				else if (OVRInput.GetDown(OVRInput.RawButton.B) || OVRInput.GetDown(OVRInput.RawButton.Y))
 				{
 					this.PublishMessage(MsgCleanUp);
+				}
+				else if (OVRInput.GetDown(OVRInput.RawButton.RThumbstick))
+				{
+					this.PublishMessage(MsgGood);
+				}
+				else if (OVRInput.GetDown(OVRInput.RawButton.LThumbstick))
+				{
+					this.PublishMessage(MsgBad);
 				}
 			}
 		}

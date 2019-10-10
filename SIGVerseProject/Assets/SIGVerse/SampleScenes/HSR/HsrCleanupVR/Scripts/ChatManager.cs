@@ -40,7 +40,7 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 		{
 			this.photonView = this.GetComponent<PhotonView>();
 
-			this.userMap = new Dictionary<string, GameObject>();
+			this.ClearChatUserList();
 		}
 
 		public void OnReceiveChatMessage(string senderName, string message)
@@ -105,6 +105,11 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 		private void RemoveChatUser(string userName)
 		{
 			this.userMap.Remove(userName);
+		}
+
+		public void ClearChatUserList()
+		{
+			this.userMap = new Dictionary<string, GameObject>();
 		}
 	}
 #endif
