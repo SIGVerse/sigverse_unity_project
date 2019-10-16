@@ -4964,7 +4964,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 15, y: -75}
+  m_AnchoredPosition: {x: 15, y: -40}
   m_SizeDelta: {x: 500, y: 265}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &332981829
@@ -9105,7 +9105,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
-  m_TargetEye: 3
+  m_TargetEye: 0
   m_HDR: 0
   m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
@@ -13466,6 +13466,16 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 20000013006332368, guid: cd16f7aea3c00f34eb4d3cde9968707a,
+        type: 3}
+      propertyPath: m_Depth
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 20000013006332368, guid: cd16f7aea3c00f34eb4d3cde9968707a,
+        type: 3}
+      propertyPath: m_TargetEye
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 54000010768107002, guid: cd16f7aea3c00f34eb4d3cde9968707a,
         type: 3}
       propertyPath: m_UseGravity
@@ -13530,11 +13540,6 @@ PrefabInstance:
         type: 3}
       propertyPath: useMainCamera
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 20000013006332368, guid: cd16f7aea3c00f34eb4d3cde9968707a,
-        type: 3}
-      propertyPath: m_Depth
-      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1000012380255514, guid: cd16f7aea3c00f34eb4d3cde9968707a, type: 3}
       propertyPath: m_TagString
@@ -22624,7 +22629,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
-  m_TargetEye: 3
+  m_TargetEye: 0
   m_HDR: 1
   m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
@@ -27583,7 +27588,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 20, y: -80}
+  m_AnchoredPosition: {x: 20, y: -45}
   m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1867228061
