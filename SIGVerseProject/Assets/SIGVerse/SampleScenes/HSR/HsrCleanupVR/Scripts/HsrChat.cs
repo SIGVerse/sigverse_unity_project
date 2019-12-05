@@ -20,7 +20,7 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 		/// </summary>
 		public override void OnReceiveChatMessage(string userName, string message)
 		{
-			if (!userName.StartsWith(PunLauncher.HumanNamePrefix)) { return; }
+			if (!userName.StartsWith(this.name)) { return; }
 
 			ExecuteEvents.Execute<SIGVerse.RosBridge.IRosSendingStringMsgHandler>
 			(

@@ -25,9 +25,6 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 	public class PunLauncher : MonoBehaviourPunCallbacks
 	{
 		//		public const string GameVersion = "0.1";
-		public const string HumanNamePrefix = "Human";
-		public const string RobotNamePrefix = "HSR";
-
 		private const string SubViewControllerStr = "SubviewController";
 
 		[HeaderAttribute("Spawn Info")]
@@ -132,13 +129,13 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 
 			if (this.isHuman)
 			{
-				PhotonNetwork.NickName = HumanNamePrefix + "#" + PhotonNetwork.LocalPlayer.ActorNumber;
+				PhotonNetwork.NickName = this.humanSource.name + "#" + PhotonNetwork.LocalPlayer.ActorNumber;
 
 				PhotonNetwork.Instantiate(this.humanSource.name, this.humanPosisions[numberOfLogins], Quaternion.Euler(this.humanEulerAngles[numberOfLogins]));
 			}
 			else
 			{
-				PhotonNetwork.NickName = RobotNamePrefix + "#" + PhotonNetwork.LocalPlayer.ActorNumber;
+				PhotonNetwork.NickName = this.robotSource.name + "#" + PhotonNetwork.LocalPlayer.ActorNumber;
 
 				XRSettings.enabled = false;
 
@@ -152,7 +149,7 @@ namespace SIGVerse.SampleScenes.Hsr.HsrCleanupVR
 		{
 			Player[] players = PhotonNetwork.PlayerListOthers;
 
-			numberOfLogins = this.isHuman? players.Count(p => p.NickName.StartsWith(HumanNamePrefix)) : players.Count(p => p.NickName.StartsWith(RobotNamePrefix));
+			numberOfLogins = this.isHuman? players.Count(p => p.NickName.StartsWith(this.humanSource.name)) : players.Count(p => p.NickName.StartsWith(this.robotSource.name));
 
 			if ((this.isHuman && numberOfLogins>=this.humanMaxNumber) || (!this.isHuman && numberOfLogins >= this.robotMaxNumber))
 			{
