@@ -12,12 +12,10 @@ namespace SIGVerse.Common
 		void Start()
 		{
 			rootGameObject = gameObject.transform.root.gameObject;
-			//Debug.Log("tename=" + rootGameObject.name);
 		}
 
 		void OnCollisionEnter(Collision collision)
 		{
-			//Debug.Log("tename2=" + rootGameObject.name);
 			rootGameObject.SendMessage("RedirectedOnCollisionEnter", collision);
 		}
 	}

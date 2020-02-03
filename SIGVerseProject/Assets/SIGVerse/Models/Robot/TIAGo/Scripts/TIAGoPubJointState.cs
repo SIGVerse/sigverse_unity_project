@@ -65,8 +65,6 @@ namespace SIGVerse.TIAGo
 			this.arm7LinkIniRotZ = this.arm7Link.localEulerAngles.z;
 			this.gripperLeftFingerLinkIniPosX  = this.gripperLeftFingerLink .localPosition.x;
 			this.gripperRightFingerLinkIniPosX = this.gripperRightFingerLink.localPosition.x;
-
-			Debug.Log("this.arm4LinkIniRotZ="+this.arm4Link.localEulerAngles.y+", "+this.arm4Link.localEulerAngles.z);
 		}
 
 		protected override void Start()

@@ -112,8 +112,6 @@ namespace SIGVerse.Common
 		// Use this for initialization
 		void Start()
 		{
-			Debug.Log("start");
-
 			this.recordButtonText = this.recordButton.GetComponentInChildren<Text>();
 			this.playButtonText = this.playButton.GetComponentInChildren<Text>();
 		}
@@ -220,11 +218,11 @@ namespace SIGVerse.Common
 
 		private void StartRecording()
 		{
-			//		DateTime dateTime = DateTime.Now;
+//			DateTime dateTime = DateTime.Now;
 
 			//this.outputFilePath = outputFolderPath.TrimEnd(' ', '\\') + "\\Motions_" + dateTime.ToString("yyyyMMddHHmmsss") + ".dat";
 			this.outputFilePath = outputFolderPath.text.TrimEnd(' ', '\\') + "\\Motions.dat";
-			Debug.Log("outputFilePath=" + this.outputFilePath);
+			SIGVerseLogger.Info("StartRecording outputFilePath=" + this.outputFilePath);
 
 			// File open
 			this.swMotionsDataWriter = new StreamWriter(this.outputFilePath, false);
@@ -297,7 +295,7 @@ namespace SIGVerse.Common
 		{
 			if (!File.Exists(inputFilePath.text))
 			{
-				Debug.Log("Input File NOT found.");
+				SIGVerseLogger.Info("Input File NOT found.");
 				return;
 			}
 
@@ -410,7 +408,6 @@ namespace SIGVerse.Common
 			}
 		}
 
-
 		private static string GetLinkPath(Transform transform)
 		{
 			string path = transform.name;
@@ -423,7 +420,6 @@ namespace SIGVerse.Common
 
 			return path;
 		}
-
 
 		public void OnDrag(PointerEventData eventData)
 		{

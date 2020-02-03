@@ -11,7 +11,7 @@ namespace SIGVerse.TIAGo
 		public const float MaxSpeedBase    = 0.3f;  // [m/s] TODO
 		public const float MaxSpeedBaseRad = 1.1f;  // [rad/s] TODO
 
-		// TODO
+		// TODO  Don't know the specifications of the actual robot
   //<xacro:property name="arm_1_max_vel"      value="1.95" />
   //<xacro:property name="arm_2_max_vel"      value="1.95" />
   //<xacro:property name="arm_3_max_vel"      value="2.35" />

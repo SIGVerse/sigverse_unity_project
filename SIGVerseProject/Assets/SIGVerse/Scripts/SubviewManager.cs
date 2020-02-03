@@ -462,6 +462,8 @@ namespace SIGVerse.Common
 
 			rectTransform.sizeDelta = new Vector2(sizeX, sizeY);
 
+			Vector2 offset = CorrectOffset(rectTransform, offsetX, offsetY);
+
 			switch (subviewPositionType)
 			{
 				case SubviewPositionType.TopLeft:
@@ -470,8 +472,8 @@ namespace SIGVerse.Common
 					rectTransform.anchorMax = new Vector2(0.0f, 1.0f);
 					rectTransform.pivot     = new Vector2(0.0f, 1.0f);
 
-					float posX = + offsetX;
-					float posY = - offsetY + Screen.height;
+					float posX = + offset.x;
+					float posY = - offset.y + Screen.height;
 
 					rectTransform.position = new Vector3(posX, posY, 0.0f);
 
@@ -483,8 +485,8 @@ namespace SIGVerse.Common
 					rectTransform.anchorMax = new Vector2(1.0f, 1.0f);
 					rectTransform.pivot     = new Vector2(1.0f, 1.0f);
 
-					float posX = - offsetX + Screen.width;
-					float posY = - offsetY + Screen.height;
+					float posX = - offset.x + Screen.width;
+					float posY = - offset.y + Screen.height;
 
 					rectTransform.position = new Vector3(posX, posY, 0.0f);
 
@@ -496,8 +498,10 @@ namespace SIGVerse.Common
 					rectTransform.anchorMax = new Vector2(0.0f, 0.0f);
 					rectTransform.pivot     = new Vector2(0.0f, 0.0f);
 
-					float posX = + offsetX;
-					float posY = + offsetY;
+					float posX = + offset.x;
+					float posY = + offset.y;
+
+					
 
 					rectTransform.position = new Vector3(posX, posY, 0.0f);
 
@@ -509,13 +513,27 @@ namespace SIGVerse.Common
 					rectTransform.anchorMax = new Vector2(1.0f, 0.0f);
 					rectTransform.pivot     = new Vector2(1.0f, 0.0f);
 
-					float posX = - offsetX + Screen.width;
-					float posY = + offsetY;
+					float posX = - offset.x + Screen.width;
+					float posY = + offset.y;
 
 					rectTransform.position = new Vector3(posX, posY, 0.0f);
 
 					break;
 				}
+			}
+		}
+
+		private static Vector2 CorrectOffset(RectTransform rectTransform, float offsetX, float offsetY)
+		{
+			RectTransform parent = rectTransform.parent as RectTransform;
+
+			if (parent != null)
+			{
+				return new Vector2(offsetX * parent.localScale.x, offsetY * parent.localScale.y);
+			}
+			else
+			{
+				return new Vector2(offsetX, offsetY);
 			}
 		}
 
