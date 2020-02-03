@@ -8,6 +8,7 @@ using SIGVerse.Common;
 using SIGVerse.SIGVerseRosBridge;
 using System.Threading;
 using SIGVerse.RosBridge;
+using System.Linq;
 
 namespace SIGVerse.ToyotaHSR
 {
@@ -26,8 +27,8 @@ namespace SIGVerse.ToyotaHSR
 
 		private GameObject cameraFrameObj;
 
-		// Xtion
-		private Camera xtionDepthCamera;
+		// Camera
+		private Camera targetCamera;
 		private Texture2D imageTexture;
 		byte[]  byteArray; 
 
@@ -37,8 +38,6 @@ namespace SIGVerse.ToyotaHSR
 
 		private CameraInfoForSIGVerseBridge cameraInfoData;
 		private ImageForSIGVerseBridge imageData;
-
-		private float elapsedTime;
 
 		private bool isPublishingCameraInfo = false;
 		private bool isPublishingImage      = false;
@@ -86,23 +85,18 @@ namespace SIGVerse.ToyotaHSR
 			this.networkStreamImage.WriteTimeout = 100000;
 
 
-			// Depth Camera
-			this.xtionDepthCamera = this.cameraFrameObj.GetComponentInChildren<Camera>();
+			// Camera
+			this.targetCamera = this.cameraFrameObj.GetComponentInChildren<Camera>();
 
-			int imageWidth  = this.xtionDepthCamera.targetTexture.width;
-			int imageHeight = this.xtionDepthCamera.targetTexture.height;
+			int imageWidth  = this.targetCamera.targetTexture.width;
+			int imageHeight = this.targetCamera.targetTexture.height;
 
-			this.byteArray = new byte[imageWidth * imageHeight * 2];
-
-			for (int i = 0; i < this.byteArray.Length; i++)
-			{
-				this.byteArray[i] = 0;
-			}
+			this.byteArray = Enumerable.Repeat<byte>(0xFF, imageWidth * imageHeight * 2).ToArray();
 
 			this.imageTexture = new Texture2D(imageWidth, imageHeight, TextureFormat.RGB24, false);
 
 
-			//  [camera/depth/CameraInfo]
+			//  [CameraInfo]
 			string distortionModel = "plumb_bob";
 
 			double[] D = { 0.0, 0.0, 0.0, 0.0, 0.0 };
@@ -119,7 +113,7 @@ namespace SIGVerse.ToyotaHSR
 
 			this.cameraInfoData = new CameraInfoForSIGVerseBridge(null, (uint)imageHeight, (uint)imageWidth, distortionModel, D, K, R, P, 0, 0, roi);
 
-			//  [camera/depth/Image_raw]
+			//  [Image_raw]
 			string encoding = "16UC1";
 			byte isBigendian = 0;
 			uint step = (uint)imageWidth * 2;
@@ -192,20 +186,19 @@ namespace SIGVerse.ToyotaHSR
 			this.isPublishingImage      = true;
 
 			// Set a terget texture as a target of rendering
-			RenderTexture.active = this.xtionDepthCamera.targetTexture;
+			RenderTexture.active = this.targetCamera.targetTexture;
 
-			// Apply depth information to 2D texture
+			// Read image
 			this.imageTexture.ReadPixels(new Rect(0, 0, this.imageTexture.width, this.imageTexture.height), 0, 0, false);
 			this.imageTexture.Apply();
 
-			// Convert pixel values to depth buffer for ROS message
-			byte[] depthBytes = this.imageTexture.GetRawTextureData();
+			byte[] rawTextureData = this.imageTexture.GetRawTextureData();
 
 //			yield return null;
 
 			this.header.Update();
 
-			//  [camera/depth/CameraInfo]
+			//  [CameraInfo]
 			this.cameraInfoData.header = this.header;
 			this.cameraInfoMsg.msg = this.cameraInfoData;
 
@@ -221,7 +214,7 @@ namespace SIGVerse.ToyotaHSR
 
 //			yield return null;
 
-			// [camera/depth/Image_raw]
+			// [Image_raw]
 			int textureWidth = this.imageTexture.width;
 			int textureHeight = this.imageTexture.height;
 
@@ -230,8 +223,8 @@ namespace SIGVerse.ToyotaHSR
 				for (int col = 0; col < textureWidth; col++)
 				{
 					int index = row * textureWidth + col;
-					this.byteArray[index * 2 + 0] = depthBytes[index * 3 + 0];
-					this.byteArray[index * 2 + 1] = depthBytes[index * 3 + 1];
+					this.byteArray[index * 2 + 0] = rawTextureData[index * 3 + 0];
+					this.byteArray[index * 2 + 1] = rawTextureData[index * 3 + 1];
 				}
 			}
 

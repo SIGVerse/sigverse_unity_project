@@ -91,7 +91,6 @@ namespace SIGVerse.Common
 						if(hit.distance < EnterDistance-RaySourcePosZ)
 						{
 							this.currentEnterRigidbodies.Add(hit.rigidbody);
-
 						}
 						if(hit.distance < ExitDistance-RaySourcePosZ)
 						{

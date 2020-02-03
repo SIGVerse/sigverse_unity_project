@@ -26,8 +26,8 @@ namespace SIGVerse.ToyotaHSR
 
 		private GameObject cameraFrameObj;
 
-		// Xtion
-		private Camera xtionRGBCamera;
+		// Camera
+		private Camera targetCamera;
 		private Texture2D imageTexture;
 
 		// TimeStamp
@@ -35,8 +35,6 @@ namespace SIGVerse.ToyotaHSR
 
 		private CameraInfoForSIGVerseBridge cameraInfoData;
 		private ImageForSIGVerseBridge imageData;
-
-		private float elapsedTime;
 
 		private bool isPublishingCameraInfo = false;
 		private bool isPublishingImage      = false;
@@ -83,16 +81,17 @@ namespace SIGVerse.ToyotaHSR
 			this.networkStreamImage.ReadTimeout  = 100000;
 			this.networkStreamImage.WriteTimeout = 100000;
 
-			// RGB Camera
-			this.xtionRGBCamera = this.cameraFrameObj.GetComponentInChildren<Camera>();
 
-			int imageWidth  = this.xtionRGBCamera.targetTexture.width;
-			int imageHeight = this.xtionRGBCamera.targetTexture.height;
+			// Camera
+			this.targetCamera = this.cameraFrameObj.GetComponentInChildren<Camera>();
+
+			int imageWidth  = this.targetCamera.targetTexture.width;
+			int imageHeight = this.targetCamera.targetTexture.height;
 
 			this.imageTexture = new Texture2D(imageWidth, imageHeight, TextureFormat.RGB24, false);
 
 
-			//  [camera/rgb/CameraInfo]
+			//  [CameraInfo]
 			string distortionModel = "plumb_bob";
 
 			double[] D = { 0.0, 0.0, 0.0, 0.0, 0.0 };
@@ -109,7 +108,7 @@ namespace SIGVerse.ToyotaHSR
 
 			this.cameraInfoData = new CameraInfoForSIGVerseBridge(null, (uint)imageHeight, (uint)imageWidth, distortionModel, D, K, R, P, 0, 0, roi);
 			
-			//  [camera/rgb/Image_raw]
+			//  [Image_raw]
 			string encoding = "rgb8";
 			byte isBigendian = 0;
 			uint step = (uint)imageWidth * 3;
@@ -117,7 +116,6 @@ namespace SIGVerse.ToyotaHSR
 			this.imageData = new ImageForSIGVerseBridge(null, (uint)imageHeight, (uint)imageWidth, encoding, isBigendian, step, null);
 
 			this.header = new Header(0, new SIGVerse.RosBridge.msg_helpers.Time(0, 0), this.cameraFrameObj.name);
-
 
 			this.cameraInfoMsg = new SIGVerseRosBridgeMessage<CameraInfoForSIGVerseBridge>("publish", topicNameCameraInfo, CameraInfoForSIGVerseBridge.GetMessageType(), this.cameraInfoData);
 			this.imageMsg      = new SIGVerseRosBridgeMessage<ImageForSIGVerseBridge>     ("publish", topicNameImage,      ImageForSIGVerseBridge.GetMessageType(),      this.imageData);
@@ -159,7 +157,6 @@ namespace SIGVerse.ToyotaHSR
 		}
 
 
-
 		//void Update()
 		//{
 		//}
@@ -177,31 +174,26 @@ namespace SIGVerse.ToyotaHSR
 
 		private void PubImage()
 		{
-			this.isPublishingCameraInfo = true;
-			this.isPublishingImage      = true;
-
-
-			// Set a terget texture as a target of rendering
-			RenderTexture.active = this.xtionRGBCamera.targetTexture;
-
-			// Apply rgb information to 2D texture
-			this.imageTexture.ReadPixels(new Rect(0, 0, this.imageTexture.width, this.imageTexture.height), 0, 0, false);
-			this.imageTexture.Apply();
-
 			//System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 			//sw.Start();
 
-			// Convert pixel values for ROS message
-			byte[] rgbBytes = this.imageTexture.GetRawTextureData();
+			this.isPublishingCameraInfo = true;
+			this.isPublishingImage      = true;
 
-			//sw.Stop();
-			//UnityEngine.Debug.Log("time=" + sw.Elapsed);
+			// Set a terget texture as a target of rendering
+			RenderTexture.active = this.targetCamera.targetTexture;
+
+			// Read image
+			this.imageTexture.ReadPixels(new Rect(0, 0, this.imageTexture.width, this.imageTexture.height), 0, 0, false);
+			this.imageTexture.Apply();
+
+			byte[] rawTextureData = this.imageTexture.GetRawTextureData();
 
 //			yield return null;
 
 			this.header.Update();
 
-			//  [camera/rgb/CameraInfo]
+			//  [CameraInfo]
 			this.cameraInfoData.header = this.header;
 			this.cameraInfoMsg.msg = this.cameraInfoData;
 
@@ -215,12 +207,11 @@ namespace SIGVerse.ToyotaHSR
 				this.SendCameraInfo();
 			}
 
-
 //			yield return null;
 
-			//  [camera/rgb/Image_raw]
+			//  [Image_raw]
 			this.imageData.header = this.header;
-			this.imageData.data = rgbBytes;
+			this.imageData.data = rawTextureData;
 			this.imageMsg.msg = this.imageData;
 
 			if(this.isUsingThread)
@@ -232,6 +223,9 @@ namespace SIGVerse.ToyotaHSR
 			{
 				this.SendImage();
 			}
+
+			//sw.Stop();
+			//UnityEngine.Debug.Log("time=" + sw.Elapsed);
 		}
 
 

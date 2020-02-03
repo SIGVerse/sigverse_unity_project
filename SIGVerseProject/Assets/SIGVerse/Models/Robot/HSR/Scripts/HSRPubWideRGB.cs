@@ -21,14 +21,13 @@ namespace SIGVerse.ToyotaHSR
 		private System.Net.Sockets.NetworkStream networkStreamCameraInfo = null;
 		private System.Net.Sockets.NetworkStream networkStreamImage      = null;
 
-
 		private SIGVerseRosBridgeMessage<CameraInfoForSIGVerseBridge> cameraInfoMsg = null;
 		private SIGVerseRosBridgeMessage<ImageForSIGVerseBridge>      imageMsg      = null;
 
 		private GameObject cameraFrameObj;
 		
 		// Camera
-		private Camera rgbCamera;
+		private Camera targetCamera;
 		private Texture2D imageTexture;
 
 		// TimeStamp
@@ -36,8 +35,6 @@ namespace SIGVerse.ToyotaHSR
 
 		private CameraInfoForSIGVerseBridge cameraInfoData;
 		private ImageForSIGVerseBridge imageData;
-
-		private float elapsedTime;
 
 		private bool isPublishingCameraInfo = false;
 		private bool isPublishingImage      = false;
@@ -85,16 +82,16 @@ namespace SIGVerse.ToyotaHSR
 			this.networkStreamImage.WriteTimeout = 100000;
 
 
-			// RGB Camera
-			this.rgbCamera = this.cameraFrameObj.GetComponentInChildren<Camera>();
+			// Camera
+			this.targetCamera = this.cameraFrameObj.GetComponentInChildren<Camera>();
 
-			int imageWidth  = this.rgbCamera.targetTexture.width;
-			int imageHeight = this.rgbCamera.targetTexture.height;
+			int imageWidth  = this.targetCamera.targetTexture.width;
+			int imageHeight = this.targetCamera.targetTexture.height;
 
 			this.imageTexture = new Texture2D(imageWidth, imageHeight, TextureFormat.RGB24, false);
 
 
-			//  [camera/rgb/CameraInfo]
+			//  [CameraInfo]
 			string distortionModel = "plumb_bob";
 
 			double[] D = { 0.0, 0.0, 0.0, 0.0, 0.0 };
@@ -111,7 +108,7 @@ namespace SIGVerse.ToyotaHSR
 
 			this.cameraInfoData = new CameraInfoForSIGVerseBridge(null, (uint)imageHeight, (uint)imageWidth, distortionModel, D, K, R, P, 0, 0, roi);
 			
-			//  [camera/rgb/Image_raw]
+			//  [Image_raw]
 			string encoding = "rgb8";
 			byte isBigendian = 0;
 			uint step = (uint)imageWidth * 3;
@@ -160,7 +157,6 @@ namespace SIGVerse.ToyotaHSR
 		}
 
 
-
 		//void Update()
 		//{
 		//}
@@ -185,9 +181,9 @@ namespace SIGVerse.ToyotaHSR
 			this.isPublishingImage      = true;
 
 			// Set a terget texture as a target of rendering
-			RenderTexture.active = this.rgbCamera.targetTexture;
+			RenderTexture.active = this.targetCamera.targetTexture;
 
-			// Apply rgb information to 2D texture
+			// Read image
 			this.imageTexture.ReadPixels(new Rect(0, 0, this.imageTexture.width, this.imageTexture.height), 0, 0, false);
 			this.imageTexture.Apply();
 
@@ -199,7 +195,7 @@ namespace SIGVerse.ToyotaHSR
 
 			this.header.Update();
 
-			//  [camera/rgb/CameraInfo]
+			//  [CameraInfo]
 			this.cameraInfoData.header = this.header;
 			this.cameraInfoMsg.msg = this.cameraInfoData;
 
@@ -215,9 +211,9 @@ namespace SIGVerse.ToyotaHSR
 
 //			yield return null;
 
-			//  [camera/rgb/Image_raw]
+			//  [Image_raw]
 			this.imageData.header = this.header;
-			this.imageData.data = rgbBytes;
+			this.imageData.data   = rgbBytes;
 			this.imageMsg.msg = this.imageData;
 
 			if(this.isUsingThread)
@@ -233,6 +229,7 @@ namespace SIGVerse.ToyotaHSR
 			//sw.Stop();
 			//UnityEngine.Debug.Log("time=" + sw.Elapsed);
 		}
+
 
 		private void SendCameraInfo()
 		{
