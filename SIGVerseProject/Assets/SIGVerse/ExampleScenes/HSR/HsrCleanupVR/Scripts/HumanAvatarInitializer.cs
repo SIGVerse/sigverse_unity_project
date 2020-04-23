@@ -23,15 +23,13 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 		public GameObject centerEyeAnchor;
 
-		void Awake()
-		{
-		}
+		//void Awake()
+		//{
+		//}
 
 		void Start()
 		{
 			PhotonView photonView = this.GetComponent<PhotonView>();
-
-			this.gameObject.name = photonView.Owner.NickName;
 
 			if (photonView.IsMine)
 			{

@@ -28,6 +28,8 @@ namespace SIGVerse.ExampleScenes.Hsr
 			WaitForReturn,
 		}
 
+		public string avatarName = "Human";
+
 		public GameObject mainMenu;
 		public GameObject rosbridgeScripts;
 
@@ -176,7 +178,7 @@ namespace SIGVerse.ExampleScenes.Hsr
 
 			if (this.receivedMessageMap[MsgTellMe])
 			{
-				this.SendRosMessage(this.taskMessage);
+				StartCoroutine(this.SendMessage(this.taskMessage, 0.0f));
 
 				this.receivedMessageMap[MsgTellMe] = false;
 			}
@@ -222,7 +224,7 @@ namespace SIGVerse.ExampleScenes.Hsr
 					}
 					case PointingStep.SpeechPickItUp:
 					{
-						this.SendRosMessage(MsgPickItUp);
+						StartCoroutine(this.SendMessage(MsgPickItUp, 0.0f));
 						this.pointingStep++;
 						
 						break;
@@ -261,7 +263,7 @@ namespace SIGVerse.ExampleScenes.Hsr
 					}
 					case PointingStep.SpeechCleanUp:
 					{
-						this.SendRosMessage(MsgCleanUp);
+						StartCoroutine(this.SendMessage(MsgCleanUp, 0.0f));
 						this.pointingStep++;
 
 						break;
@@ -308,9 +310,9 @@ namespace SIGVerse.ExampleScenes.Hsr
 			);
 		}
 
-		private void SendPanelNotice(string message)
+		private void SendPanelNotice(string message, Color panelColor)
 		{
-			PanelNoticeStatus noticeStatus = new PanelNoticeStatus(message, 150, PanelNoticeStatus.Green, 2.0f);
+			PanelNoticeStatus noticeStatus = new PanelNoticeStatus(this.avatarName, message, panelColor);
 
 			// For changing the notice of the panel
 			ExecuteEvents.Execute<IPanelNoticeHandler>
@@ -343,7 +345,7 @@ namespace SIGVerse.ExampleScenes.Hsr
 			yield return new WaitForSeconds(waitingTime);
 
 			this.SendRosMessage(message);
-			this.SendPanelNotice(message);
+			this.SendPanelNotice(message, PanelNoticeStatus.Green);
 		}
 
 		private bool IsPlaced()

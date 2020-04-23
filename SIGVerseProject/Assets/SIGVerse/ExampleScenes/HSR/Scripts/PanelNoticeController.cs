@@ -17,25 +17,21 @@ namespace SIGVerse.ExampleScenes.Hsr
 		public static readonly Color Green = new Color(  0/255f, 143/255f, 36/255f, 255/255f);
 		public static readonly Color Red   = new Color(255/255f,   0/255f,  0/255f, 255/255f);
 
+		public string Speaker  { get; set; }
 		public string Message  { get; set; }
-		public int    FontSize { get; set; }
 		public Color  Color    { get; set; }
-		public float  Duration { get; set; }
-
-		public PanelNoticeStatus(string message, int fontSize, Color color, float duration)
+		public PanelNoticeStatus(string speaker, string message, Color color)
 		{
+			this.Speaker  = speaker;
 			this.Message  = message;
-			this.FontSize = fontSize;
 			this.Color    = color;
-			this.Duration = duration;
 		}
 
 		public PanelNoticeStatus(PanelNoticeStatus panelNoticeStatus)
 		{
+			this.Speaker  = panelNoticeStatus.Speaker;
 			this.Message  = panelNoticeStatus.Message;
-			this.FontSize = panelNoticeStatus.FontSize;
 			this.Color    = panelNoticeStatus.Color;
-			this.Duration = panelNoticeStatus.Duration;
 		}
 	}
 
@@ -44,12 +40,15 @@ namespace SIGVerse.ExampleScenes.Hsr
 	{
 		public GameObject noticePanel;
 
-		private Text noticeText;
+		private Text speakerText;
+		private Text messageText;
+
 		private float hideTime = 0.0f;
 
 		void Awake()
 		{
-			this.noticeText = this.noticePanel.GetComponentInChildren<Text>();
+			this.speakerText = this.noticePanel.transform.Find("SpeakerText").GetComponent<Text>();
+			this.messageText = this.noticePanel.transform.Find("MessageText").GetComponent<Text>();
 		}
 
 		void Start()
@@ -61,11 +60,17 @@ namespace SIGVerse.ExampleScenes.Hsr
 		{
 			this.noticePanel.SetActive(true);
 
-			noticeText.text     = panelNoticeStatus.Message;
-			noticeText.fontSize = panelNoticeStatus.FontSize;
-			noticeText.color    = panelNoticeStatus.Color;
+			int fontSize   = (panelNoticeStatus.Message.Length < 20)? 150 : 80;
+			float duration = (panelNoticeStatus.Message.Length < 20)? 2f : 10f;
 
-			this.hideTime = UnityEngine.Time.time + panelNoticeStatus.Duration;
+			this.speakerText.text  = panelNoticeStatus.Speaker;
+			this.speakerText.color = panelNoticeStatus.Color;
+
+			this.messageText.text     = panelNoticeStatus.Message;
+			this.messageText.fontSize = fontSize;
+			this.messageText.color    = panelNoticeStatus.Color;
+
+			this.hideTime = UnityEngine.Time.time + duration;
 
 			StartCoroutine(this.HideNotice()); // Hide
 		}

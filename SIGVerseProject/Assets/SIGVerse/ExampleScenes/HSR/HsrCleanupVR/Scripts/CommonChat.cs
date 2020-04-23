@@ -14,10 +14,10 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 #if SIGVERSE_PUN
 	public abstract class CommonChat : MonoBehaviour, IChatMessageHandler
 	{
-
 		protected GameObject chatManager;
+		protected GameObject mainMenu;
 
-		protected string nickName;
+		protected PhotonView photonView;
 
 		protected virtual void Awake()
 		{
@@ -27,19 +27,24 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 			{
 				SIGVerseLogger.Error("Could not find ChatManager!");
 			}
+
+			this.mainMenu = GameObject.Find(ChatManager.MainMenuName);
+
+			if (this.mainMenu == null)
+			{
+				SIGVerseLogger.Warn("Could not find MainMenu.");
+			}
 		}
 
 		protected virtual void Start()
 		{
-			PhotonView photonView = this.GetComponent<PhotonView>();
-
-			this.nickName = photonView.Owner.NickName;
+			this.photonView = this.GetComponent<PhotonView>();
 
 			ExecuteEvents.Execute<IChatRegistrationHandler>
 			(
 				target: this.chatManager,
 				eventData: null,
-				functor: (reciever, eventData) => reciever.OnAddChatUser(this.nickName)
+				functor: (reciever, eventData) => reciever.OnAddChatUser(this.transform.root.name)
 			);
 		}
 
@@ -53,7 +58,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 			(
 				target: this.chatManager,
 				eventData: null,
-				functor: (reciever, eventData) => reciever.OnRemoveChatUser(this.nickName)
+				functor: (reciever, eventData) => reciever.OnRemoveChatUser(this.transform.root.name)
 			);
 		}
 
@@ -63,7 +68,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 			(
 				target: this.chatManager,
 				eventData: null,
-				functor: (reciever, eventData) => reciever.OnReceiveChatMessage(this.nickName, message)
+				functor: (reciever, eventData) => reciever.OnReceiveChatMessage(this.transform.root.name, message)
 			);
 		}
 

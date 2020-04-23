@@ -61,24 +61,21 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 			this.latestSendingMessageTime = Time.time;
 
-			SIGVerseLogger.Info("Human: Sent the message. user=" + this.nickName + ", message=" + message);
+			SIGVerseLogger.Info("Human: Sent a message. sender=" + this.transform.root.name + ", message=" + message);
 		}
 
 		/// <summary>
 		/// Anyone -> Human Avatar
 		/// </summary>
-		public override void OnReceiveChatMessage(string userName, string message)
+		public override void OnReceiveChatMessage(string senderName, string message)
 		{
-			this.SendPanelNotice(userName, message);
+			if (this.photonView.Owner != PhotonNetwork.LocalPlayer) { return; }
 
-			SIGVerseLogger.Info("Human: Received the message. user=" + userName + ", message=" + message);
-		}
+			string senderNickName = senderName.Split('#')[0];
 
-		private void SendPanelNotice(string userName, string message)
-		{
-			string dispMessage = (userName == PhotonNetwork.NickName) ? "You:                    \n" + message : userName + ":                    \n" + message;
+			if (senderNickName==PhotonNetwork.NickName) { senderNickName = "You"; }
 
-			PanelNoticeStatus noticeStatus = new PanelNoticeStatus(dispMessage, 100, PanelNoticeStatus.Green, 5.0f);
+			PanelNoticeStatus noticeStatus = new PanelNoticeStatus(senderNickName, message, PanelNoticeStatus.Green);
 
 			// For changing the notice of the panel
 			ExecuteEvents.Execute<IPanelNoticeHandler>
@@ -87,6 +84,8 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 				eventData: null,
 				functor: (reciever, eventData) => reciever.OnPanelNoticeChange(noticeStatus)
 			);
+
+			SIGVerseLogger.Info("Human: Received a message. sender=" + senderName + ", message=" + message);
 		}
 	}
 #endif

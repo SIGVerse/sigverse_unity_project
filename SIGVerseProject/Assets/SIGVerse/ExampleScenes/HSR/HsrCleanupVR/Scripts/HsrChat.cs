@@ -5,6 +5,9 @@ using UnityEngine;
 using SIGVerse.Common;
 using UnityEngine.EventSystems;
 using SIGVerse.RosBridge;
+#if SIGVERSE_PUN
+using Photon.Pun;
+#endif
 
 namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
@@ -18,10 +21,25 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		/// <summary>
 		/// Human Avatar -> Robot
 		/// </summary>
-		public override void OnReceiveChatMessage(string userName, string message)
+		public override void OnReceiveChatMessage(string senderName, string message)
 		{
-			if (!userName.StartsWith(PunLauncher.HumanNamePrefix)) { return; }
+			if (this.photonView.Owner != PhotonNetwork.LocalPlayer) { return; }
 
+			string senderNickName = senderName.Split('#')[0];
+
+			if (senderNickName==PhotonNetwork.NickName) { senderNickName = "You"; }
+
+			// Display the message
+			PanelNoticeStatus noticeStatus = new PanelNoticeStatus(senderNickName, message, PanelNoticeStatus.Green);
+
+			ExecuteEvents.Execute<IPanelNoticeHandler>
+			(
+				target: this.mainMenu,
+				eventData: null,
+				functor: (reciever, eventData) => reciever.OnPanelNoticeChange(noticeStatus)
+			);
+
+			// Forward the message to ROS
 			ExecuteEvents.Execute<SIGVerse.RosBridge.IRosSendingStringMsgHandler>
 			(
 				target: this.rosBridgeScripts,
@@ -29,7 +47,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 				functor: (reciever, eventData) => reciever.OnSendRosStringMsg(message)
 			);
 
-			SIGVerseLogger.Info("Robot: Received the message. user=" + userName + ", message=" + message);
+			SIGVerseLogger.Info("Robot: Received a message. sender=" + senderName + ", message=" + message);
 		}
 
 		/// <summary>
@@ -39,7 +57,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		{
 			this.SendChatMessage(rosMsg.data);
 
-			SIGVerseLogger.Info("Robot: Sent the message. user=" + this.nickName + ", message=" + rosMsg.data);
+			SIGVerseLogger.Info("Robot: Sent a message. sender=" + this.transform.root.name + ", message=" + rosMsg.data);
 		}
 	}
 #endif

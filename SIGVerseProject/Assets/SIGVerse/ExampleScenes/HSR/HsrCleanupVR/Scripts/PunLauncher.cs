@@ -30,13 +30,13 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		private const string SubViewControllerStr = "SubviewController";
 
 		[HeaderAttribute("Spawn Info")]
-		public int humanMaxNumber;
-		public Vector3[] humanPosisions;
-		public Vector3[] humanEulerAngles;
+		public int humanMaxNumber = 1;
+		public Vector3[] humanPositions = new Vector3[] {};
+		public Vector3[] humanEulerAngles = new Vector3[] {};
 
-		public int robotMaxNumber;
-		public Vector3[] robotPosisions;
-		public Vector3[] robotEulerAngles;
+		public int robotMaxNumber = 1;
+		public Vector3[] robotPositions = new Vector3[] {};
+		public Vector3[] robotEulerAngles = new Vector3[] {};
 
 
 		[HeaderAttribute("Objects")]
@@ -97,7 +97,10 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 			PhotonNetwork.GameVersion = PhotonNetwork.PhotonServerSettings.AppSettings.AppVersion;
 
-			PhotonNetwork.ConnectUsingSettings();
+			if (!PhotonNetwork.ConnectUsingSettings())
+			{
+				SIGVerseLogger.Error("Failed to connect Photon Server.");
+			}
 		}
 
 		public void GetOwnership()
@@ -131,17 +134,19 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 			if (this.isHuman)
 			{
-				PhotonNetwork.NickName = HumanNamePrefix + "#" + PhotonNetwork.LocalPlayer.ActorNumber;
+				PhotonNetwork.NickName = HumanNamePrefix + PhotonNetwork.LocalPlayer.ActorNumber;
 
-				PhotonNetwork.Instantiate(this.humanSource.name, this.humanPosisions[numberOfLogins], Quaternion.Euler(this.humanEulerAngles[numberOfLogins]));
+				GameObject player = PhotonNetwork.Instantiate(this.humanSource.name, this.humanPositions[numberOfLogins], Quaternion.Euler(this.humanEulerAngles[numberOfLogins]));
+				player.name = PhotonNetwork.NickName + "#" + this.humanSource.name;
 			}
 			else
 			{
-				PhotonNetwork.NickName = RobotNamePrefix + "#" + PhotonNetwork.LocalPlayer.ActorNumber;
+				PhotonNetwork.NickName = RobotNamePrefix + PhotonNetwork.LocalPlayer.ActorNumber;
 
 				XRSettings.enabled = false;
 
-				PhotonNetwork.Instantiate(this.robotSource.name, this.robotPosisions[numberOfLogins], Quaternion.Euler(this.robotEulerAngles[numberOfLogins]));
+				GameObject player = PhotonNetwork.Instantiate(this.robotSource.name, this.robotPositions[numberOfLogins], Quaternion.Euler(this.robotEulerAngles[numberOfLogins]));
+				player.name = PhotonNetwork.NickName + "#" + this.robotSource.name;
 			}
 
 			this.mainPanel.SetActive(false);
@@ -241,17 +246,17 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		{
 			PunLauncher punLauncher = (PunLauncher)target;
 
-			if(punLauncher.humanMaxNumber != punLauncher.humanPosisions.Length || punLauncher.humanMaxNumber != punLauncher.humanEulerAngles.Length)
+			if (punLauncher.humanMaxNumber != punLauncher.humanPositions.Length || punLauncher.humanMaxNumber != punLauncher.humanEulerAngles.Length)
 			{
 				Undo.RecordObject(target, "Update Human Spawn Info");
-				Array.Resize(ref punLauncher.humanPosisions,   punLauncher.humanMaxNumber);
+				Array.Resize(ref punLauncher.humanPositions, punLauncher.humanMaxNumber);
 				Array.Resize(ref punLauncher.humanEulerAngles, punLauncher.humanMaxNumber);
 			}
 
-			if (punLauncher.robotMaxNumber != punLauncher.robotPosisions.Length || punLauncher.robotMaxNumber != punLauncher.robotEulerAngles.Length)
+			if (punLauncher.robotMaxNumber != punLauncher.robotPositions.Length || punLauncher.robotMaxNumber != punLauncher.robotEulerAngles.Length)
 			{
 				Undo.RecordObject(target, "Update Robot Spawn Info");
-				Array.Resize(ref punLauncher.robotPosisions,   punLauncher.robotMaxNumber);
+				Array.Resize(ref punLauncher.robotPositions, punLauncher.robotMaxNumber);
 				Array.Resize(ref punLauncher.robotEulerAngles, punLauncher.robotMaxNumber);
 			}
 
@@ -297,7 +302,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 						photonView.ObservedComponents = new List<Component>();
 
 //						PhotonTransformView photonTransformView = Undo.AddComponent<PhotonTransformView>(roomObject);
-						LocalTransformView  localTransformView  = Undo.AddComponent<LocalTransformView>(roomObject);
+						LocalTransformView localTransformView = Undo.AddComponent<LocalTransformView>(roomObject);
 //						PhotonRigidbodyView photonRigidbodyView = Undo.AddComponent<PhotonRigidbodyView>(roomObject);
 
 //						photonView.ObservedComponents.Add(photonTransformView);

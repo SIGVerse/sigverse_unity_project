@@ -26,8 +26,6 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		{
 			PhotonView photonView = this.GetComponent<PhotonView>();
 
-			this.gameObject.name = photonView.Owner.NickName;
-
 			if (photonView.IsMine)
 			{
 				this.GetComponent<GraspingDetectorForPun>().enabled = true;

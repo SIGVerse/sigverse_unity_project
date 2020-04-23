@@ -68,13 +68,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1364360052321159953}
-  m_LocalRotation: {x: 0.18771842, y: -0, z: -0, w: 0.9822229}
-  m_LocalPosition: {x: 0, y: 1.725, z: 0.196}
+  m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
+  m_LocalPosition: {x: 0, y: 2, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 654035971042074458}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 21.639002, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
 --- !u!20 &6013645172831835536
 Camera:
   m_ObjectHideFlags: 0
@@ -248,7 +248,7 @@ GameObject:
   - component: {fileID: 1942553493084394555}
   - component: {fileID: 8035840710622487129}
   m_Layer: 0
-  m_Name: TorsoTrackingCamera
+  m_Name: MainCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7089,9 +7089,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7898716077939634024}
   - component: {fileID: 369685256109576528}
-  - component: {fileID: 2558127735790574056}
   m_Layer: 0
-  m_Name: BirdsEyeViewCamera
+  m_Name: RobotCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7104,13 +7103,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6522622499133164166}
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 3.209, z: 1.184}
+  m_LocalRotation: {x: 0, y: 0.92387956, z: -0.38268343, w: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 654035971042074458}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 180, z: 0}
 --- !u!20 &369685256109576528
 Camera:
   m_ObjectHideFlags: 0
@@ -7153,19 +7152,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &2558127735790574056
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6522622499133164166}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b37ae55773bda8e40b6cfcfc2d8dd282, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  robot: {fileID: 6287943808358023110}
 --- !u!1 &6770313352754556520
 GameObject:
   m_ObjectHideFlags: 0
@@ -7220,8 +7206,8 @@ GameObject:
   m_Component:
   - component: {fileID: 654035971042074458}
   - component: {fileID: 460588868213072261}
-  - component: {fileID: 3459519833194665760}
   - component: {fileID: 4481976668274096636}
+  - component: {fileID: 3459519833194665760}
   m_Layer: 0
   m_Name: SubviewController
   m_TagString: Untagged
@@ -7262,29 +7248,10 @@ MonoBehaviour:
   subviewCamera: {fileID: 369685256109576528}
   subviewType: 1
   subviewPositionType: 2
-  offsetX: 15
-  offsetY: 15
-  sizeX: 480
-  sizeY: 320
---- !u!114 &3459519833194665760
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7840431936717674460}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b479a64dae2962540af50dc391587a2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  subviewCamera: {fileID: 9073919520915991108}
-  subviewType: 2
-  subviewPositionType: 3
-  offsetX: 15
-  offsetY: 15
-  sizeX: 480
-  sizeY: 320
+  offsetX: 0
+  offsetY: 0
+  sizeX: 640
+  sizeY: 480
 --- !u!114 &4481976668274096636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7298,9 +7265,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   subviewCamera: {fileID: 6013645172831835536}
+  subviewType: 2
+  subviewPositionType: 3
+  offsetX: 0
+  offsetY: 0
+  sizeX: 640
+  sizeY: 480
+--- !u!114 &3459519833194665760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7840431936717674460}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b479a64dae2962540af50dc391587a2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  subviewCamera: {fileID: 9073919520915991108}
   subviewType: 3
   subviewPositionType: 1
-  offsetX: 15
-  offsetY: 15
+  offsetX: 0
+  offsetY: 0
   sizeX: 480
   sizeY: 320

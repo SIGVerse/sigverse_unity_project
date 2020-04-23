@@ -111,7 +111,14 @@ namespace Kyusyukeigo.Helper
             GameViewSizeGroupType currentType = (GameViewSizeGroupType)currentSizeGroupType.GetValue(gameView, null);
             if (groupType != currentType)
             {
-                Debug.LogError(string.Format("GameViewSizeGroupType is {0}. but Current GameViewSizeGroupType is {1}.", groupType, currentType));
+                if (currentType == GameViewSizeGroupType.HMD)
+                {
+                    Debug.LogError("Please unplug HMD");
+                }
+                else
+                {
+                    Debug.LogError(string.Format("GameViewSizeGroupType is {0}. but Current GameViewSizeGroupType is {1}.", groupType, currentType));
+                }
                 return;
             }
             object group = GetGroup(groupType, instance);
