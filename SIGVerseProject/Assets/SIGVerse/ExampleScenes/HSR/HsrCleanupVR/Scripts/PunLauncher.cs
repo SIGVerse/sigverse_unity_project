@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SIGVerse.Common;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.XR;
 using System.Linq;
@@ -24,6 +23,8 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 	public class PunLauncher : MonoBehaviourPunCallbacks
 	{
+		public const string AvatarNameKey = "AvatarName";
+
 //		public const string GameVersion = "0.1";
 		public const string HumanNamePrefix = "Human";
 		public const string RobotNamePrefix = "HSR";
@@ -136,17 +137,23 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 			{
 				PhotonNetwork.NickName = HumanNamePrefix + PhotonNetwork.LocalPlayer.ActorNumber;
 
+				ExitGames.Client.Photon.Hashtable customPropertie = new ExitGames.Client.Photon.Hashtable();
+				customPropertie.Add(AvatarNameKey, PhotonNetwork.NickName + "#" + this.humanSource.name);
+				PhotonNetwork.LocalPlayer.SetCustomProperties(customPropertie);
+
 				GameObject player = PhotonNetwork.Instantiate(this.humanSource.name, this.humanPositions[numberOfLogins], Quaternion.Euler(this.humanEulerAngles[numberOfLogins]));
-				player.name = PhotonNetwork.NickName + "#" + this.humanSource.name;
 			}
 			else
 			{
 				PhotonNetwork.NickName = RobotNamePrefix + PhotonNetwork.LocalPlayer.ActorNumber;
 
+				ExitGames.Client.Photon.Hashtable customPropertie = new ExitGames.Client.Photon.Hashtable();
+				customPropertie.Add(AvatarNameKey, PhotonNetwork.NickName + "#" + this.robotSource.name);
+				PhotonNetwork.LocalPlayer.SetCustomProperties(customPropertie);
+
 				XRSettings.enabled = false;
 
 				GameObject player = PhotonNetwork.Instantiate(this.robotSource.name, this.robotPositions[numberOfLogins], Quaternion.Euler(this.robotEulerAngles[numberOfLogins]));
-				player.name = PhotonNetwork.NickName + "#" + this.robotSource.name;
 			}
 
 			this.mainPanel.SetActive(false);

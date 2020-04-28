@@ -33,6 +33,8 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 		//-----------------------------
 
+		public GameObject[] extraMessageDestinations;
+
 		private PhotonView photonView;
 
 		private GameObject mainMenu;
@@ -66,7 +68,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		[PunRPC]
 		private void ForwardMessage(string senderName, string message)
 		{
-			SIGVerseLogger.Info("ForwardMessage userName=" + senderName + ", message=" + message);
+//			SIGVerseLogger.Info("ForwardMessage userName=" + senderName + ", message=" + message);
 
 			// Forward the message 
 			foreach (KeyValuePair<string, GameObject> user in this.userMap)
@@ -78,6 +80,19 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 					eventData: null,
 					functor: (reciever, eventData) => reciever.OnReceiveChatMessage(senderName, message)
 				);
+			}
+
+			if(this.extraMessageDestinations!=null)
+			{
+				foreach(GameObject extraMessageDestination in this.extraMessageDestinations)
+				{
+					ExecuteEvents.Execute<IChatMessageHandler>
+					(
+						target: extraMessageDestination,
+						eventData: null,
+						functor: (reciever, eventData) => reciever.OnReceiveChatMessage(senderName, message)
+					);
+				}
 			}
 		}
 
