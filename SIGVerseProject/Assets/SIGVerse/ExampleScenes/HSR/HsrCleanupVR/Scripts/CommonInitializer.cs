@@ -10,10 +10,10 @@ using Photon.Pun;
 
 namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
-#if SIGVERSE_PUN
-
 	public class CommonInitializer : MonoBehaviour
 	{
+#if SIGVERSE_PUN
+
 		protected IEnumerator SetAvatarName(PhotonView photonView)
 		{
 			object avatarNameObj;
@@ -25,7 +25,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 			this.gameObject.name = (string)avatarNameObj;
 		}
-	}
 #endif
+	}
 }
 
