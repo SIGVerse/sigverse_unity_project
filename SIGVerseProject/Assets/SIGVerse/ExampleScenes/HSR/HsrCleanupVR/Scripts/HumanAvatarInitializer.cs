@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SIGVerse.Common;
+using NewtonVR;
 
 #if SIGVERSE_PUN
 using Photon.Pun;
@@ -19,6 +20,22 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		public GameObject ethan;
 
 		public GameObject centerEyeAnchor;
+
+		private void Awake()
+		{
+			InitializeNVRInteractables();
+		}
+
+		public static void InitializeNVRInteractables()
+		{
+			NVRInteractableItem[] nvrInteractableItems = SIGVerseUtils.FindObjectsOfInterface<NVRInteractableItem>();
+
+			foreach(NVRInteractableItem nvrInteractableItem in nvrInteractableItems)
+			{
+				nvrInteractableItem.enabled = true;
+			}
+		}
+
 
 		void Start()
 		{
