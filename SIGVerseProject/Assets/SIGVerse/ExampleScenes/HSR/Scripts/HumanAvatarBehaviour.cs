@@ -61,9 +61,9 @@ namespace SIGVerse.ExampleScenes.Hsr
 
 		private PointingStep pointingStep = PointingStep.PointTarget;
 
-		private CleanupAvatarVRHandController avatarHandController;
-		private CleanupAvatarVRHandController avatarLeftHandController;
-		private CleanupAvatarVRHandController avatarRightHandController;
+		private CleanupAvatarHandController avatarHandController;
+		private CleanupAvatarHandController avatarLeftHandController;
+		private CleanupAvatarHandController avatarRightHandController;
 		
 		private string taskMessage;
 
@@ -117,8 +117,8 @@ namespace SIGVerse.ExampleScenes.Hsr
 
 			this.graspingTargetRigidbody = this.graspingTarget.GetComponentInChildren<Rigidbody>();
 
-			this.avatarLeftHandController  = this.GetComponentsInChildren<CleanupAvatarVRHandController>().Where(item=>item.handType==CleanupAvatarVRHandController.HandType.LeftHand) .First();
-			this.avatarRightHandController = this.GetComponentsInChildren<CleanupAvatarVRHandController>().Where(item=>item.handType==CleanupAvatarVRHandController.HandType.RightHand).First();
+			this.avatarLeftHandController  = this.GetComponentsInChildren<CleanupAvatarHandController>().Where(item=>item.handType==CleanupAvatarHandController.HandType.LeftHand) .First();
+			this.avatarRightHandController = this.GetComponentsInChildren<CleanupAvatarHandController>().Where(item=>item.handType==CleanupAvatarHandController.HandType.RightHand).First();
 
 			this.avatarHandController = this.avatarLeftHandController; // Set default
 

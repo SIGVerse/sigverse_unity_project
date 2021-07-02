@@ -14,16 +14,22 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 	{
 #if SIGVERSE_PUN
 
-		protected IEnumerator SetAvatarName(PhotonView photonView)
+		protected bool isNameSet = false;
+
+		protected PhotonView photonView;
+
+		protected IEnumerator SetAvatarName()
 		{
 			object avatarNameObj;
 
-			while (!photonView.Owner.CustomProperties.TryGetValue(PunLauncher.AvatarNameKey, out avatarNameObj))
+			while (!this.photonView.Owner.CustomProperties.TryGetValue(PunLauncher.AvatarNameKey, out avatarNameObj))
 			{
 				yield return null;
 			}
 
 			this.gameObject.name = (string)avatarNameObj;
+
+			this.isNameSet = true;
 		}
 #endif
 	}

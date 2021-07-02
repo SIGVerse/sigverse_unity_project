@@ -14,9 +14,9 @@ namespace SIGVerse.Common
 		private const char   SymbolSeparator = ';';
 		private const string SIGVerseScriptingDefineSymbolsKey = "sigverse_scripting_define_symbols";
 
-		private const string DefineSIGVerseMySQL  = "SIGVERSE_MYSQL";
-		private const string DefineSIGVerseOculus = "SIGVERSE_OCULUS";
-		private const string DefineSIGVersePun    = "SIGVERSE_PUN";
+		private const string DefineSIGVerseMySQL   = "SIGVERSE_MYSQL";
+		private const string DefineSIGVerseSteamVR = "SIGVERSE_STEAMVR";
+		private const string DefineSIGVersePun     = "SIGVERSE_PUN";
 
 		private const string WindowName   = "SIGVerse";
 		private const string MenuItemName = "SIGVerse/SIGVerse Settings"; 
@@ -43,7 +43,7 @@ namespace SIGVerse.Common
 		private bool   setUpRosTimestamp;
 
 		private bool isUsingMySQL;
-		private bool isUsingOculus;
+		private bool isUsingSteamVR;
 		private bool isUsingPun;
 
 
@@ -81,9 +81,9 @@ namespace SIGVerse.Common
 
 			string[] defineSymbols = defineSymbolsStr.Split(SymbolSeparator);
 
-			this.isUsingMySQL  = Array.IndexOf(defineSymbols, DefineSIGVerseMySQL)  >= 0;
-			this.isUsingOculus = Array.IndexOf(defineSymbols, DefineSIGVerseOculus) >= 0;
-			this.isUsingPun    = Array.IndexOf(defineSymbols, DefineSIGVersePun)    >= 0;
+			this.isUsingMySQL   = Array.IndexOf(defineSymbols, DefineSIGVerseMySQL)   >= 0;
+			this.isUsingSteamVR = Array.IndexOf(defineSymbols, DefineSIGVerseSteamVR) >= 0;
+			this.isUsingPun     = Array.IndexOf(defineSymbols, DefineSIGVersePun)     >= 0;
 		}
 
 
@@ -155,9 +155,9 @@ namespace SIGVerse.Common
 
 			EditorGUILayout.BeginHorizontal();
 			{
-				this.isUsingOculus = EditorGUILayout.Toggle("Use Oculus", this.isUsingOculus);
+				this.isUsingSteamVR = EditorGUILayout.Toggle("Use SteamVR", this.isUsingSteamVR);
 				GUILayout.Space(20);
-				GUILayout.Label("* Please import Oculus libraries");
+				GUILayout.Label("* Please import SteamVR Plugin");
 				GUILayout.FlexibleSpace();
 			}
 			EditorGUILayout.EndHorizontal();
@@ -182,8 +182,8 @@ namespace SIGVerse.Common
 					// Add/Remove MySQL define
 					this.UpdateScriptingDefineSymbolList(ref scriptingDefineSymbolList, this.isUsingMySQL, DefineSIGVerseMySQL);
 
-					// Add/Remove Oculus define
-					this.UpdateScriptingDefineSymbolList(ref scriptingDefineSymbolList, this.isUsingOculus, DefineSIGVerseOculus);
+					// Add/Remove SteamVR define
+					this.UpdateScriptingDefineSymbolList(ref scriptingDefineSymbolList, this.isUsingSteamVR, DefineSIGVerseSteamVR);
 
 					// Add/Remove PUN define
 					this.UpdateScriptingDefineSymbolList(ref scriptingDefineSymbolList, this.isUsingPun, DefineSIGVersePun);

@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets_1_1_2.CrossPlatformInput;
 
+#if SIGVERSE_STEAMVR
+using Valve.VR;
+#endif
+
 namespace SIGVerse.Human.VR
 {
 	public class SimpleHumanVRController : MonoBehaviour
@@ -60,6 +64,11 @@ namespace SIGVerse.Human.VR
 			// read inputs
 			float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
 			float vertical   = CrossPlatformInputManager.GetAxis("Vertical");
+
+#if SIGVERSE_STEAMVR
+			horizontal = SteamVR_Actions.sigverse.Move.axis.x;
+			vertical   = SteamVR_Actions.sigverse.Move.axis.y;
+#endif
 
 			if(Mathf.Abs(horizontal) > 0.01 || Mathf.Abs(vertical) > 0.01)
 			{

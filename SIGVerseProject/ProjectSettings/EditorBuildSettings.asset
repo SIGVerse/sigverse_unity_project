@@ -27,9 +27,18 @@ EditorBuildSettings:
     path: Assets/SIGVerse/ExampleScenes/HSR/HsrCleanupVR.unity
     guid: 2fe1b69011465f34c9d14920a669ab53
   - enabled: 0
-    path: Assets/SIGVerse/ExampleScenes/HSR/HsrCleanupVRWithMotionRecorder.unity
+    path: Assets/SIGVerse/ExampleScenes/HSR/HsrCleanupVRwithMotionRecorder.unity
     guid: a5788a3920e0ae746bd9b747451d89d5
   - enabled: 0
     path: Assets/SIGVerse/ExampleScenes/TIAGo/TIAGoTeleop.unity
     guid: eb9b284e99fd4b04d8e014a8601103dc
-  m_configObjects: {}
+  - enabled: 1
+    path: Assets/SIGVerse/ExampleScenes/HSR/HsrCleanupVRwithMotionRecorderNew.unity
+    guid: d302aa7e78f8c594da8a99bbebf569f1
+  m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 74e8e94f8ac04c942893e19e2fa30f59,
+      type: 2}
+    Unity.XR.OpenVR.Settings: {fileID: 11400000, guid: de6d7a8f2357d6246aa9aa7bae169459,
+      type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 3df72ff55b256c44c809f92787bd6a61,
+      type: 2}

@@ -10,11 +10,15 @@ using UnityEngine.UI;
 using Photon.Pun;
 #endif
 
+#if SIGVERSE_STEAMVR
+using Valve.VR;
+#endif
+
 namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
-#if SIGVERSE_PUN
 	public class HumanAvatarChat : CommonChat
 	{
+#if SIGVERSE_PUN
 		public GameObject personalPanel;
 
 		//-----------------------------
@@ -34,22 +38,24 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 			if(Time.time - this.latestSendingMessageTime > SendingMessageInterval)
 			{
-				if (OVRInput.GetDown(OVRInput.RawButton.A) || OVRInput.GetDown(OVRInput.RawButton.X))
+#if SIGVERSE_STEAMVR
+				if (SteamVR_Actions.sigverse.PressNearButton.GetStateDown(SteamVR_Input_Sources.Any))
 				{
 					this.PublishMessage(MsgPickItUp);
 				}
-				else if (OVRInput.GetDown(OVRInput.RawButton.B) || OVRInput.GetDown(OVRInput.RawButton.Y))
+				else if (SteamVR_Actions.sigverse_PressFarButton.GetStateDown(SteamVR_Input_Sources.Any))
 				{
 					this.PublishMessage(MsgCleanUp);
 				}
-				else if (OVRInput.GetDown(OVRInput.RawButton.RThumbstick))
+				else if (SteamVR_Actions.sigverse_PressThumbstick.GetStateDown(SteamVR_Input_Sources.RightHand))
 				{
 					this.PublishMessage(MsgGood);
 				}
-				else if (OVRInput.GetDown(OVRInput.RawButton.LThumbstick))
+				else if (SteamVR_Actions.sigverse_PressThumbstick.GetStateDown(SteamVR_Input_Sources.LeftHand))
 				{
 					this.PublishMessage(MsgBad);
 				}
+#endif
 			}
 		}
 
@@ -71,9 +77,9 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 			string senderNickName = senderName.Split('#')[0];
 
-			if (senderNickName==PhotonNetwork.NickName) { senderNickName = "You"; }
+			string speaker = (senderNickName == PhotonNetwork.NickName) ? "You" : senderNickName;
 
-			PanelNoticeStatus noticeStatus = new PanelNoticeStatus(senderNickName, message, PanelNoticeStatus.Green);
+			PanelNoticeStatus noticeStatus = new PanelNoticeStatus(speaker, message, PanelNoticeStatus.Green);
 
 			// For changing the notice of the panel
 			ExecuteEvents.Execute<IPanelNoticeHandler>
@@ -85,7 +91,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 			SIGVerseLogger.Info("Human: Received a message. sender=" + senderName + ", message=" + message);
 		}
-	}
 #endif
+	}
 }
 

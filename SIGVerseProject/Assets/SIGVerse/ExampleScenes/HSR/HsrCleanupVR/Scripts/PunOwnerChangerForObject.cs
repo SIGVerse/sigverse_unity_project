@@ -11,10 +11,10 @@ using Photon.Pun;
 
 namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
-#if SIGVERSE_PUN
 
 	public class PunOwnerChangerForObject : MonoBehaviour
 	{
+#if SIGVERSE_PUN
 		public static string[] OwnerTags = new string[] { "Player", "Robot" };
 
 		private PhotonView photonView;
@@ -65,7 +65,6 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 			return false;
 		}
-	}
-
 #endif
+	}
 }

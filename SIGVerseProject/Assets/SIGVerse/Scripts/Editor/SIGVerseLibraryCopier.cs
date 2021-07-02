@@ -17,7 +17,7 @@ namespace SIGVerse.Common
 
 			if (stopLibraryCopyFile.Exists) { return; }
 
-			string[] contentsPaths = new string[] { "/Mono/lib/mono/2.0/System.Windows.Forms.dll" };
+			string[] contentsPaths = new string[] { "/MonoBleedingEdge/lib/mono/unityjit/System.Windows.Forms.dll" };
 
 			foreach (string contentsPath in contentsPaths)
 			{

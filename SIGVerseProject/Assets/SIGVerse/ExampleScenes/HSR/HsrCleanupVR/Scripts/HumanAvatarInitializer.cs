@@ -3,74 +3,113 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SIGVerse.Common;
-using NewtonVR;
 
 #if SIGVERSE_PUN
 using Photon.Pun;
 #endif
 
+#if SIGVERSE_STEAMVR
+using Valve.VR;
+using Valve.VR.InteractionSystem;
+#endif
+
 namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
-#if SIGVERSE_PUN && SIGVERSE_OCULUS
 
 	public class HumanAvatarInitializer : CommonInitializer
 	{
-		public GameObject ovrCameraRig;
+#if SIGVERSE_PUN && SIGVERSE_STEAMVR
+		public GameObject cameraRig;
 
 		public GameObject ethan;
 
-		public GameObject centerEyeAnchor;
+		public GameObject eyeAnchor;
 
 		private void Awake()
 		{
-			InitializeNVRInteractables();
+//			InitializeNVRInteractables();
 		}
 
 		public static void InitializeNVRInteractables()
 		{
-			NVRInteractableItem[] nvrInteractableItems = SIGVerseUtils.FindObjectsOfInterface<NVRInteractableItem>();
+			//NVRInteractableItem[] nvrInteractableItems = SIGVerseUtils.FindObjectsOfInterface<NVRInteractableItem>();
 
-			foreach(NVRInteractableItem nvrInteractableItem in nvrInteractableItems)
-			{
-				nvrInteractableItem.enabled = true;
-			}
+			//foreach(NVRInteractableItem nvrInteractableItem in nvrInteractableItems)
+			//{
+			//	nvrInteractableItem.enabled = true;
+			//}
 		}
 
 
 		void Start()
 		{
-			PhotonView photonView = this.GetComponent<PhotonView>();
+			SteamVR_Actions.sigverse.Activate(SteamVR_Input_Sources.Any);
 
-			StartCoroutine(this.SetAvatarName(photonView));
+			this.photonView = this.GetComponent<PhotonView>();
 
-			if (photonView.IsMine)
+			StartCoroutine(this.SetAvatarName());
+			StartCoroutine(this.EnableScripts());
+		}
+
+		private IEnumerator EnableScripts()
+		{
+			while(!this.isNameSet)
+			{
+				yield return null;
+			}
+
+			if (this.photonView.IsMine)
 			{
 				this.GetComponent<HumanAvatarChat>().enabled = true;
 
-				this.ovrCameraRig.GetComponent<OVRCameraRig>().enabled = true;
+				this.GetComponent<Player>().enabled = true;
 
-				this.ovrCameraRig.GetComponent<OVRManager>().enabled = true;
+//				this.cameraRig.GetComponent<SteamVR_PlayArea>().enabled = true;
 
-				this.ovrCameraRig.GetComponent<SIGVerse.Human.IK.AnchorPostureCalculator>().enabled = true;
+				this.cameraRig.GetComponent<SIGVerse.Human.IK.AnchorPostureCalculator>().enabled = true;
 
-				this.centerEyeAnchor.GetComponent<Camera>().enabled = true;
+				SteamVR_Behaviour_Pose[] steamVrBehaviourPoses = this.cameraRig.GetComponentsInChildren<SteamVR_Behaviour_Pose>();
+
+				foreach(SteamVR_Behaviour_Pose steamVrBehaviourPose in steamVrBehaviourPoses)
+				{
+					steamVrBehaviourPose.enabled = true;
+				}
+
+				Hand[] hands = this.cameraRig.GetComponentsInChildren<Hand>(true);
+
+				foreach(Hand hand in hands)
+				{
+					hand.enabled = true;
+				}
+
+				this.eyeAnchor.GetComponent<Camera>().enabled = true;
+
+				this.eyeAnchor.GetComponent<AudioListener>().enabled = true;
+
+				this.eyeAnchor.GetComponent<SteamVR_CameraHelper>().enabled = true;
 
 				this.ethan.GetComponent<SimpleHumanVRControllerForPun>().enabled = true;
 
-				CleanupAvatarVRHandControllerForRift[] cleanupAvatarVRHandControllerForRiftList = this.ethan.GetComponents<CleanupAvatarVRHandControllerForRift>();
+				CleanupAvatarVRHandControllerForSteamVR[] cleanupAvatarVRHandControllerForSteamVRs = this.ethan.GetComponents<CleanupAvatarVRHandControllerForSteamVR>();
 
-				foreach(CleanupAvatarVRHandControllerForRift cleanupAvatarVRHandControllerForRift in cleanupAvatarVRHandControllerForRiftList)
+				foreach(CleanupAvatarVRHandControllerForSteamVR cleanupAvatarVRHandControllerForSteamVR in cleanupAvatarVRHandControllerForSteamVRs)
 				{
-					cleanupAvatarVRHandControllerForRift.enabled = true;
+					cleanupAvatarVRHandControllerForSteamVR.enabled = true;
 				}
 
 				PunLauncher.EnableSubview(this.gameObject);
 			}
 			else
 			{
-				this.centerEyeAnchor.GetComponent<Camera>().enabled = false;
+				Rigidbody[] rigidbodies = this.GetComponentsInChildren<Rigidbody>(true);
+
+				foreach(Rigidbody rigidbody in rigidbodies)
+				{
+					rigidbody.useGravity = false;
+//					rigidbody.isKinematic = true;
+				}
 			}
 		}
-	}
 #endif
+	}
 }

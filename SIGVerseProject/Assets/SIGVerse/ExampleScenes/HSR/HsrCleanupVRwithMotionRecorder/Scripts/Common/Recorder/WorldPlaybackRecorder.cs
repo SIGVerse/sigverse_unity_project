@@ -5,6 +5,7 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.UI;
+using System.Text.RegularExpressions;
 
 namespace SIGVerse.Common.Recorder
 {
@@ -24,6 +25,9 @@ namespace SIGVerse.Common.Recorder
 		public TargetType targetType = TargetType.ObjectsWithRigidbodyAndItsChildObjects;
 
 		public List<GameObject> exclusionTargets;
+
+		[TooltipAttribute("Regular Expression")]
+		public List<String> exclusionTargetNameRegexs;
 
 
 		[HeaderAttribute("Recording Parameters")]
@@ -208,6 +212,18 @@ namespace SIGVerse.Common.Recorder
 				{
 					this.targetTransforms.Remove(transformToExclude);
 				}
+			}
+
+			int targetTransformCountBefore = this.targetTransforms.Count;
+
+			foreach(String exclusionTargetNameRegex in this.exclusionTargetNameRegexs)
+			{
+				this.targetTransforms = this.targetTransforms.Where(x => !Regex.IsMatch(x.name, exclusionTargetNameRegex)).ToList();
+			}
+
+			if(this.targetTransforms.Count != targetTransformCountBefore)
+			{
+				SIGVerseLogger.Info("The number excluded by name is "+(targetTransformCountBefore - this.targetTransforms.Count));
 			}
 		}
 

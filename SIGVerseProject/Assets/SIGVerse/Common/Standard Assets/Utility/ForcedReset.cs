@@ -5,7 +5,7 @@ using UnityStandardAssets_1_1_2.CrossPlatformInput;
 
 #pragma warning disable 618
 
-[RequireComponent(typeof (GUITexture))]
+[RequireComponent(typeof (UnityEngine.UI.Image))]
 public class ForcedReset : MonoBehaviour
 {
     private void Update()

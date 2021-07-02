@@ -17,12 +17,16 @@ using Photon.Pun;
 using Photon.Realtime;
 #endif
 
+#if SIGVERSE_STEAMVR
+using UnityEngine.XR.Management;
+#endif
+
 namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
-#if SIGVERSE_PUN
 
 	public class PunLauncher : MonoBehaviourPunCallbacks
 	{
+#if SIGVERSE_PUN
 		public const string AvatarNameKey = "AvatarName";
 
 //		public const string GameVersion = "0.1";
@@ -65,10 +69,13 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 		private bool isHuman;
 
+		private XRLoader activeLoader;
+
 		void Awake()
 		{
-			XRSettings.enabled = true;
+//			XRSettings.enabled = true;
 		}
+
 
 		void Start()
 		{
@@ -135,13 +142,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 			if (this.isHuman)
 			{
-				PhotonNetwork.NickName = HumanNamePrefix + PhotonNetwork.LocalPlayer.ActorNumber;
-
-				ExitGames.Client.Photon.Hashtable customPropertie = new ExitGames.Client.Photon.Hashtable();
-				customPropertie.Add(AvatarNameKey, PhotonNetwork.NickName + "#" + this.humanSource.name);
-				PhotonNetwork.LocalPlayer.SetCustomProperties(customPropertie);
-
-				GameObject player = PhotonNetwork.Instantiate(this.humanSource.name, this.humanPositions[numberOfLogins], Quaternion.Euler(this.humanEulerAngles[numberOfLogins]));
+				StartCoroutine(this.InstantiateHuman(numberOfLogins));
 			}
 			else
 			{
@@ -151,7 +152,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 				customPropertie.Add(AvatarNameKey, PhotonNetwork.NickName + "#" + this.robotSource.name);
 				PhotonNetwork.LocalPlayer.SetCustomProperties(customPropertie);
 
-				XRSettings.enabled = false;
+//				XRSettings.enabled = false;
 
 				GameObject player = PhotonNetwork.Instantiate(this.robotSource.name, this.robotPositions[numberOfLogins], Quaternion.Euler(this.robotEulerAngles[numberOfLogins]));
 			}
@@ -183,6 +184,40 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 			return false;
 		}
 
+
+		public IEnumerator InstantiateHuman(int numberOfLogins)
+		{
+			// Initialize XR System
+			XRManagerSettings xrManagerSettings = XRGeneralSettings.Instance.Manager;
+
+			if (xrManagerSettings == null) { SIGVerseLogger.Error("xrManagerSettings == null"); yield break; }
+
+			if(xrManagerSettings.activeLoader == null)
+			{
+				yield return xrManagerSettings.InitializeLoader();
+			}
+
+			this.activeLoader = xrManagerSettings.activeLoader;
+
+			if (this.activeLoader == null)
+			{
+				Debug.LogError("Initializing XR Failed.");
+				yield break;
+			}
+
+			xrManagerSettings.activeLoader.Start();
+
+
+			// Instantiate Human
+			PhotonNetwork.NickName = HumanNamePrefix + PhotonNetwork.LocalPlayer.ActorNumber;
+
+			ExitGames.Client.Photon.Hashtable customPropertie = new ExitGames.Client.Photon.Hashtable();
+			customPropertie.Add(AvatarNameKey, PhotonNetwork.NickName + "#" + this.humanSource.name);
+			PhotonNetwork.LocalPlayer.SetCustomProperties(customPropertie);
+
+			GameObject player = PhotonNetwork.Instantiate(this.humanSource.name, this.humanPositions[numberOfLogins], Quaternion.Euler(this.humanEulerAngles[numberOfLogins]));
+		}
+
 		private IEnumerator Disconnect()
 		{
 			yield return new WaitForSeconds(3.0f);
@@ -196,6 +231,15 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 			this.robotLoginButton.interactable = true;
 		}
 
+		void OnDestroy()
+		{
+			// It is mandatory to perform this termination process.
+			if(this.activeLoader != null)
+			{
+				this.activeLoader.Stop();
+				XRGeneralSettings.Instance.Manager.DeinitializeLoader();
+			}
+		}
 
 		public void SetRoomObjects(List<GameObject> roomObjects)
 		{
@@ -237,9 +281,11 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		//{
 		//	PhotonNetwork.LeaveRoom();
 		//}
+#else
+	public class PunLauncher : MonoBehaviour {
+#endif
 	}
 
-#endif
 
 #if SIGVERSE_PUN && UNITY_EDITOR
 	[CustomEditor(typeof(PunLauncher))]

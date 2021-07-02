@@ -79,67 +79,82 @@ namespace SIGVerse.Common.Recorder
 
 		public override bool ReadEvents(string[] headerArray, string dataStr)
 		{
-			// Transform data
-			if (headerArray[1] == WorldPlaybackCommon.DataType1Transform)
+			try
 			{
-				string[] dataArray = dataStr.Split('\t');
-
-				// Definition
-				if (headerArray[2] == WorldPlaybackCommon.DataType2TransformDef)
+				// Transform data
+				if (headerArray[1] == WorldPlaybackCommon.DataType1Transform)
 				{
-					this.transformOrder.Clear();
+					string[] dataArray = dataStr.Split('\t');
 
-					SIGVerseLogger.Info("Playback player : transform data num=" + dataArray.Length);
-
-					foreach (string transformPath in dataArray)
+					// Definition
+					if (headerArray[2] == WorldPlaybackCommon.DataType2TransformDef)
 					{
-						if (!this.targetTransformPathMap.ContainsKey(transformPath))
+						this.transformOrder.Clear();
+
+						SIGVerseLogger.Info("Playback player : transform data num=" + dataArray.Length);
+
+						foreach (string transformPath in dataArray)
 						{
-							SIGVerseLogger.Error("Couldn't find the object that path is " + transformPath);
+							Transform targetTransform;
+
+							this.targetTransformPathMap.TryGetValue(transformPath, out targetTransform);
+
+							if (targetTransform==null)
+							{
+								SIGVerseLogger.Error("Couldn't find the object that path is " + transformPath);
+							}
+
+							this.transformOrder.Add(targetTransform);
 						}
-
-						this.transformOrder.Add(this.targetTransformPathMap[transformPath]);
 					}
-				}
-				// Value
-				else if (headerArray[2] == WorldPlaybackCommon.DataType2TransformVal)
-				{
-					if (this.transformOrder.Count == 0) { return false; }
-
-					PlaybackTransformEventList playbackTransformEventList = new PlaybackTransformEventList();
-
-					playbackTransformEventList.ElapsedTime = float.Parse(headerArray[0]);
-
-					for (int i = 0; i < dataArray.Length; i++)
+					// Value
+					else if (headerArray[2] == WorldPlaybackCommon.DataType2TransformVal)
 					{
-						string[] transformValues = dataArray[i].Split(',');
+						if (this.transformOrder.Count == 0) { return false; }
 
-						PlaybackTransformEvent transformEvent = new PlaybackTransformEvent();
+						PlaybackTransformEventList playbackTransformEventList = new PlaybackTransformEventList();
 
-						transformEvent.TargetTransform = this.transformOrder[i];
+						playbackTransformEventList.ElapsedTime = float.Parse(headerArray[0]);
 
-						transformEvent.Position = new Vector3(float.Parse(transformValues[0]), float.Parse(transformValues[1]), float.Parse(transformValues[2]));
-						transformEvent.Rotation = new Vector3(float.Parse(transformValues[3]), float.Parse(transformValues[4]), float.Parse(transformValues[5]));
-
-						if (transformValues.Length == 6)
+						for (int i = 0; i < dataArray.Length; i++)
 						{
-							transformEvent.Scale = Vector3.one;
-						}
-						else if (transformValues.Length == 9)
-						{
-							transformEvent.Scale = new Vector3(float.Parse(transformValues[6]), float.Parse(transformValues[7]), float.Parse(transformValues[8]));
+							if(this.transformOrder[i] is null) { continue; }
+
+							string[] transformValues = dataArray[i].Split(',');
+
+							PlaybackTransformEvent transformEvent = new PlaybackTransformEvent();
+
+							transformEvent.TargetTransform = this.transformOrder[i];
+
+							transformEvent.Position = new Vector3(float.Parse(transformValues[0]), float.Parse(transformValues[1]), float.Parse(transformValues[2]));
+							transformEvent.Rotation = new Vector3(float.Parse(transformValues[3]), float.Parse(transformValues[4]), float.Parse(transformValues[5]));
+
+							if (transformValues.Length == 6)
+							{
+								transformEvent.Scale = Vector3.one;
+							}
+							else if (transformValues.Length == 9)
+							{
+								transformEvent.Scale = new Vector3(float.Parse(transformValues[6]), float.Parse(transformValues[7]), float.Parse(transformValues[8]));
+							}
+
+							playbackTransformEventList.EventList.Add(transformEvent);
 						}
 
-						playbackTransformEventList.EventList.Add(transformEvent);
+						this.eventLists.Add(playbackTransformEventList);
 					}
 
-					this.eventLists.Add(playbackTransformEventList);
+					return true;
 				}
 
-				return true;
+				return false;
 			}
+			catch (Exception ex)
+			{
+				SIGVerseLogger.Error(ex.Message+"\n\n"+ex.StackTrace);
 
-			return false;
+				return false;
+			}
 		}
 
 

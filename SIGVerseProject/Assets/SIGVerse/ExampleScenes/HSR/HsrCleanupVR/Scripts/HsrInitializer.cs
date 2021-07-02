@@ -16,21 +16,43 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 		public GameObject rosBridgeScripts;
 
+
 		void Start()
 		{
-			PhotonView photonView = this.GetComponent<PhotonView>();
+			this.photonView = this.GetComponent<PhotonView>();
 
-			StartCoroutine(this.SetAvatarName(photonView));
+			StartCoroutine(this.SetAvatarName());
+			StartCoroutine(this.EnableScripts());
+		}
 
-			if (photonView.IsMine)
+		private IEnumerator EnableScripts()
+		{
+			while(!this.isNameSet)
+			{
+				yield return null;
+			}
+
+			if (this.photonView.IsMine)
 			{
 				this.GetComponent<GraspingDetectorForPun>().enabled = true;
+
+				this.GetComponent<AudioListener>().enabled = true;
 
 				this.GetComponent<HsrChat>().enabled = true;
 
 				this.rosBridgeScripts.SetActive(true);
 
 				PunLauncher.EnableSubview(this.gameObject);
+			}
+			else
+			{
+				Rigidbody[] rigidbodies = this.GetComponentsInChildren<Rigidbody>(true);
+
+				foreach(Rigidbody rigidbody in rigidbodies)
+				{
+					rigidbody.useGravity = false;
+//					rigidbody.isKinematic = true;
+				}
 			}
 		}
 #endif

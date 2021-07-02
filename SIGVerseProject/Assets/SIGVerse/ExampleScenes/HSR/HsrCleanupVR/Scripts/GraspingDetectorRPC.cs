@@ -11,9 +11,9 @@ using Photon.Pun;
 
 namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
-#if SIGVERSE_PUN
 	public class GraspingDetectorRPC : MonoBehaviour
 	{
+#if SIGVERSE_PUN
 		public GameObject handPalm;
 
 		private GameObject graspedObject;
@@ -35,6 +35,8 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 			graspedRigidbody.useGravity = false;
 //			graspedRigidbody.isKinematic = true;
 			graspedRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+
+			this.graspedObject.GetComponent<ThrowableWithoutSuction>().ChangeOwner();
 
 			SIGVerseLogger.Info("Grasp by GraspingDetectorRPC :" + objectName);
 		}
@@ -62,7 +64,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 			SIGVerseLogger.Info("Release by GraspingDetectorRPC");
 		}
-	}
 #endif
+	}
 }
 

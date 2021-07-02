@@ -183,10 +183,17 @@ namespace SIGVerse.ToyotaHSR
 			// Set a terget texture as a target of rendering
 			RenderTexture.active = this.targetCamera.targetTexture;
 
+			//System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+			//sw.Start();
 			// Read image
 			this.imageTexture.ReadPixels(new Rect(0, 0, this.imageTexture.width, this.imageTexture.height), 0, 0, false);
 			this.imageTexture.Apply();
 
+			//sw.Stop();
+			//if(sw.Elapsed.TotalMilliseconds > 1000.0)
+			//{
+			//	UnityEngine.Debug.LogWarning("time=" + sw.Elapsed);
+			//}
 			byte[] rawTextureData = this.imageTexture.GetRawTextureData();
 
 //			yield return null;
@@ -225,7 +232,10 @@ namespace SIGVerse.ToyotaHSR
 			}
 
 			//sw.Stop();
-			//UnityEngine.Debug.Log("time=" + sw.Elapsed);
+			//if (sw.Elapsed.TotalMilliseconds > 1000.0)
+			//{
+			//	UnityEngine.Debug.LogWarning("time=" + sw.Elapsed);
+			//}
 		}
 
 

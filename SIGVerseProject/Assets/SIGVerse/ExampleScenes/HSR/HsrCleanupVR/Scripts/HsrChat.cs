@@ -27,10 +27,10 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 			string senderNickName = senderName.Split('#')[0];
 
-			if (senderNickName==PhotonNetwork.NickName) { senderNickName = "You"; }
+			string speaker = (senderNickName == PhotonNetwork.NickName) ? "You" : senderNickName;
 
 			// Display the message
-			PanelNoticeStatus noticeStatus = new PanelNoticeStatus(senderNickName, message, PanelNoticeStatus.Green);
+			PanelNoticeStatus noticeStatus = new PanelNoticeStatus(speaker, message, PanelNoticeStatus.Green);
 
 			ExecuteEvents.Execute<IPanelNoticeHandler>
 			(
@@ -40,12 +40,15 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 			);
 
 			// Forward the message to ROS
-			ExecuteEvents.Execute<SIGVerse.RosBridge.IRosSendingStringMsgHandler>
-			(
-				target: this.rosBridgeScripts,
-				eventData: null,
-				functor: (reciever, eventData) => reciever.OnSendRosStringMsg(message)
-			);
+			if (senderNickName!=PhotonNetwork.NickName)
+			{
+				ExecuteEvents.Execute<SIGVerse.RosBridge.IRosSendingStringMsgHandler>
+				(
+					target: this.rosBridgeScripts,
+					eventData: null,
+					functor: (reciever, eventData) => reciever.OnSendRosStringMsg(message)
+				);
+			}
 
 			SIGVerseLogger.Info("Robot: Received a message. sender=" + senderName + ", message=" + message);
 		}

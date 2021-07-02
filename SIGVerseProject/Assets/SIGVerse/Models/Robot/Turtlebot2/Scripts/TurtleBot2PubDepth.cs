@@ -17,6 +17,8 @@ namespace SIGVerse.TurtleBot
 		public string topicNameCameraInfo = "/camera/depth/camera_info";
 		public string topicNameImage      = "/camera/depth/image_raw";
 
+		[TooltipAttribute("milliseconds")]
+		public float sendingInterval = 100;
 		//--------------------------------------------------
 
 		System.Net.Sockets.TcpClient tcpClient = null;
@@ -36,6 +38,8 @@ namespace SIGVerse.TurtleBot
 
 		private CameraInfoForSIGVerseBridge cameraInfoData;
 		private ImageForSIGVerseBridge imageData;
+
+		private float elapsedTime = 0.0f;
 
 
 		void Start()
@@ -106,6 +110,15 @@ namespace SIGVerse.TurtleBot
 
 		void Update()
 		{
+			this.elapsedTime += UnityEngine.Time.deltaTime;
+
+			if (this.elapsedTime < this.sendingInterval * 0.001f)
+			{
+				return;
+			}
+
+			this.elapsedTime = 0.0f;
+
 			base.StartCoroutine(GenerateDepthBuffer());
 		}
 

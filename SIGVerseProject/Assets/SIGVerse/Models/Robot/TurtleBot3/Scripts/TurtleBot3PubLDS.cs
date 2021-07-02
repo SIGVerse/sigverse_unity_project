@@ -167,6 +167,7 @@ namespace SIGVerse.TurtleBot3
 				float distance = 0.0f;
 				RaycastHit hit;
 
+				// Note: If the ray cannot reach the target, the distance will be zero.
 				if (Physics.Raycast(this.sensorPivot.position, ray, out hit, RangeMax, this.layerMask))
 				{
 					distance = hit.distance;

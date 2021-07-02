@@ -21,7 +21,7 @@ namespace SIGVerse.Common.Recorder
 		public Image recordImage;
 
 		public Sprite recordIcon;
-		public Sprite pauseIcon;
+		public Sprite stopIcon;
 
 		public WorldPlaybackRecorder worldPlaybackRecorder;
 		public WorldPlaybackPlayer   worldPlaybackPlayer;
@@ -46,7 +46,7 @@ namespace SIGVerse.Common.Recorder
 					if (!this.worldPlaybackRecorder.Initialize()){ throw new Exception("Start Recording(initialize) Error"); }
 					if (!this.worldPlaybackRecorder.Record())    { throw new Exception("Start Recording Error"); }
 
-					this.recordImage.sprite = this.pauseIcon;
+					this.recordImage.sprite = this.stopIcon;
 					this.goToPlaybackModeButton.interactable = false;
 
 					return;
@@ -88,6 +88,21 @@ namespace SIGVerse.Common.Recorder
 			this.playbackPanel    .SetActive(true);
 
 			this.worldPlaybackRecorder.enabled = false;
+
+			this.StopXR();
+		}
+
+		private void StopXR()
+		{
+			var xrManagerSettings = UnityEngine.XR.Management.XRGeneralSettings.Instance.Manager;
+
+			if (xrManagerSettings == null) { return; }
+
+			if(xrManagerSettings.activeLoader != null)
+			{
+				xrManagerSettings.activeLoader.Stop();
+				UnityEngine.XR.Management.XRGeneralSettings.Instance.Manager.DeinitializeLoader();
+			}
 		}
 
 		public void OnConfirmNoButtonClick()

@@ -8,6 +8,10 @@ using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace SIGVerse.Common.Recorder
 {
 	[RequireComponent(typeof(WorldPlaybackCommon))]
@@ -23,9 +27,15 @@ namespace SIGVerse.Common.Recorder
 		private const string ElapsedTimeFormat = "###0.0";
 		private const string TotalTimeFormat = "###0";
 
-		[HeaderAttribute("Objects")]
+		[TooltipAttribute("GameObjects from the scene")]
 		public List<GameObject> targetsToDisableOnPlaybackMode;
 
+		[TooltipAttribute("Scripts from Assets")]
+#if UNITY_EDITOR
+		public List<MonoScript> scriptsToDisableOnPlaybackMode;
+#endif
+		[HideInInspector]
+		public List<string> scriptsAssemblyQualifiedName;
 
 		[HeaderAttribute("Playback Parameters")]
 		[TooltipAttribute("[s]")]
@@ -40,6 +50,8 @@ namespace SIGVerse.Common.Recorder
 
 		public Sprite playSprite;
 		public Sprite pauseSprite;
+
+		public MonoBehaviour behav;
 
 
 		//--------------------------------------------------------------------------------------------
@@ -64,7 +76,7 @@ namespace SIGVerse.Common.Recorder
 		protected bool isRepeating = false;
 
 		protected PlaybackTransformEventController transformController;  // Transform
-		protected PlaybackStringEventController    stringController;     // String Data
+		protected PlaybackStringEventController stringController;     // String Data
 
 		protected string filePath;
 
@@ -75,32 +87,32 @@ namespace SIGVerse.Common.Recorder
 
 
 		//--- GUI ---
-		protected Text       statusText;
-		protected Button     readFileButton;
-		protected Text       fileNameText;
-		protected Text       elapsedTimeText;
-		protected Text       totalTimeText;
-		protected Slider     timeSlider;
-		protected Button     playButton;
-		protected Dropdown   speedDropdown;
-		protected Toggle     repeatToggle;
+		protected Text statusText;
+		protected Button readFileButton;
+		protected Text fileNameText;
+		protected Text elapsedTimeText;
+		protected Text totalTimeText;
+		protected Slider timeSlider;
+		protected Button playButton;
+		protected Dropdown speedDropdown;
+		protected Toggle repeatToggle;
 		protected InputField startTimeInputField;
 		protected InputField endTimeInputField;
 
 
 		protected virtual void Awake()
 		{
-			this.statusText          = this.playbackPanel.transform.Find("StatusText")                 .GetComponent<Text>();
-			this.readFileButton      = this.playbackPanel.transform.Find("ReadFile/ReadFileButton")    .GetComponent<Button>();
-			this.fileNameText        = this.playbackPanel.transform.Find("ReadFile/FileNameText")      .GetComponent<Text>();
+			this.statusText          = this.playbackPanel.transform.Find("StatusText").GetComponent<Text>();
+			this.readFileButton      = this.playbackPanel.transform.Find("ReadFile/ReadFileButton").GetComponent<Button>();
+			this.fileNameText        = this.playbackPanel.transform.Find("ReadFile/FileNameText").GetComponent<Text>();
 			this.elapsedTimeText     = this.playbackPanel.transform.Find("ElapsedTime/ElapsedTimeText").GetComponent<Text>();
-			this.totalTimeText       = this.playbackPanel.transform.Find("TotalTime/TotalTimeText")    .GetComponent<Text>();
-			this.timeSlider          = this.playbackPanel.transform.Find("TimeSlider")                 .GetComponent<Slider>();
-			this.playButton          = this.playbackPanel.transform.Find("PlayButton")                 .GetComponent<Button>();
-			this.speedDropdown       = this.playbackPanel.transform.Find("Speed/SpeedDropdown")        .GetComponent<Dropdown>();
-			this.repeatToggle        = this.playbackPanel.transform.Find("Repeat/RepeatToggle")        .GetComponent<Toggle>();
-			this.startTimeInputField = this.playbackPanel.transform.Find("StartTimeInputField")        .GetComponent<InputField>();
-			this.endTimeInputField   = this.playbackPanel.transform.Find("EndTimeInputField")          .GetComponent<InputField>();
+			this.totalTimeText       = this.playbackPanel.transform.Find("TotalTime/TotalTimeText").GetComponent<Text>();
+			this.timeSlider          = this.playbackPanel.transform.Find("TimeSlider").GetComponent<Slider>();
+			this.playButton          = this.playbackPanel.transform.Find("PlayButton").GetComponent<Button>();
+			this.speedDropdown       = this.playbackPanel.transform.Find("Speed/SpeedDropdown").GetComponent<Dropdown>();
+			this.repeatToggle        = this.playbackPanel.transform.Find("Repeat/RepeatToggle").GetComponent<Toggle>();
+			this.startTimeInputField = this.playbackPanel.transform.Find("StartTimeInputField").GetComponent<InputField>();
+			this.endTimeInputField   = this.playbackPanel.transform.Find("EndTimeInputField").GetComponent<InputField>();
 		}
 
 		protected virtual void Start()
@@ -110,7 +122,7 @@ namespace SIGVerse.Common.Recorder
 
 		protected virtual IEnumerator DisableObjectsAtStartOfPlaybackMode()
 		{
-			while(!this.playbackPanel.activeSelf)
+			while (!this.playbackPanel.activeSelf)
 			{
 				yield return null;
 			}
@@ -267,10 +279,10 @@ namespace SIGVerse.Common.Recorder
 		protected virtual void StartInitializingEvents()
 		{
 			this.transformController = new PlaybackTransformEventController(this.filePath);  // Transform
-			this.stringController    = new PlaybackStringEventController(this.stringDataDestinations);  // String Data
+			this.stringController = new PlaybackStringEventController(this.stringDataDestinations);  // String Data
 
 			this.transformController.StartInitializingEvents();
-			this.stringController   .StartInitializingEvents();
+			this.stringController.StartInitializingEvents();
 		}
 
 		protected virtual void InstantiateAdditionalRootObjects()
@@ -333,6 +345,20 @@ namespace SIGVerse.Common.Recorder
 				((Rigidbody)component).velocity = Vector3.zero;
 				((Rigidbody)component).angularVelocity = Vector3.zero;
 			}
+			else if(type == typeof(Animator))
+			{
+				((Animator)component).enabled = false;
+			}
+			else
+			{
+				foreach(string scriptAssemblyQualifiedName in this.scriptsAssemblyQualifiedName)
+				{
+					if(type.AssemblyQualifiedName == scriptAssemblyQualifiedName)
+					{
+						((MonoBehaviour)component).enabled = false; // scriptAssemblyQualifiedName is subclass of MonoBehaviour.
+					}
+				}
+			}
 		}
 
 		protected virtual void DisablePlayerComponent(Component component)
@@ -394,8 +420,7 @@ namespace SIGVerse.Common.Recorder
 			}
 			catch (Exception ex)
 			{
-				SIGVerseLogger.Error(ex.Message);
-				SIGVerseLogger.Error(ex.StackTrace);
+				SIGVerseLogger.Error(ex.Message + "\n\n" + ex.StackTrace);
 
 				this.errorMsg = "Cannot read the file !";
 				this.step = Step.Waiting;
@@ -406,7 +431,7 @@ namespace SIGVerse.Common.Recorder
 		protected virtual void ReadData(string[] headerArray, string dataStr)
 		{
 			this.transformController.ReadEvents(headerArray, dataStr); // Transform
-			this.stringController   .ReadEvents(headerArray, dataStr); // String Data
+			this.stringController.ReadEvents(headerArray, dataStr); // String Data
 		}
 
 
@@ -427,7 +452,7 @@ namespace SIGVerse.Common.Recorder
 			this.deltaTime = 0.0f;
 
 			this.transformController.UpdateIndex(elapsedTime); // Transform
-			this.stringController   .UpdateIndex(elapsedTime); // String Data
+			this.stringController.UpdateIndex(elapsedTime); // String Data
 		}
 
 
@@ -461,7 +486,7 @@ namespace SIGVerse.Common.Recorder
 			}
 
 			this.transformController.ExecutePassedLatestEvents(this.elapsedTime, deltaTime); // Transform
-			this.stringController   .ExecutePassedAllEvents(this.elapsedTime, deltaTime); // String Data
+			this.stringController.ExecutePassedAllEvents(this.elapsedTime, deltaTime); // String Data
 		}
 
 
@@ -501,13 +526,13 @@ namespace SIGVerse.Common.Recorder
 
 						if (this.isInitialized)
 						{
-							this.readFileButton     .interactable = true;
-							this.timeSlider         .interactable = true;
-							this.playButton         .interactable = true;
-							this.speedDropdown      .interactable = true;
-							this.repeatToggle       .interactable = true;
+							this.readFileButton.interactable = true;
+							this.timeSlider.interactable = true;
+							this.playButton.interactable = true;
+							this.speedDropdown.interactable = true;
+							this.repeatToggle.interactable = true;
 							this.startTimeInputField.interactable = true;
-							this.endTimeInputField  .interactable = true;
+							this.endTimeInputField.interactable = true;
 						}
 
 						if (this.isFileRead)
@@ -562,12 +587,12 @@ namespace SIGVerse.Common.Recorder
 
 						this.playButton.image.sprite = this.pauseSprite;
 
-						this.readFileButton     .interactable = false;
-						this.timeSlider         .interactable = false;
-						this.speedDropdown      .interactable = false;
-						this.repeatToggle       .interactable = false;
+						this.readFileButton.interactable = false;
+						this.timeSlider.interactable = false;
+						this.speedDropdown.interactable = false;
+						this.repeatToggle.interactable = false;
 						this.startTimeInputField.interactable = false;
-						this.endTimeInputField  .interactable = false;
+						this.endTimeInputField.interactable = false;
 
 						this.isStepChanged = false;
 					}
@@ -713,6 +738,38 @@ namespace SIGVerse.Common.Recorder
 				this.deltaTime = this.GetElapsedTimeUsingSlider() - this.elapsedTime;
 			}
 		}
+
+#if UNITY_EDITOR
+		private void OnValidate()
+		{
+			this.scriptsAssemblyQualifiedName = this.scriptsToDisableOnPlaybackMode
+				.Where(x => x!=null && x.GetClass()!=null && x.GetClass().IsSubclassOf(typeof(MonoBehaviour)))
+				.Select(x => x.GetClass().AssemblyQualifiedName).ToList();
+		}
+
+		[CustomEditor(typeof(WorldPlaybackPlayer))]
+		public class WorldPlaybackPlayerEditor : Editor
+		{
+			public override void OnInspectorGUI()
+			{
+				base.OnInspectorGUI();
+
+				WorldPlaybackPlayer worldPlaybackPlayer = base.target as WorldPlaybackPlayer;
+
+				GUILayout.Space(30);
+				GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(2));
+				EditorGUILayout.LabelField("DEBUG", EditorStyles.boldLabel);
+				EditorGUILayout.LabelField("scriptsAssemblyQualifiedName", EditorStyles.boldLabel);
+
+				EditorGUI.indentLevel++;
+				foreach(string scriptAssemblyQualifiedName in worldPlaybackPlayer.scriptsAssemblyQualifiedName)
+				{
+					EditorGUILayout.LabelField(scriptAssemblyQualifiedName);
+				}
+				EditorGUI.indentLevel--;
+			}
+		}
+#endif
 	}
 }
 

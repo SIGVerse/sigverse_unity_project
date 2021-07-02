@@ -23,11 +23,10 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		void OnReceiveChatMessage(string senderName, string message);
 	}
 
-#if SIGVERSE_PUN
 
 	public class ChatManager : MonoBehaviour, IChatRegistrationHandler, IChatMessageHandler
 	{
-
+#if SIGVERSE_PUN
 		public const string ChatManagerName = "ChatManager";
 		public const string MainMenuName    = "MainMenu";
 
@@ -68,7 +67,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		[PunRPC]
 		private void ForwardMessage(string senderName, string message)
 		{
-//			SIGVerseLogger.Info("ForwardMessage userName=" + senderName + ", message=" + message);
+//			SIGVerseLogger.Info("ForwardMessage userName=" + senderName + ", message=" + message + ", user num="+this.userMap.Keys.Count);
 
 			// Forward the message 
 			foreach (KeyValuePair<string, GameObject> user in this.userMap)
@@ -132,7 +131,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		{
 			this.userMap = new Dictionary<string, GameObject>();
 		}
-	}
 #endif
+	}
 }
 
