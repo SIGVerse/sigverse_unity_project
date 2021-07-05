@@ -23,10 +23,9 @@ using UnityEngine.XR.Management;
 
 namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
-
+#if SIGVERSE_PUN
 	public class PunLauncher : MonoBehaviourPunCallbacks
 	{
-#if SIGVERSE_PUN
 		public const string AvatarNameKey = "AvatarName";
 
 //		public const string GameVersion = "0.1";

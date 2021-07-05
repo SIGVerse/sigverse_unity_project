@@ -73,7 +73,10 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		}
 
 		public abstract void OnReceiveChatMessage(string userName, string message);
-	}
+#else
+	public abstract class CommonChat : MonoBehaviour 
+	{
 #endif
+	}
 }
 
