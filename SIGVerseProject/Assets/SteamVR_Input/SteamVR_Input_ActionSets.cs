@@ -8,8 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-#if SIGVERSE_STEAMVR
-
 namespace Valve.VR
 {
     using System;
@@ -85,5 +83,3 @@ namespace Valve.VR
         }
     }
 }
-
-#endif

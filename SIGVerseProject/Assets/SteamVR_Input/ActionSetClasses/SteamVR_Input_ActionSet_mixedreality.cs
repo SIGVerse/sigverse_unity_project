@@ -14,18 +14,15 @@ namespace Valve.VR
     using UnityEngine;
     
     
-    public partial class SteamVR_Actions
+    public class SteamVR_Input_ActionSet_mixedreality : Valve.VR.SteamVR_ActionSet
     {
         
-        public static void PreInitialize()
+        public virtual SteamVR_Action_Pose ExternalCamera
         {
-            SteamVR_Actions.StartPreInitActionSets();
-            SteamVR_Input.PreinitializeActionSetDictionaries();
-            SteamVR_Actions.PreInitActions();
-            SteamVR_Actions.InitializeActionArrays();
-            SteamVR_Input.PreinitializeActionDictionaries();
-            SteamVR_Input.PreinitializeFinishActionSets();
+            get
+            {
+                return SteamVR_Actions.mixedreality_ExternalCamera;
+            }
         }
     }
 }
-
