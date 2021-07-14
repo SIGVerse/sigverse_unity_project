@@ -19,12 +19,14 @@ namespace Valve.VR
         
         public static void PreInitialize()
         {
+#if SIGVERSE_STEAMVR
             SteamVR_Actions.StartPreInitActionSets();
             SteamVR_Input.PreinitializeActionSetDictionaries();
             SteamVR_Actions.PreInitActions();
             SteamVR_Actions.InitializeActionArrays();
             SteamVR_Input.PreinitializeActionDictionaries();
             SteamVR_Input.PreinitializeFinishActionSets();
+#endif
         }
     }
 }
