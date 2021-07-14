@@ -630,6 +630,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bca6f9f743448c4388066dd9ff494e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  humanMaxNumber: 1
+  humanPositions:
+  - {x: 0, y: 0, z: 3.2}
+  humanEulerAngles:
+  - {x: 0, y: 180, z: 0}
+  robotMaxNumber: 1
+  robotPositions:
+  - {x: 0, y: 0, z: 1}
+  robotEulerAngles:
+  - {x: -90, y: 0, z: 90}
+  humanSource: {fileID: 8980909707749178005, guid: fcbe2d7464547f64f9ecb0baa00b454c,
+    type: 3}
+  robotSource: {fileID: 6288594784585338128, guid: 84cd0018cdcf4c140a2ac42164a8b812,
+    type: 3}
+  rootsOfSyncTarget:
+  - {fileID: 356352451}
+  - {fileID: 1196940949}
+  chatManager: {fileID: 2026884281}
+  humanLoginButton: {fileID: 1297121700}
+  robotLoginButton: {fileID: 378846550}
+  mainPanel: {fileID: 1295811729}
+  noticePanel: {fileID: 266503821}
+  roomNameText: {fileID: 1653970917}
+  roomNameDefaultText: {fileID: 1421371917}
+  errorMessageText: {fileID: 1557609461}
+  roomObjects:
+  - {fileID: 104784776}
+  - {fileID: 468260271}
+  - {fileID: 1175112736}
+  - {fileID: 1988621772}
+  - {fileID: 911358548}
+  - {fileID: 1681914440}
+  - {fileID: 1722852241}
+  - {fileID: 105617685}
+  - {fileID: 1660961724}
+  - {fileID: 459196030}
+  - {fileID: 1562757772}
 --- !u!43 &64355444
 Mesh:
   m_ObjectHideFlags: 0
@@ -919,8 +956,8 @@ GameObject:
   - component: {fileID: 104784778}
   - component: {fileID: 104784781}
   - component: {fileID: 104784784}
-  - component: {fileID: 104784783}
   - component: {fileID: 104784782}
+  - component: {fileID: 104784783}
   m_Layer: 8
   m_Name: ricebowl_B_c02
   m_TagString: Untagged
@@ -1045,11 +1082,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 104784776}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b30bae3e6d6a7b0428ee7f72ed09028c, type: 3}
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncLocalPosition: 1
-  syncLocalRotation: 1
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!114 &104784784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1246,6 +1285,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3f5848bfed0a2d4abf4b56a0db766c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attachmentFlags: 85
+  attachmentOffset: {fileID: 0}
+  catchingSpeedThreshold: -1
+  releaseVelocityStyle: 3
+  releaseVelocityTimeOffset: -0.011
+  scaleReleaseVelocity: 1.1
+  scaleReleaseVelocityThreshold: -1
+  scaleReleaseVelocityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  restoreOriginalParent: 0
+  onPickUp:
+    m_PersistentCalls:
+      m_Calls: []
+  onDetachFromHand:
+    m_PersistentCalls:
+      m_Calls: []
+  onHeldUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  interactable: {fileID: 0}
 --- !u!114 &105617694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3945,6 +4026,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3f5848bfed0a2d4abf4b56a0db766c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attachmentFlags: 85
+  attachmentOffset: {fileID: 0}
+  catchingSpeedThreshold: -1
+  releaseVelocityStyle: 3
+  releaseVelocityTimeOffset: -0.011
+  scaleReleaseVelocity: 1.1
+  scaleReleaseVelocityThreshold: -1
+  scaleReleaseVelocityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  restoreOriginalParent: 0
+  onPickUp:
+    m_PersistentCalls:
+      m_Calls: []
+  onDetachFromHand:
+    m_PersistentCalls:
+      m_Calls: []
+  onHeldUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  interactable: {fileID: 0}
 --- !u!114 &459196037
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4026,8 +4149,8 @@ GameObject:
   - component: {fileID: 468260273}
   - component: {fileID: 468260275}
   - component: {fileID: 468260278}
-  - component: {fileID: 468260277}
   - component: {fileID: 468260276}
+  - component: {fileID: 468260277}
   m_Layer: 8
   m_Name: photoframe
   m_TagString: Untagged
@@ -4139,11 +4262,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 468260271}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b30bae3e6d6a7b0428ee7f72ed09028c, type: 3}
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncLocalPosition: 1
-  syncLocalRotation: 1
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!114 &468260278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7423,8 +7548,8 @@ GameObject:
   - component: {fileID: 911358549}
   - component: {fileID: 911358550}
   - component: {fileID: 911358553}
-  - component: {fileID: 911358552}
   - component: {fileID: 911358551}
+  - component: {fileID: 911358552}
   m_Layer: 8
   m_Name: laptop
   m_TagString: Untagged
@@ -7486,11 +7611,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 911358548}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b30bae3e6d6a7b0428ee7f72ed09028c, type: 3}
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncLocalPosition: 1
-  syncLocalRotation: 1
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!114 &911358553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9077,11 +9204,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1175112736}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b30bae3e6d6a7b0428ee7f72ed09028c, type: 3}
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncLocalPosition: 1
-  syncLocalRotation: 1
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!114 &1175112740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12695,6 +12824,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3f5848bfed0a2d4abf4b56a0db766c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attachmentFlags: 85
+  attachmentOffset: {fileID: 0}
+  catchingSpeedThreshold: -1
+  releaseVelocityStyle: 3
+  releaseVelocityTimeOffset: -0.011
+  scaleReleaseVelocity: 1.1
+  scaleReleaseVelocityThreshold: -1
+  scaleReleaseVelocityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  restoreOriginalParent: 0
+  onPickUp:
+    m_PersistentCalls:
+      m_Calls: []
+  onDetachFromHand:
+    m_PersistentCalls:
+      m_Calls: []
+  onHeldUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  interactable: {fileID: 0}
 --- !u!114 &1562757778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13485,6 +13656,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3f5848bfed0a2d4abf4b56a0db766c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attachmentFlags: 85
+  attachmentOffset: {fileID: 0}
+  catchingSpeedThreshold: -1
+  releaseVelocityStyle: 3
+  releaseVelocityTimeOffset: -0.011
+  scaleReleaseVelocity: 1.1
+  scaleReleaseVelocityThreshold: -1
+  scaleReleaseVelocityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  restoreOriginalParent: 0
+  onPickUp:
+    m_PersistentCalls:
+      m_Calls: []
+  onDetachFromHand:
+    m_PersistentCalls:
+      m_Calls: []
+  onHeldUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  interactable: {fileID: 0}
 --- !u!114 &1660961731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13823,11 +14036,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1681914440}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b30bae3e6d6a7b0428ee7f72ed09028c, type: 3}
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncLocalPosition: 1
-  syncLocalRotation: 1
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!114 &1681914444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14528,11 +14743,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1722852241}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b30bae3e6d6a7b0428ee7f72ed09028c, type: 3}
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncLocalPosition: 1
-  syncLocalRotation: 1
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!114 &1722852245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16528,11 +16745,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1988621772}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b30bae3e6d6a7b0428ee7f72ed09028c, type: 3}
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncLocalPosition: 1
-  syncLocalRotation: 1
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!114 &1988621776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16735,6 +16954,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abbd952ee7ceabc4d99f03ba40a901e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  extraMessageDestinations: []
 --- !u!4 &2026884282
 Transform:
   m_ObjectHideFlags: 0

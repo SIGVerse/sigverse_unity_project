@@ -27,6 +27,9 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 #if SIGVERSE_PUN
 
 	public class ChatManager : MonoBehaviour, IChatRegistrationHandler, IChatMessageHandler
+#else
+	public class ChatManager : MonoBehaviour 
+#endif
 	{
 		public const string ChatManagerName = "ChatManager";
 		public const string MainMenuName    = "MainMenu";
@@ -34,6 +37,8 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		//-----------------------------
 
 		public GameObject[] extraMessageDestinations;
+
+#if SIGVERSE_PUN
 
 		private PhotonView photonView;
 
@@ -132,8 +137,6 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		{
 			this.userMap = new Dictionary<string, GameObject>();
 		}
-#else
-	public class ChatManager : MonoBehaviour {
 #endif
 	}
 }

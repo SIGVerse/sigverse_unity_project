@@ -72,9 +72,6 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 				}
 			}
 		}
-#else
-	public class ThrowableWithoutSuction : MonoBehaviour
-	{
-#endif
 	}
+#endif
 }

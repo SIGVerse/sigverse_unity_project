@@ -10,7 +10,7 @@ using Photon.Pun;
 
 namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
-#if (SIGVERSE_PUN)
+#if SIGVERSE_PUN
 	public class LocalTransformView : MonoBehaviour, IPunObservable
 	{
 		public bool syncLocalPosition = true;

@@ -25,6 +25,9 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
 #if SIGVERSE_PUN
 	public class PunLauncher : MonoBehaviourPunCallbacks
+#else
+	public class PunLauncher : MonoBehaviour
+#endif
 	{
 		public const string AvatarNameKey = "AvatarName";
 
@@ -63,6 +66,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 //		[HideInInspector]
 		public List<GameObject> roomObjects;
 
+#if SIGVERSE_PUN
 		// -----------------------
 		private string roomName;
 
@@ -280,8 +284,6 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		//{
 		//	PhotonNetwork.LeaveRoom();
 		//}
-#else
-	public class PunLauncher : MonoBehaviour {
 #endif
 	}
 
