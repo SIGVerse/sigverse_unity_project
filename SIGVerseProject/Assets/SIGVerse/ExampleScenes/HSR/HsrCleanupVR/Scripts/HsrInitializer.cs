@@ -12,10 +12,9 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
 	public class HsrInitializer : CommonInitializer
 	{
-#if SIGVERSE_PUN
-
 		public GameObject rosBridgeScripts;
 
+#if SIGVERSE_PUN
 
 		void Start()
 		{

@@ -18,7 +18,6 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
 	public class HumanAvatarChat : CommonChat
 	{
-#if SIGVERSE_PUN
 		public GameObject personalPanel;
 
 		//-----------------------------
@@ -31,6 +30,8 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		private const float SendingMessageInterval = 0.5f;
 
 		private float latestSendingMessageTime = 0.0f;
+
+#if SIGVERSE_PUN
 
 		protected override void Update()
 		{
@@ -58,6 +59,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 #endif
 			}
 		}
+#endif
 
 		private void PublishMessage(string message)
 		{
@@ -73,6 +75,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		/// </summary>
 		public override void OnReceiveChatMessage(string senderName, string message)
 		{
+#if SIGVERSE_PUN
 			if (this.photonView.Owner != PhotonNetwork.LocalPlayer) { return; }
 
 			string senderNickName = senderName.Split('#')[0];
@@ -90,8 +93,8 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 			);
 
 			SIGVerseLogger.Info("Human: Received a message. sender=" + senderName + ", message=" + message);
-		}
 #endif
+		}
 	}
 }
 

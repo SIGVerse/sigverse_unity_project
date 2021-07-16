@@ -16,9 +16,17 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
 #if SIGVERSE_PUN && SIGVERSE_STEAMVR
 	public class CleanupAvatarVRHandControllerForSteamVR : MonoBehaviour, IPunObservable
+#else
+	public class CleanupAvatarVRHandControllerForSteamVR : MonoBehaviour
+#endif
 	{
-		public SteamVR_Input_Sources inputSource;
+		public enum HandType
+		{
+			Left,
+			Right,
+		}
 
+		public HandType   handType;
 		public GameObject avatarBase;
 		public GameObject avatarPointing;
 
@@ -39,12 +47,19 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		private Quaternion ring1End  , ring2End  , ring3End;
 		private Quaternion little1End, little2End, little3End;
 
+#if SIGVERSE_PUN && SIGVERSE_STEAMVR
+
+		private SteamVR_Input_Sources inputSource;
+
 		private PhotonView photonView;
 
 		private float handPostureRatio = 0.0f;
 
 		void Start()
 		{
+			if(this.handType==HandType.Left) { this.inputSource = SteamVR_Input_Sources.LeftHand; }
+			if(this.handType==HandType.Right){ this.inputSource = SteamVR_Input_Sources.RightHand; }
+
 			this.photonView = this.transform.root.GetComponent<PhotonView>();
 
 			Transform[] baseTransforms;
@@ -174,10 +189,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 			this.little2.localRotation = Quaternion.Slerp(this.little2Start, this.little2End, ratio);
 			this.little3.localRotation = Quaternion.Slerp(this.little3Start, this.little3End, ratio);
 		}
-	}
-#else
-	public class CleanupAvatarVRHandControllerForSteamVR : MonoBehaviour{
-	}
 #endif
+	}
 }
 

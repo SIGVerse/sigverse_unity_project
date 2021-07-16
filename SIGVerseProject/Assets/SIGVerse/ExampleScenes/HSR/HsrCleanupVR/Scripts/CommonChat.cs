@@ -13,10 +13,14 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
 #if SIGVERSE_PUN
 	public abstract class CommonChat : MonoBehaviour, IChatMessageHandler
+#else
+	public abstract class CommonChat : MonoBehaviour
+#endif
 	{
 		protected GameObject chatManager;
 		protected GameObject mainMenu;
 
+#if SIGVERSE_PUN
 		protected PhotonView photonView;
 
 		protected virtual void Awake()
@@ -62,6 +66,8 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 			);
 		}
 
+#endif
+
 		protected virtual void SendChatMessage(string message)
 		{
 			ExecuteEvents.Execute<IChatMessageHandler>
@@ -73,10 +79,6 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		}
 
 		public abstract void OnReceiveChatMessage(string userName, string message);
-#else
-	public abstract class CommonChat : MonoBehaviour 
-	{
-#endif
 	}
 }
 

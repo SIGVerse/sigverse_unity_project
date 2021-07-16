@@ -15,15 +15,15 @@ using Valve.VR.InteractionSystem;
 
 namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
-
 	public class HumanAvatarInitializer : CommonInitializer
 	{
-#if SIGVERSE_PUN && SIGVERSE_STEAMVR
 		public GameObject cameraRig;
 
 		public GameObject ethan;
 
 		public GameObject eyeAnchor;
+
+#if SIGVERSE_PUN && SIGVERSE_STEAMVR
 
 		private void Awake()
 		{
@@ -90,12 +90,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 				this.ethan.GetComponent<SimpleHumanVRControllerForPun>().enabled = true;
 
-				CleanupAvatarVRHandControllerForSteamVR[] cleanupAvatarVRHandControllerForSteamVRs = this.ethan.GetComponents<CleanupAvatarVRHandControllerForSteamVR>();
-
-				foreach(CleanupAvatarVRHandControllerForSteamVR cleanupAvatarVRHandControllerForSteamVR in cleanupAvatarVRHandControllerForSteamVRs)
-				{
-					cleanupAvatarVRHandControllerForSteamVR.enabled = true;
-				}
+				this.EnableCleanupAvatarVRHandControllerForSteamVR();
 
 				PunLauncher.EnableSubview(this.gameObject);
 			}
@@ -108,6 +103,18 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 					rigidbody.useGravity = false;
 //					rigidbody.isKinematic = true;
 				}
+
+				this.EnableCleanupAvatarVRHandControllerForSteamVR();
+			}
+		}
+
+		private void EnableCleanupAvatarVRHandControllerForSteamVR()
+		{
+			CleanupAvatarVRHandControllerForSteamVR[] cleanupAvatarVRHandControllerForSteamVRs = this.ethan.GetComponents<CleanupAvatarVRHandControllerForSteamVR>();
+
+			foreach (CleanupAvatarVRHandControllerForSteamVR cleanupAvatarVRHandControllerForSteamVR in cleanupAvatarVRHandControllerForSteamVRs)
+			{
+				cleanupAvatarVRHandControllerForSteamVR.enabled = true;
 			}
 		}
 #endif

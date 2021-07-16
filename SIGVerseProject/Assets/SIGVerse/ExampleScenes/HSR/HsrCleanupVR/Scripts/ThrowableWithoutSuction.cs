@@ -5,6 +5,10 @@ using UnityEngine;
 using SIGVerse.Common;
 using UnityEngine.EventSystems;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 #if SIGVERSE_STEAMVR
 using Valve.VR.InteractionSystem;
 #endif
@@ -17,17 +21,36 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
 #if SIGVERSE_STEAMVR && SIGVERSE_PUN
 	public class ThrowableWithoutSuction : Throwable
+#else
+	public class ThrowableWithoutSuction : MonoBehaviour
+#endif
 	{
+		public bool useSIGVerseDefault = true;
+
+#if SIGVERSE_STEAMVR && SIGVERSE_PUN
+
 		private Rigidbody[] rigidbodies;
 		private PhotonView photonView;
 
 		protected override void Awake()
 		{
+			if(this.useSIGVerseDefault)
+			{
+				this.SetSIGVerseDefault();
+			}
+
 			base.Awake();
 
 			this.photonView = this.GetComponent<PhotonView>();
 
 			this.rigidbodies = this.GetComponentsInChildren<Rigidbody>();
+		}
+
+		private void SetSIGVerseDefault()
+		{
+			this.attachmentFlags = Hand.AttachmentFlags.SnapOnAttach | Hand.AttachmentFlags.DetachFromOtherHand | Hand.AttachmentFlags.VelocityMovement | Hand.AttachmentFlags.TurnOffGravity;
+
+			this.releaseVelocityStyle = ReleaseStyle.AdvancedEstimation;
 		}
 
 		protected override void OnHandHoverBegin(Hand hand)
@@ -70,6 +93,31 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 				{
 					rigidbody.useGravity = useGravity;
 				}
+			}
+		}
+#endif
+	}
+
+#if UNITY_EDITOR
+	[CustomEditor(typeof(ThrowableWithoutSuction))]
+	public class ThrowableWithoutSuctionEditor : Editor
+	{
+		private ThrowableWithoutSuction throwableWithoutSuction;
+
+		private void Awake()
+		{
+			this.throwableWithoutSuction = (ThrowableWithoutSuction)target;
+		}
+
+		public override void OnInspectorGUI()
+		{
+			ThrowableWithoutSuction ThrowableWithoutSuction = (ThrowableWithoutSuction)target;
+
+			this.throwableWithoutSuction.useSIGVerseDefault = EditorGUILayout.ToggleLeft("Use SIGVerse Default", this.throwableWithoutSuction.useSIGVerseDefault);
+
+			if(!ThrowableWithoutSuction.useSIGVerseDefault)
+			{
+				base.OnInspectorGUI();
 			}
 		}
 	}

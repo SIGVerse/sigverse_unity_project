@@ -296,16 +296,16 @@ MonoBehaviour:
   trackedObject: {fileID: 3030778562129483494}
   grabPinchAction:
     actionPath: /actions/default/in/GrabPinch
-    needsReinit: 0
+    needsReinit: 1
   grabGripAction:
     actionPath: /actions/default/in/GrabGrip
-    needsReinit: 0
+    needsReinit: 1
   hapticAction:
     actionPath: /actions/default/out/Haptic
-    needsReinit: 0
+    needsReinit: 1
   uiInteractAction:
     actionPath: /actions/default/in/InteractUI
-    needsReinit: 0
+    needsReinit: 1
   useHoverSphere: 1
   hoverSphereTransform: {fileID: 4123463328149470108}
   hoverSphereRadius: 0.02
@@ -347,16 +347,16 @@ MonoBehaviour:
   trackedObject: {fileID: 3030778561367624046}
   grabPinchAction:
     actionPath: /actions/default/in/GrabPinch
-    needsReinit: 0
+    needsReinit: 1
   grabGripAction:
     actionPath: /actions/default/in/GrabGrip
-    needsReinit: 0
+    needsReinit: 1
   hapticAction:
     actionPath: /actions/default/out/Haptic
-    needsReinit: 0
+    needsReinit: 1
   uiInteractAction:
     actionPath: /actions/default/in/InteractUI
-    needsReinit: 0
+    needsReinit: 1
   useHoverSphere: 1
   hoverSphereTransform: {fileID: 8881327795058164132}
   hoverSphereRadius: 0.02
@@ -1141,16 +1141,16 @@ MonoBehaviour:
   trackedObject: {fileID: 0}
   grabPinchAction:
     actionPath: /actions/default/in/GrabPinch
-    needsReinit: 0
+    needsReinit: 1
   grabGripAction:
     actionPath: /actions/default/in/GrabGrip
-    needsReinit: 0
+    needsReinit: 1
   hapticAction:
     actionPath: /actions/default/out/Haptic
-    needsReinit: 0
+    needsReinit: 1
   uiInteractAction:
     actionPath: /actions/default/in/InteractUI
-    needsReinit: 0
+    needsReinit: 1
   useHoverSphere: 1
   hoverSphereTransform: {fileID: 0}
   hoverSphereRadius: 0.05
@@ -3613,7 +3613,7 @@ MonoBehaviour:
   audioListener: {fileID: 3140216827106526208}
   headsetOnHead:
     actionPath: /actions/default/in/HeadsetOnHead
-    needsReinit: 0
+    needsReinit: 1
   allowToggleTo2D: 1
 --- !u!1 &8980909707761249679
 GameObject:
@@ -4245,7 +4245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9daa18c1f69551245b48696b5f06a167, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputSource: 1
+  handType: 0
   avatarBase: {fileID: 3025488274380231993, guid: a0cd478ce6bde534c912fbedd66073d8,
     type: 3}
   avatarPointing: {fileID: 7501972641279445146, guid: e3c1439e7a1fd8840a9cc541bc85f141,
@@ -4262,7 +4262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9daa18c1f69551245b48696b5f06a167, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputSource: 2
+  handType: 1
   avatarBase: {fileID: 3025488274380231993, guid: a0cd478ce6bde534c912fbedd66073d8,
     type: 3}
   avatarPointing: {fileID: 7501972641279445146, guid: e3c1439e7a1fd8840a9cc541bc85f141,

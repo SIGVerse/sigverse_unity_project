@@ -15,7 +15,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 	{
 #if SIGVERSE_PUN
 
-		PhotonView photonView;
+		private PhotonView photonView;
 
 		protected override void Start()
 		{

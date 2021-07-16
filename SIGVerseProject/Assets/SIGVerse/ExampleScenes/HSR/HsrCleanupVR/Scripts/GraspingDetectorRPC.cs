@@ -13,11 +13,12 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
 	public class GraspingDetectorRPC : MonoBehaviour
 	{
-#if SIGVERSE_PUN
 		public GameObject handPalm;
 
 		private GameObject graspedObject;
 		private Transform  graspedParentObject;
+
+#if SIGVERSE_PUN
 
 		[PunRPC]
 		protected void GraspRPC(string objectName)

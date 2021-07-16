@@ -11,7 +11,6 @@ using Photon.Pun;
 
 namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 {
-#if SIGVERSE_PUN
 	public class HsrChat : CommonChat, IRosReceivingStringMsgHandler
 	{
 		public GameObject rosBridgeScripts;
@@ -23,6 +22,8 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		/// </summary>
 		public override void OnReceiveChatMessage(string senderName, string message)
 		{
+#if SIGVERSE_PUN
+
 			if (this.photonView.Owner != PhotonNetwork.LocalPlayer) { return; }
 
 			string senderNickName = senderName.Split('#')[0];
@@ -51,6 +52,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 			}
 
 			SIGVerseLogger.Info("Robot: Received a message. sender=" + senderName + ", message=" + message);
+#endif
 		}
 
 		/// <summary>
@@ -63,5 +65,4 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 			SIGVerseLogger.Info("Robot: Sent a message. sender=" + this.transform.root.name + ", message=" + rosMsg.data);
 		}
 	}
-#endif
 }
