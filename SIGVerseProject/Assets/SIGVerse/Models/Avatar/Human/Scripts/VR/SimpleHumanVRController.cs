@@ -19,12 +19,18 @@ namespace SIGVerse.Human.VR
 
 		public float moveSpeedByController = 1.0f;
 		public float moveSpeedByHmd        = 2.0f;
+		public float strideMax = 0.3f;
+
+		public bool useSteamVrInput = true;
 		//////////////////////////////
 
 		private Animator animator;
 
 		private Transform[]  fixedTransforms;
 		private Quaternion[] fixedQuaternionsOrg;
+
+		private float preHorizontal = 0.0f;
+		private float preVertical   = 0.0f;
 
 		protected virtual void Awake()
 		{
@@ -66,15 +72,20 @@ namespace SIGVerse.Human.VR
 			float vertical   = CrossPlatformInputManager.GetAxis("Vertical");
 
 #if SIGVERSE_STEAMVR
-			horizontal = SteamVR_Actions.sigverse.Move.axis.x;
-			vertical   = SteamVR_Actions.sigverse.Move.axis.y;
+			if (this.useSteamVrInput)
+			{
+				horizontal = SteamVR_Actions.sigverse.Move.axis.x;
+				vertical   = SteamVR_Actions.sigverse.Move.axis.y;
+			}
 #endif
 
-			if(Mathf.Abs(horizontal) > 0.01 || Mathf.Abs(vertical) > 0.01)
+			(horizontal, vertical) = this.GetRestrictedInput(horizontal, vertical);
+
+			if (Mathf.Abs(horizontal) > 0.01 || Mathf.Abs(vertical) > 0.01)
 			{
 				Vector3 destination = vertical * this.transform.forward + horizontal * this.transform.right;
 
-				this.Move(destination  * this.moveSpeedByController, this.moveSpeedByController);
+				this.Move(destination, this.moveSpeedByController);
 
 				Vector3 newVrRoot = this.animator.rootPosition - (this.bodyAnchor.position - this.vrRoot.transform.position);
 
@@ -85,9 +96,24 @@ namespace SIGVerse.Human.VR
 				Vector3 destination = new Vector3(this.bodyAnchor.position.x - this.transform.position.x, 0, this.bodyAnchor.position.z - this.transform.position.z);
 
 				this.Move(destination, this.moveSpeedByHmd);
-				
+
 				this.transform.rotation = this.bodyAnchor.rotation;
+
+				this.vrRoot.transform.position = new Vector3(this.vrRoot.transform.position.x, 0.0f, this.vrRoot.transform.position.z);
 			}
+
+			this.preHorizontal = horizontal;
+			this.preVertical   = vertical;
+		}
+
+		private (float, float) GetRestrictedInput(float horizontal, float vertical)
+		{
+			float maxSpeedInc = this.moveSpeedByController / 10f;
+
+			if (Mathf.Abs(horizontal - this.preHorizontal) > maxSpeedInc) { horizontal = horizontal > this.preHorizontal ? this.preHorizontal + maxSpeedInc : this.preHorizontal - maxSpeedInc; }
+			if (Mathf.Abs(vertical   - this.preVertical)   > maxSpeedInc) { vertical   = vertical   > this.preVertical   ? this.preVertical   + maxSpeedInc : this.preVertical   - maxSpeedInc; }
+
+			return (horizontal, vertical);
 		}
 
 		private void Move(Vector3 move, float animSpeedMultiplier)
@@ -98,8 +124,8 @@ namespace SIGVerse.Human.VR
 
 			move = Vector3.ProjectOnPlane(move, Vector3.up);
 
-			this.animator.SetFloat("Forward", move.z, 0.01f, Time.deltaTime);
-			this.animator.SetFloat("Turn",    move.x, 0.01f, Time.deltaTime);
+			this.animator.SetFloat("Forward", Mathf.Clamp(move.z, -this.strideMax, +this.strideMax), 0.01f, Time.deltaTime);
+			this.animator.SetFloat("Turn",    Mathf.Clamp(move.x, -this.strideMax, +this.strideMax), 0.01f, Time.deltaTime);
 
 			this.animator.speed = animSpeedMultiplier;
 		}

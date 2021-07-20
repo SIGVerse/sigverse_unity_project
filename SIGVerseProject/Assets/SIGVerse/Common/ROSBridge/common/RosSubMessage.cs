@@ -79,6 +79,8 @@ namespace SIGVerse.RosBridge
 
 		public virtual void Close()
 		{
+			this.Clear();
+
 			if (this.webSocketConnection != null)
 			{
 				this.webSocketConnection.Disconnect();

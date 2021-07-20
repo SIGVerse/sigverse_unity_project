@@ -19,6 +19,8 @@ namespace SIGVerse.Human.IK
 		public Transform rightHandAnchor;
 		public Transform leftFootAnchor;
 		public Transform rightFootAnchor;
+		public Transform leftElbowAnchor;
+		public Transform rightElbowAnchor;
 		public Transform leftKneeAnchor;
 		public Transform rightKneeAnchor;
 
@@ -37,6 +39,9 @@ namespace SIGVerse.Human.IK
 
 		public float rightFootWeightPosition = 1.0f;
 		public float rightFootWeightRotation = 1.0f;
+
+		public float leftElbowWeight  = 0.3f;
+		public float rightElbowWeight = 0.3f;
 
 		public float leftKneeWeight  = 0.3f;
 		public float rightKneeWeight = 0.3f;
@@ -59,19 +64,15 @@ namespace SIGVerse.Human.IK
 
 			this.animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, this.leftHandWeightPosition);
 			this.animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, this.leftHandWeightRotation);
-							
+
 			this.animator.SetIKPositionWeight(AvatarIKGoal.RightHand, this.rightHandWeightPosition);
 			this.animator.SetIKRotationWeight(AvatarIKGoal.RightHand, this.rightHandWeightRotation);
-				
+
 			this.animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, this.leftFootWeightPosition);
 			this.animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, this.leftFootWeightRotation);
-							
+
 			this.animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, this.rightFootWeightPosition);
 			this.animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, this.rightFootWeightRotation);
-
-			this.animator.SetIKHintPositionWeight(AvatarIKHint.LeftKnee,  this.leftKneeWeight);
-			this.animator.SetIKHintPositionWeight(AvatarIKHint.RightKnee, this.rightKneeWeight);
-
 
 			if (this.bodyAnchor != null)
 			{
@@ -111,13 +112,27 @@ namespace SIGVerse.Human.IK
 				this.animator.SetIKRotation(AvatarIKGoal.RightFoot, this.rightFootAnchor.rotation);
 			}
 
+			if(this.leftElbowAnchor != null)
+			{
+				this.animator.SetIKHintPositionWeight(AvatarIKHint.LeftElbow,  this.leftElbowWeight);
+				this.animator.SetIKHintPosition(AvatarIKHint.LeftElbow, this.leftElbowAnchor.position);
+			}
+
+			if(this.rightElbowAnchor != null)
+			{
+				this.animator.SetIKHintPositionWeight(AvatarIKHint.RightElbow, this.rightElbowWeight);
+				this.animator.SetIKHintPosition(AvatarIKHint.RightElbow, this.rightElbowAnchor.position);
+			}
+
 			if(this.leftKneeAnchor != null)
 			{
+				this.animator.SetIKHintPositionWeight(AvatarIKHint.LeftKnee,  this.leftKneeWeight);
 				this.animator.SetIKHintPosition(AvatarIKHint.LeftKnee, this.leftKneeAnchor.position);
 			}
 
 			if(this.rightKneeAnchor != null)
 			{
+				this.animator.SetIKHintPositionWeight(AvatarIKHint.RightKnee, this.rightKneeWeight);
 				this.animator.SetIKHintPosition(AvatarIKHint.RightKnee, this.rightKneeAnchor.position);
 			}
 		}

@@ -5,16 +5,14 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 using UnityEngine;
 using SIGVerse.Common;
+using SIGVerse.RosBridge;
 
 namespace SIGVerse.SIGVerseRosBridge
 {
 	[System.Serializable]
-	public class SIGVerseRosBridgeTimeSynchronizer : MonoBehaviour
+	public class SIGVerseRosBridgeTimeSynchronizer : SIGVerseRosBridgePubMessage
 	{
 		private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-		public string rosBridgeIP;
-		public int    sigverseBridgePort;
 
 		public string topicName = "/sigverse/TimeSync";
 
@@ -27,18 +25,20 @@ namespace SIGVerse.SIGVerseRosBridge
 
 		private SIGVerseRosBridgeMessage<SIGVerse.RosBridge.std_msgs.Time> timeSyncMsg = null;
 
-		private void Start()
+		protected override void Start()
 		{
-			if (this.rosBridgeIP.Equals(string.Empty))
-			{
-				this.rosBridgeIP        = ConfigManager.Instance.configInfo.rosbridgeIP;
-			}
-			if (this.sigverseBridgePort == 0)
-			{
-				this.sigverseBridgePort = ConfigManager.Instance.configInfo.sigverseBridgePort;
-			}
+			base.Start();
 
-			this.tcpClient = new System.Net.Sockets.TcpClient(rosBridgeIP, sigverseBridgePort);
+			if (!RosConnectionManager.Instance.rosConnections.sigverseRosBridgeTcpClientMap.ContainsKey(topicName))
+			{
+				this.tcpClient = SIGVerseRosBridgeConnection.GetConnection(this.rosBridgeIP, this.sigverseBridgePort);
+
+				RosConnectionManager.Instance.rosConnections.sigverseRosBridgeTcpClientMap.Add(topicName, this.tcpClient);
+			}
+			else
+			{
+				this.tcpClient = RosConnectionManager.Instance.rosConnections.sigverseRosBridgeTcpClientMap[topicName];
+			}
 
 			this.networkStream = this.tcpClient.GetStream();
 
@@ -106,6 +106,22 @@ namespace SIGVerse.SIGVerseRosBridge
 			
 				this.timeSyncMsg.SendMsg(this.networkStream);
 			}
+		}
+
+		public override bool IsConnected()
+		{
+			return this.networkStream != null && this.tcpClient.Connected;
+		}
+
+		public override void Close()
+		{
+			if (this.networkStream != null) { this.networkStream.Close(); }
+			if (this.tcpClient     != null) { this.tcpClient.Close(); }
+		}
+
+		void OnApplicationQuit()
+		{
+			this.Close();
 		}
 	}
 }
