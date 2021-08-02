@@ -61,23 +61,23 @@ namespace SIGVerse.Human.IK
 			this.body.rotation = Quaternion.LookRotation(new Vector3(this.eye.forward.x, 0.0f, this.eye.forward.z));
 			this.body.localPosition = this.initialBodyLocalPos;
 
-			if(this.neck.position.y < 1.2f)
-			{
-				float bodyAngle = (1.2f - this.neck.position.y) * 90f / 1.2f;
+			//if (this.neck.position.y < 1.2f)
+			//{
+			//	float bodyAngle = (1.2f - this.neck.position.y) * 90f / 1.2f;
 
-				this.body.rotation *= Quaternion.Euler(bodyAngle, 0, 0);
-				this.body.localPosition = Mathf.Abs(this.initialBodyLocalPos.y) * new Vector3(0f, -Mathf.Cos(Mathf.Deg2Rad*bodyAngle), -Mathf.Sin(Mathf.Deg2Rad*bodyAngle));
-			}
+			//	this.body.rotation *= Quaternion.Euler(bodyAngle, 0, 0);
+			//	this.body.localPosition = Mathf.Abs(this.initialBodyLocalPos.y) * new Vector3(0f, -Mathf.Cos(Mathf.Deg2Rad * bodyAngle), -Mathf.Sin(Mathf.Deg2Rad * bodyAngle));
+			//}
 
-			this.leftKnee .position = new Vector3(this.leftKneeHint .position.x, this.body.position.y, this.leftKneeHint .position.z);
-			this.rightKnee.position = new Vector3(this.rightKneeHint.position.x, this.body.position.y, this.rightKneeHint.position.z);
+			this.leftKnee .position = new Vector3(this.leftKneeHint .position.x, Mathf.Max(this.body.position.y, 0.2f), this.leftKneeHint .position.z);
+			this.rightKnee.position = new Vector3(this.rightKneeHint.position.x, Mathf.Max(this.body.position.y, 0.2f), this.rightKneeHint.position.z);
 
-			this.leftFoot .position = new Vector3((this.neck.position.x + this.leftWaist .position.x)/2, 0.0f, (this.neck.position.x + this.leftWaist .position.z)/2);
-			this.rightFoot.position = new Vector3((this.neck.position.x + this.rightWaist.position.x)/2, 0.0f, (this.neck.position.x + this.rightWaist.position.z)/2);
+			this.leftFoot .position = new Vector3((this.neck.position.x + this.leftWaist .position.x)/2, 0.0f, (this.neck.position.z + this.leftWaist .position.z)/2);
+			this.rightFoot.position = new Vector3((this.neck.position.x + this.rightWaist.position.x)/2, 0.0f, (this.neck.position.z + this.rightWaist.position.z)/2);
 
 			Quaternion eyeForward = Quaternion.LookRotation(new Vector3(this.eye.forward.x, 0.0f, this.eye.forward.z));
 
-			this.leftFoot.rotation  = eyeForward;
+			this.leftFoot .rotation = eyeForward;
 			this.rightFoot.rotation = eyeForward;
 
 			this.preRot = this.eye.rotation;
