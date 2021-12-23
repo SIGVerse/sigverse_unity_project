@@ -36,7 +36,7 @@ namespace SIGVerse.RosBridge
 				this.publisher = this.webSocketConnection.Advertise<Tmsg>(topicName);
 
 				// Connect to ROSbridge server
-				this.webSocketConnection.Connect();
+				this.webSocketConnection.Connect<Tmsg>();
 			}
 			else
 			{

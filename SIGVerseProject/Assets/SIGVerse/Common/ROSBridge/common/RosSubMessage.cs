@@ -37,7 +37,7 @@ namespace SIGVerse.RosBridge
 				this.subscriber = this.webSocketConnection.Subscribe<Tmsg>(topicName, this.SubscribeMessageCallback);
 
 				// Connect to ROSbridge server
-				this.webSocketConnection.Connect();
+				this.webSocketConnection.Connect<Tmsg>();
 			}
 			else
 			{

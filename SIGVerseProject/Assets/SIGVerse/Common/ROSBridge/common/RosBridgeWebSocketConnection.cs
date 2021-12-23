@@ -27,19 +27,29 @@ namespace SIGVerse.RosBridge
 			this.topic = message.topic;
 		}
 	}
-
+	
 	[System.Serializable]
-	public class ServiceHeader
+	public class RosbridgeJson<Tmsg>
 	{
 		public string op;
-		public string service;
 		public string id;
+		public string topic;
+		public Tmsg msg;
+		public string type;
+		public string service;
 
-		public ServiceHeader(string jsonstring)
+		public RosbridgeJson(string jsonString)
 		{
-			JsonUtility.FromJsonOverwrite(jsonstring, this);
+			RosbridgeJson<Tmsg> message = JsonUtility.FromJson<RosbridgeJson<Tmsg>>(jsonString);
+			this.op      = message.op;
+			this.id      = message.id;
+			this.topic   = message.topic;
+			this.msg     = message.msg;
+			this.type    = message.type;
+			this.service = message.service;
 		}
 	}
+
 
 	public class RosBridgeWebSocketConnection
 	{
@@ -332,7 +342,7 @@ namespace SIGVerse.RosBridge
 		/// <summary>
 		/// Connect to the remote ros environment.
 		/// </summary>
-		public void Connect()
+		public void Connect<Tmsg>() where Tmsg : RosMessage
 		{
 			if (this.IsConnected)
 			{
@@ -349,8 +359,8 @@ namespace SIGVerse.RosBridge
 			this.webSocket = new WebSocket(url);
 
 			this.webSocket.OnOpen    += (sender, eventArgs) => { Debug.Log("WebSocket Open  url=" + url); };
-			this.webSocket.OnMessage += (sender, eventArgs) => this.OnMessage(eventArgs.Data);
-			this.webSocket.OnError   += (sender, eventArgs) => { Debug.Log("WebSocket Error Message: " + eventArgs.Message); };
+			this.webSocket.OnMessage += (sender, eventArgs) => this.OnMessage<Tmsg>(eventArgs.Data);
+			this.webSocket.OnError   += (sender, eventArgs) => { Debug.LogError("WebSocket Error Message: " + eventArgs.Message); };
 			this.webSocket.OnClose   += (sender, eventArgs) => this.OnClose();
 
 //			this.webSocket.Connect();
@@ -434,50 +444,43 @@ namespace SIGVerse.RosBridge
 			this.msgQueue.Clear();
 		}
 
-		private void OnMessage(string message)
+		private void OnMessage<Tmsg>(string message) where Tmsg : RosMessage
 		{
+//			Debug.LogWarning("OnMessage="+message);
+
 			if ((message != null) && !message.Equals(string.Empty))
 			{
 				Topper topper = new Topper(message);
 
-				string op = topper.op;
-
-				if ("publish".Equals(op))  // Topic
+				if ("publish".Equals(topper.op))  // Topic
 				{
-					string topic = topper.topic;
-					string msgParams = string.Empty;
-
-					// if we have message parameters, parse them
-					Match match = Regex.Match(message, @"""msg""\s*:\s*({.*}),");
-					RosMessage msg = null;
-
-					if (match.Success)
-					{
-						msgParams = match.Groups[1].Value;
-					}
+					RosbridgeJson<Tmsg> rosbridgeJson = null;
 
 					foreach (var sub in this.subscribers)
 					{
 						// only consider subscribers with a matching topic
-						if (topic != sub.Key.Topic)
-							continue;
+						if (topper.topic != sub.Key.Topic) { continue; }
 
-						msg = sub.Key.ParseMessage(msgParams);
-						MessageTask newTask = new MessageTask(sub.Key, msg);
+						if(rosbridgeJson == null)
+						{
+							rosbridgeJson = new RosbridgeJson<Tmsg>(message);
+						}
+
+						MessageTask newTask = new MessageTask(sub.Key, rosbridgeJson.msg);
 
 						lock (this.lockMsgQueue)
 						{
-							this.msgQueue[topic].Enqueue(newTask);
+							this.msgQueue[rosbridgeJson.topic].Enqueue(newTask);
 						}
 					}
 				}
-				else if (Regex.IsMatch(message, @"""op""\s*:\s*""call_service""")) // Service
+				else if ("call_service".Equals(topper.op)) // Service
 				{
-					ServiceHeader header = new ServiceHeader(message);
+					RosbridgeJson<Tmsg> rosbridgeJson = new RosbridgeJson<Tmsg>(message);
 
 					foreach (var srv in this.serviceProviders)
 					{
-						if (srv.Key.Name == header.service)
+						if (srv.Key.Name == rosbridgeJson.service)
 						{
 							ServiceArgs args = null;
 //							ServiceResponse response = null;
@@ -492,7 +495,7 @@ namespace SIGVerse.RosBridge
 							// add service request to queue, to be processed later in Render()
 							lock(this.lockMsgQueue)
 							{
-								this.svcQueue[srv.Key.Name].Enqueue(new ServiceTask(srv.Key, args, header.id));
+								this.svcQueue[srv.Key.Name].Enqueue(new ServiceTask(srv.Key, args, rosbridgeJson.id));
 							}
 
 							break; // there should only be one server for each service

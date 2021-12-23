@@ -39,7 +39,7 @@ namespace SIGVerse.TurtleBot3
 			this.webSocketConnection.Subscribe<SIGVerse.RosBridge.sensor_msgs.JointState>(topicName, this.JointStateCallback);
 
 			// Connect to ROSbridge server
-			this.webSocketConnection.Connect();
+			this.webSocketConnection.Connect<SIGVerse.RosBridge.sensor_msgs.JointState>();
 		}
 	
 		public void JointStateCallback(SIGVerse.RosBridge.sensor_msgs.JointState jointState)
