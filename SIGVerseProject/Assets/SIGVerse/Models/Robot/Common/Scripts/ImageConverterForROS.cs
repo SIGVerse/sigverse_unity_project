@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.Experimental.Rendering;
 
 namespace SIGVerse.Common
 {
@@ -16,6 +17,7 @@ namespace SIGVerse.Common
 		public int height;
 		public int depth;
 		public RenderTextureFormat renderTextureFormat;
+		public GraphicsFormat graphicsFormat = GraphicsFormat.R8G8B8A8_UNorm;
 		public FilterMode filterMode;
 		public int anisoLevel;
 
@@ -34,6 +36,7 @@ namespace SIGVerse.Common
 			if(this.useRenderTexture)
 			{
 				RenderTexture renderTexture = new RenderTexture(this.width, this.height, this.depth, this.renderTextureFormat);
+				renderTexture.graphicsFormat = this.graphicsFormat;
 				renderTexture.filterMode = this.filterMode;
 				renderTexture.anisoLevel = this.anisoLevel;
 

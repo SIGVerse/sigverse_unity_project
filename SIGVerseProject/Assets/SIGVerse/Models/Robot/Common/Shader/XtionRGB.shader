@@ -42,6 +42,9 @@ Shader "SIGVerse/XtionRGB"
 			fixed4 frag(v2f i) : COLOR
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
+#if !UNITY_COLORSPACE_GAMMA
+				col.rgb = LinearToGammaSpace(col.rgb);
+#endif
 				return col;
 			}
 
