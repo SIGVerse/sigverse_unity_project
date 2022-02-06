@@ -85,13 +85,19 @@ crashlytics-build.properties
 !/Assets/XR/XRGeneralSettings.asset.meta
 
 # SIGVerse
-/SIGVerseConfig/
+/SIGVerseConfig/*
+!/SIGVerseConfig/sample/
+!/SIGVerseConfig/data/
 /MotionData/
 
 SIGVerse*.log
 *MySql.Data.dll*
 *Google.Protobuf.dll*
 *System.Windows.Forms.dll*
+
+/Assets/Resources/OculusRuntimeSettings*
+/Assets/Resources/ONSPSettings*
+/Assets/Resources/OVRPlatformToolSettings*
 
 /Assets/OVR*
 /Assets/Oculus*

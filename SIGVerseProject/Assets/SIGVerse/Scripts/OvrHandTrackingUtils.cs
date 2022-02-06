@@ -157,7 +157,7 @@ namespace SIGVerse.Common
 
 		private static Dictionary<HumanBodyBones, ConversionAngle> ReadConversionAngleFile(string fileName)
 		{
-			string configFolderPath = Application.dataPath + "/Resources/"; 
+			string configFolderPath = Application.dataPath + ConfigManager.FolderPath + "data/"; 
 			string configFilePath   = configFolderPath + fileName + ".json";
 
 			if (!Directory.Exists(configFolderPath))
