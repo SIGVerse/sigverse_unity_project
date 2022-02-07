@@ -144,7 +144,7 @@ namespace SIGVerse.Common
 
 		public static string SaveJsonFile(string jsonData, string fileName)
 		{
-			string filePath = Application.dataPath + "/Resources/" + fileName + ".json";
+			string filePath = Application.streamingAssetsPath + "/" + SIGVerseUtils.SIGVerse + "/" + fileName + ".json";
 
 			StreamWriter writer = new StreamWriter(filePath, false);
 
@@ -157,7 +157,7 @@ namespace SIGVerse.Common
 
 		private static Dictionary<HumanBodyBones, ConversionAngle> ReadConversionAngleFile(string fileName)
 		{
-			string configFolderPath = Application.dataPath + ConfigManager.FolderPath + "data/"; 
+			string configFolderPath = Application.streamingAssetsPath + "/" + SIGVerseUtils.SIGVerse + "/"; 
 			string configFilePath   = configFolderPath + fileName + ".json";
 
 			if (!Directory.Exists(configFolderPath))

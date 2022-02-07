@@ -7,7 +7,7 @@ namespace SIGVerse.Common
 {
 	public class ConfigManager : Singleton<ConfigManager>
 	{
-		public const string FolderPath = "/../SIGVerseConfig/";
+		public const string FolderName = "SIGVerseConfig";
 		public const string FileName = "SIGVerseConfig.json";
 
 		protected ConfigManager() { } // guarantee this will be always a singleton only - can't use the constructor!
@@ -27,7 +27,7 @@ namespace SIGVerse.Common
 
 		public static ConfigInfo InitConfigFile()
 		{
-			string configFolderPath = Application.dataPath + FolderPath;
+			string configFolderPath = Application.dataPath + "/../" + FolderName + "/";
 			string configFilePath   = configFolderPath + FileName;
 
 			ConfigInfo configInfo = new ConfigInfo();
@@ -61,7 +61,7 @@ namespace SIGVerse.Common
 
 		public static void SaveConfig(ConfigInfo configInfo)
 		{
-			string configFilePath   = Application.dataPath + FolderPath + FileName;
+			string configFilePath   = Application.dataPath + "/../" + FolderName + "/" + FileName;
 
 			StreamWriter swConfigWriter = new StreamWriter(configFilePath, false);
 

@@ -1,13 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using System.IO;
 using UnityEngine;
 
 namespace SIGVerse.Common
 {
 	public static class SIGVerseUtils
 	{
+		public const string SIGVerse = "SIGVerse";
+
 		public const string SIGVerseMenuResourcePath  = "SIGVerse/Prefabs/SIGVerseMenu";
 		public const string EventSystemResourcePath   = "SIGVerse/Prefabs/EventSystem";
 		public const string WarningWindowResourcePath = "SIGVerse/Prefabs/WarningWindow";
@@ -147,6 +149,48 @@ namespace SIGVerse.Common
 				}
 			}
 			return String.Format("{0}{1}", number, suffix);
+		}
+	
+		/// <summary>
+		/// based on https://docs.microsoft.com/en-us/dotnet/standard/io/how-to-copy-directories
+		/// </summary>
+		public static void CopyDirectory(string sourceDir, string destinationDir, bool recursive, List<string> excludedFolders = null)
+		{
+			// Get information about the source directory
+			var dir = new DirectoryInfo(sourceDir);
+
+			// Check if the source directory exists
+			if (!dir.Exists)
+				throw new DirectoryNotFoundException($"Source directory not found: {dir.FullName}");
+
+			// Cache directories before we start copying
+			DirectoryInfo[] dirs = dir.GetDirectories();
+
+			// Create the destination directory
+			Directory.CreateDirectory(destinationDir);
+
+			// Get the files in the source directory and copy to the destination directory
+			foreach (FileInfo file in dir.GetFiles())
+			{
+				string targetFilePath = Path.Combine(destinationDir, file.Name);
+
+				if(!File.Exists(targetFilePath))
+				{
+					file.CopyTo(targetFilePath);
+				}
+			}
+
+			// If recursive and copying subdirectories, recursively call this method
+			if (recursive)
+			{
+				foreach (DirectoryInfo subDir in dirs)
+				{
+					if(excludedFolders!=null && excludedFolders.Contains(subDir.Name)) { continue; }
+
+					string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
+					CopyDirectory(subDir.FullName, newDestinationDir, true, excludedFolders);
+				}
+			}
 		}
 	}
 }
