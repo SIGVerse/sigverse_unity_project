@@ -50,11 +50,18 @@ namespace SIGVerse.TurtleBot3
 			linkNameMap.Add(LinkType.CasterBackRightLink,     "caster_back_right_link");
 			linkNameMap.Add(LinkType.WheelLeftLink,           "wheel_left_link");
 			linkNameMap.Add(LinkType.WheelRightLink,          "wheel_right_link");
-			linkNameMap.Add(LinkType.CameraLink,              "camera_link");
-			linkNameMap.Add(LinkType.CameraRgbFrame,          "camera_rgb_frame");
-			linkNameMap.Add(LinkType.CameraDepthFrame,        "camera_depth_frame");
-			linkNameMap.Add(LinkType.CameraRgbOpticalFram,    "camera_rgb_optical_frame");
-			linkNameMap.Add(LinkType.CameraDepthOpticalFrame, "camera_depth_optical_frame");
+
+			//linkNameMap.Add(LinkType.CameraLink,              "camera_link");
+			//linkNameMap.Add(LinkType.CameraRgbFrame,          "camera_rgb_frame");
+			//linkNameMap.Add(LinkType.CameraDepthFrame,        "camera_depth_frame");
+			//linkNameMap.Add(LinkType.CameraRgbOpticalFram,    "camera_rgb_optical_frame");
+			//linkNameMap.Add(LinkType.CameraDepthOpticalFrame, "camera_depth_optical_frame");
+			linkNameMap.Add(LinkType.zedm_base_link,                  "zedm_base_link");
+			linkNameMap.Add(LinkType.zedm_camera_center,              "zedm_camera_center");
+			linkNameMap.Add(LinkType.zedm_left_camera_frame,          "zedm_left_camera_frame");
+			linkNameMap.Add(LinkType.zedm_right_camera_frame,         "zedm_right_camera_frame");
+			linkNameMap.Add(LinkType.zedm_left_camera_optical_frame,  "zedm_left_camera_optical_frame");
+			linkNameMap.Add(LinkType.zedm_right_camera_optical_frame, "zedm_right_camera_optical_frame");
 
 			// Laser Distance Sensor
 			linkNameMap.Add(LinkType.BaseScan, "base_scan");
@@ -143,11 +150,17 @@ namespace SIGVerse.TurtleBot3
 			AddLink(linkList, FindGameObjectFromChild(root, LinkType.CasterBackRightLink));
 			AddLink(linkList, FindGameObjectFromChild(root, LinkType.WheelLeftLink));
 			AddLink(linkList, FindGameObjectFromChild(root, LinkType.WheelRightLink));
-			AddLink(linkList, FindGameObjectFromChild(root, LinkType.CameraLink));
-			AddLink(linkList, FindGameObjectFromChild(root, LinkType.CameraRgbFrame));
-			AddLink(linkList, FindGameObjectFromChild(root, LinkType.CameraDepthFrame));
-			AddLink(linkList, FindGameObjectFromChild(root, LinkType.CameraRgbOpticalFram));
-			AddLink(linkList, FindGameObjectFromChild(root, LinkType.CameraDepthOpticalFrame));
+			//AddLink(linkList, FindGameObjectFromChild(root, LinkType.CameraLink));
+			//AddLink(linkList, FindGameObjectFromChild(root, LinkType.CameraRgbFrame));
+			//AddLink(linkList, FindGameObjectFromChild(root, LinkType.CameraDepthFrame));
+			//AddLink(linkList, FindGameObjectFromChild(root, LinkType.CameraRgbOpticalFram));
+			//AddLink(linkList, FindGameObjectFromChild(root, LinkType.CameraDepthOpticalFrame));
+			AddLink(linkList, FindGameObjectFromChild(root, LinkType.zedm_base_link));
+			AddLink(linkList, FindGameObjectFromChild(root, LinkType.zedm_camera_center));
+			AddLink(linkList, FindGameObjectFromChild(root, LinkType.zedm_left_camera_frame));
+			AddLink(linkList, FindGameObjectFromChild(root, LinkType.zedm_right_camera_frame));
+			AddLink(linkList, FindGameObjectFromChild(root, LinkType.zedm_left_camera_optical_frame));
+			AddLink(linkList, FindGameObjectFromChild(root, LinkType.zedm_right_camera_optical_frame));
 
 			AddLink(linkList, FindGameObjectFromChild(root, LinkType.BaseScan));
 

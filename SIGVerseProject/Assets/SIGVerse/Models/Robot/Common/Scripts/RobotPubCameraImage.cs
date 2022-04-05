@@ -11,8 +11,11 @@ using SIGVerse.RosBridge;
 
 namespace SIGVerse.Common
 {
+	[RequireComponent(typeof (Camera))]
 	public class RobotPubCameraImage : MonoBehaviour
 	{
+		public bool debugPrint = false;
+
 		protected System.Net.Sockets.TcpClient tcpClientCameraInfo = null;
 		protected System.Net.Sockets.TcpClient tcpClientImage      = null;
 
@@ -23,6 +26,8 @@ namespace SIGVerse.Common
 		protected SIGVerseRosBridgeMessage<ImageForSIGVerseBridge>      imageMsg      = null;
 
 		protected GameObject cameraFrameObj;
+
+		public TextureFormat textureFormat = TextureFormat.RGB24;
 		
 		// Camera
 		protected Camera targetCamera;
@@ -81,12 +86,12 @@ namespace SIGVerse.Common
 
 
 			// Camera
-			this.targetCamera = this.cameraFrameObj.GetComponentInChildren<Camera>();
+			this.targetCamera = this.GetComponent<Camera>();
 
 			int imageWidth  = this.targetCamera.targetTexture.width;
 			int imageHeight = this.targetCamera.targetTexture.height;
 
-			this.imageTexture = new Texture2D(imageWidth, imageHeight, TextureFormat.RGB24, false);
+			this.imageTexture = new Texture2D(imageWidth, imageHeight, this.textureFormat, false);
 
 
 			//  [CameraInfo]
@@ -222,7 +227,23 @@ namespace SIGVerse.Common
 			this.imageData.data = this.GetImageData(this.imageTexture);
 			this.imageMsg.msg = this.imageData;
 
-			if(this.isUsingThread)
+			// Debug Print Center Depth
+			int center = this.imageTexture.width * this.imageTexture.height / 2 - this.imageTexture.width / 2;
+
+			if (this.debugPrint)
+			{
+				uint depth =
+					((uint)this.imageData.data[center * 4 + 3]) << 24 |
+					((uint)this.imageData.data[center * 4 + 2]) << 16 |
+					((uint)this.imageData.data[center * 4 + 1]) << 8 |
+					((uint)this.imageData.data[center * 4 + 0]);
+
+				Debug.LogWarning("depth = " + BitConverter.ToSingle(BitConverter.GetBytes(depth), 0) + "[m]");
+
+				this.debugPrint = false;
+			}
+
+			if (this.isUsingThread)
 			{
 				Thread threadImage = new Thread(new ThreadStart(SendImage));
 				threadImage.Start();

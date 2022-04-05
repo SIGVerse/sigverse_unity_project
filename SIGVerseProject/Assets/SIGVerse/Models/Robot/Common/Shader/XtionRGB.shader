@@ -7,7 +7,7 @@ Shader "SIGVerse/XtionRGB"
 		_MainTex("Texture", 2D) = "white" {}
 	}
 
-		SubShader
+	SubShader
 	{
 		Tags{ "RenderType" = "Opaque" }
 

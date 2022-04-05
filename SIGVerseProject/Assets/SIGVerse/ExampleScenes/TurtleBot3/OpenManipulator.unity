@@ -229,12 +229,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 27610518}
   m_Mesh: {fileID: 4300000, guid: fb72c0df1d96839468edf5d4f317c18d, type: 3}
---- !u!20 &44675664 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 20730350666180770, guid: 94cc548e728e1a142899082e70ae07cb,
-    type: 3}
-  m_PrefabInstance: {fileID: 1306103091}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &87588335
 GameObject:
   m_ObjectHideFlags: 0
@@ -1643,6 +1637,53 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &1118987734
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1118987736}
+  - component: {fileID: 1118987735}
+  m_Layer: 0
+  m_Name: SubviewController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1118987735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118987734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17d1bd64751e1834b810174d4099373d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  subview1Camera: {fileID: 1306103092}
+  subview2Camera: {fileID: 0}
+  subview3Camera: {fileID: 0}
+  subview4Camera: {fileID: 0}
+--- !u!4 &1118987736
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118987734}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1144215348
 GameObject:
   m_ObjectHideFlags: 0
@@ -2209,9 +2250,25 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 7925402977641537424, guid: 94cc548e728e1a142899082e70ae07cb,
+        type: 3}
+      propertyPath: sendingInterval
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8582779595406076069, guid: 94cc548e728e1a142899082e70ae07cb,
+        type: 3}
+      propertyPath: sendingInterval
+      value: 1000
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114772397529947326, guid: 94cc548e728e1a142899082e70ae07cb, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 94cc548e728e1a142899082e70ae07cb, type: 3}
+--- !u!20 &1306103092 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 6743085442467218600, guid: 94cc548e728e1a142899082e70ae07cb,
+    type: 3}
+  m_PrefabInstance: {fileID: 1306103091}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1307844546
 GameObject:
   m_ObjectHideFlags: 0
@@ -2432,28 +2489,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1354053601}
   m_Mesh: {fileID: 4300000, guid: 1fff9141bdb9c92409796dd6cccce385, type: 3}
---- !u!1 &1400637021 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1670823013942062, guid: 94cc548e728e1a142899082e70ae07cb,
-    type: 3}
-  m_PrefabInstance: {fileID: 1306103091}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1400637022
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1400637021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17d1bd64751e1834b810174d4099373d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  subview1Camera: {fileID: 44675664}
-  subview2Camera: {fileID: 0}
-  subview3Camera: {fileID: 0}
-  subview4Camera: {fileID: 0}
 --- !u!1 &1426568989
 GameObject:
   m_ObjectHideFlags: 0

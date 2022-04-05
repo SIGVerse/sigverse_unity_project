@@ -6,10 +6,11 @@ using SIGVerse.RosBridge.geometry_msgs;
 using System.Collections.Generic;
 using System.Threading;
 using SIGVerse.RosBridge;
+using SIGVerse.Common;
 
 namespace SIGVerse.TurtleBot3
 {
-	[RequireComponent(typeof (TurtleBot3PubSynchronizer))]
+	[RequireComponent(typeof (RobotPubSynchronizer))]
 
 	public class TurtleBot3PubTf : SIGVerseRosBridgePubMessage
 	{
@@ -49,7 +50,7 @@ namespace SIGVerse.TurtleBot3
 			}
 		}
 
-		private TurtleBot3PubSynchronizer synchronizer;
+		private RobotPubSynchronizer synchronizer;
 
 		private int publishSequenceNumber;
 
@@ -84,7 +85,7 @@ namespace SIGVerse.TurtleBot3
 
 				this.localTfInfoList.Add(localTfInfo);
 
-				this.synchronizer = this.GetComponent<TurtleBot3PubSynchronizer>();
+				this.synchronizer = this.GetComponent<RobotPubSynchronizer>();
 
 				this.publishSequenceNumber = this.synchronizer.GetAssignedSequenceNumber();
 

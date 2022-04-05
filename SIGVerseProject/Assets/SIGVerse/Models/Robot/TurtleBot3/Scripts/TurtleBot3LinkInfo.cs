@@ -15,11 +15,18 @@ namespace SIGVerse.TurtleBot3
 			CasterBackRightLink,
 			WheelLeftLink,
 			WheelRightLink,
-			CameraLink,
-			CameraRgbFrame,
-			CameraDepthFrame,
-			CameraRgbOpticalFram,
-			CameraDepthOpticalFrame,
+
+			//CameraLink,
+			//CameraRgbFrame,
+			//CameraDepthFrame,
+			//CameraRgbOpticalFram,
+			//CameraDepthOpticalFrame,
+			zedm_base_link,
+			zedm_camera_center,
+			zedm_left_camera_frame,
+			zedm_right_camera_frame,
+			zedm_left_camera_optical_frame,
+			zedm_right_camera_optical_frame,
 
 			BaseScan,
 

@@ -10,7 +10,7 @@ using SIGVerse.RosBridge;
 
 namespace SIGVerse.TurtleBot3
 {
-	[RequireComponent(typeof (TurtleBot3PubSynchronizer))]
+	[RequireComponent(typeof (RobotPubSynchronizer))]
 
 	public class TurtleBot3PubLDS : SIGVerseRosBridgePubMessage
 	{
@@ -40,7 +40,7 @@ namespace SIGVerse.TurtleBot3
 
 		private Transform sensorPivot;
 
-		private TurtleBot3PubSynchronizer synchronizer;
+		private RobotPubSynchronizer synchronizer;
 
 		private int publishSequenceNumber;
 
@@ -69,7 +69,7 @@ namespace SIGVerse.TurtleBot3
 		{
 			this.sensorPivot = this.sensorLink.Find("LDS_sensor_pivot");
 
-			this.synchronizer = this.GetComponent<TurtleBot3PubSynchronizer>();
+			this.synchronizer = this.GetComponent<RobotPubSynchronizer>();
 
 			this.publishSequenceNumber = this.synchronizer.GetAssignedSequenceNumber();
 
