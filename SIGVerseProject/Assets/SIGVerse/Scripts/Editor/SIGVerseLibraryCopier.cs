@@ -17,7 +17,11 @@ namespace SIGVerse.Common
 
 			if (stopLibraryCopyFile.Exists) { return; }
 
+#if UNITY_2020
 			string[] contentsPaths = new string[] { "/MonoBleedingEdge/lib/mono/unityjit/System.Windows.Forms.dll" };
+#else 
+			string[] contentsPaths = new string[] { "/MonoBleedingEdge/lib/mono/unityjit-win32/System.Windows.Forms.dll" };
+#endif
 
 			foreach (string contentsPath in contentsPaths)
 			{

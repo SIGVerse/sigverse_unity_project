@@ -4,7 +4,6 @@ using SIGVerse.RosBridge.std_msgs;
 using SIGVerse.RosBridge.sensor_msgs;
 using SIGVerse.Common;
 using System.Collections.Generic;
-using System;
 
 namespace SIGVerse.TIAGo
 {
