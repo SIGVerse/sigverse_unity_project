@@ -47,8 +47,8 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 
 		[HeaderAttribute("Objects")]
-		public GameObject humanSource;
-		public GameObject robotSource;
+		public string humanPrefabName;
+		public string robotPrefabName;
 		public GameObject[] rootsOfSyncTarget;
 
 		[HeaderAttribute("Scripts")]
@@ -152,12 +152,12 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 				PhotonNetwork.NickName = RobotNamePrefix + PhotonNetwork.LocalPlayer.ActorNumber;
 
 				ExitGames.Client.Photon.Hashtable customPropertie = new ExitGames.Client.Photon.Hashtable();
-				customPropertie.Add(AvatarNameKey, PhotonNetwork.NickName + "#" + this.robotSource.name);
+				customPropertie.Add(AvatarNameKey, PhotonNetwork.NickName + "#" + this.robotPrefabName);
 				PhotonNetwork.LocalPlayer.SetCustomProperties(customPropertie);
 
 //				XRSettings.enabled = false;
 
-				GameObject player = PhotonNetwork.Instantiate(this.robotSource.name, this.robotPositions[numberOfLogins], Quaternion.Euler(this.robotEulerAngles[numberOfLogins]));
+				GameObject player = PhotonNetwork.Instantiate(this.robotPrefabName, this.robotPositions[numberOfLogins], Quaternion.Euler(this.robotEulerAngles[numberOfLogins]));
 			}
 
 			this.mainPanel.SetActive(false);
@@ -215,10 +215,10 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 			PhotonNetwork.NickName = HumanNamePrefix + PhotonNetwork.LocalPlayer.ActorNumber;
 
 			ExitGames.Client.Photon.Hashtable customPropertie = new ExitGames.Client.Photon.Hashtable();
-			customPropertie.Add(AvatarNameKey, PhotonNetwork.NickName + "#" + this.humanSource.name);
+			customPropertie.Add(AvatarNameKey, PhotonNetwork.NickName + "#" + this.humanPrefabName);
 			PhotonNetwork.LocalPlayer.SetCustomProperties(customPropertie);
 
-			GameObject player = PhotonNetwork.Instantiate(this.humanSource.name, this.humanPositions[numberOfLogins], Quaternion.Euler(this.humanEulerAngles[numberOfLogins]));
+			GameObject player = PhotonNetwork.Instantiate(this.humanPrefabName, this.humanPositions[numberOfLogins], Quaternion.Euler(this.humanEulerAngles[numberOfLogins]));
 		}
 
 		private IEnumerator Disconnect()

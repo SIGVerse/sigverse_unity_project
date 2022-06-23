@@ -27,6 +27,8 @@ namespace SIGVerse.Common.Recorder
 		private const string ElapsedTimeFormat = "###0.0";
 		private const string TotalTimeFormat = "###0";
 
+		public List<GameObject> avatarSources;
+
 		[TooltipAttribute("GameObjects from the scene")]
 		public List<GameObject> targetsToDisableOnPlaybackMode;
 
@@ -305,21 +307,36 @@ namespace SIGVerse.Common.Recorder
 					SIGVerseLogger.Info("Add object. name=" + resourceName);
 
 					UnityEngine.Object resourceObj = Resources.Load(resourceName);
+					GameObject resourceGameObject = null;
 
 					if (resourceObj == null)
 					{
-						SIGVerseLogger.Error("Couldn't find a object. name=" + rootObjectName);
-						continue;
+						foreach (GameObject avatarSource in this.avatarSources)
+						{
+							if (avatarSource.name == resourceName)
+							{
+								resourceGameObject = avatarSource;
+								break;
+							}
+						}
+
+						if(resourceGameObject == null)
+						{
+							SIGVerseLogger.Error("Couldn't find a object. name=" + rootObjectName);
+							continue;
+						}
 					}
 					else
 					{
-						GameObject instance = MonoBehaviour.Instantiate((GameObject)resourceObj);
-						instance.name = rootObjectName;
-
-						List<Component> allComponents = instance.GetComponentsInChildren<Component>().ToList();
-
-						allComponents.ForEach(component => this.DisablePlayerComponent(component));
+						resourceGameObject = (GameObject)resourceObj;
 					}
+					
+					GameObject instance = MonoBehaviour.Instantiate(resourceGameObject);
+					instance.name = rootObjectName;
+
+					List<Component> allComponents = instance.GetComponentsInChildren<Component>().ToList();
+
+					allComponents.ForEach(component => this.DisablePlayerComponent(component));
 				}
 			}
 		}
