@@ -56,7 +56,8 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		{
 		}
 
-		protected virtual void OnDisable()
+
+		protected virtual void OnApplicationQuit()
 		{
 			ExecuteEvents.Execute<IChatRegistrationHandler>
 			(
