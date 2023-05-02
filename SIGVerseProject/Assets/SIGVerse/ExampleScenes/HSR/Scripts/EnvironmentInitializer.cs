@@ -29,6 +29,8 @@ namespace SIGVerse.ExampleScenes.Hsr
 		{
 			try
 			{
+				UnityEngine.Random.InitState(DateTime.Now.Millisecond);
+
 				this.EnableEnvironments(this.environments);
 
 				// Get graspable objects

@@ -108,6 +108,7 @@ namespace SIGVerse.ExampleScenes.Hsr
 
 			SIGVerseLogger.Info("Count of DestinationCandidates = " + this.destinationCandidates.Count);
 
+			UnityEngine.Random.InitState(DateTime.Now.Millisecond);
 
 			this.graspingTarget = this.graspables           [UnityEngine.Random.Range(0, this.graspables.Count)];
 			this.destination    = this.destinationCandidates[UnityEngine.Random.Range(0, this.destinationCandidates.Count)];

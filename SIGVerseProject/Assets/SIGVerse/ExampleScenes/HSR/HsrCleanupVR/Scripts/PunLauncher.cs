@@ -47,8 +47,8 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 
 		[HeaderAttribute("Objects")]
-		public string humanPrefabName;
-		public string robotPrefabName;
+		public GameObject humanPrefabInPrefabPool;
+		public GameObject robotPrefabInPrefabPool;
 		public GameObject[] rootsOfSyncTarget;
 
 		[HeaderAttribute("Scripts")]
@@ -68,6 +68,8 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 #if SIGVERSE_PUN
 		// -----------------------
+		private string humanPrefabName;
+		private string robotPrefabName;
 		private string roomName;
 
 		private bool isHuman;
@@ -83,6 +85,9 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 		void Start()
 		{
 			PhotonNetwork.AutomaticallySyncScene = true;
+
+			this.humanPrefabName = this.humanPrefabInPrefabPool.name;
+			this.robotPrefabName = this.robotPrefabInPrefabPool.name;
 
 			// Check for duplication
 			List<string> duplicateNames = roomObjects.GroupBy(obj => obj.name).Where(g => g.Count() > 1).Select(g => g.Key).ToList();
@@ -190,26 +195,28 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 		public IEnumerator InstantiateHuman(int numberOfLogins)
 		{
-			// Initialize XR System
-			XRManagerSettings xrManagerSettings = XRGeneralSettings.Instance.Manager;
-
-			if (xrManagerSettings == null) { SIGVerseLogger.Error("xrManagerSettings == null"); yield break; }
-
-			if(xrManagerSettings.activeLoader == null)
+			if (!this.humanPrefabName.StartsWith("Dummy"))
 			{
-				yield return xrManagerSettings.InitializeLoader();
+				// Initialize XR System
+				XRManagerSettings xrManagerSettings = XRGeneralSettings.Instance.Manager;
+
+				if (xrManagerSettings == null) { SIGVerseLogger.Error("xrManagerSettings == null"); yield break; }
+
+				if(xrManagerSettings.activeLoader == null)
+				{
+					yield return xrManagerSettings.InitializeLoader();
+				}
+
+				this.activeLoader = xrManagerSettings.activeLoader;
+
+				if (this.activeLoader == null)
+				{
+					Debug.LogError("Initializing XR Failed.");
+					yield break;
+				}
+
+				xrManagerSettings.activeLoader.Start();
 			}
-
-			this.activeLoader = xrManagerSettings.activeLoader;
-
-			if (this.activeLoader == null)
-			{
-				Debug.LogError("Initializing XR Failed.");
-				yield break;
-			}
-
-			xrManagerSettings.activeLoader.Start();
-
 
 			// Instantiate Human
 			PhotonNetwork.NickName = HumanNamePrefix + PhotonNetwork.LocalPlayer.ActorNumber;

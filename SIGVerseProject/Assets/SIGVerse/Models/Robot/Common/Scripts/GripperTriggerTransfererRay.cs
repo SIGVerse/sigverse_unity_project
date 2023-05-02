@@ -26,13 +26,13 @@ namespace SIGVerse.Common
 
 		public bool enableDebugRay = false;
 
-		protected HashSet<Rigidbody> currentEnterRigidbodies;
-		protected HashSet<Rigidbody> currentExitRigidbodies;
+		public BoxCollider[] raySourceBoxes;
 
-		protected HashSet<Rigidbody> previousEnterRigidbodies;
-		protected HashSet<Rigidbody> previousExitRigidbodies;
-
-		protected BoxCollider raySourceBox;
+		protected HashSet<Rigidbody> currentRigidbodiesInEnterArea = new HashSet<Rigidbody>();
+		protected HashSet<Rigidbody> currentRigidbodiesInExitArea  = new HashSet<Rigidbody>();
+		
+		protected HashSet<Rigidbody> previousRigidbodiesInEnterArea = new HashSet<Rigidbody>();
+		protected HashSet<Rigidbody> previousRigidbodiesInExitArea  = new HashSet<Rigidbody>();
 
 
 		protected virtual void Awake()
@@ -42,31 +42,46 @@ namespace SIGVerse.Common
 				this.eventDestination = this.transform.root.gameObject;
 			}
 
-			this.raySourceBox = this.transform.Find("RaySourceBox").GetComponent<BoxCollider>();
+			this.raySourceBoxes.ToList().ForEach(x => x.enabled = false);
 
-			this.raySourceBox.enabled = false;
-
-			if(raySourceBox.center.x!=0 || raySourceBox.center.y!=0)
+			foreach(BoxCollider raySourceBox in this.raySourceBoxes)
 			{
-				string msg = "raySourceBox.center.x or raySourceBox.center.y is NOT zero. ("+this.gameObject.name+")";
-				Debug.LogError(msg);
-				throw new Exception(msg);
+				if(raySourceBox.center.x!=0 || raySourceBox.center.y!=0)
+				{
+					string msg = "center.x or .center.y is NOT zero. ("+raySourceBox.name+")";
+					Debug.LogError(msg);
+					throw new Exception(msg);
+				}
 			}
-		}
-
-		protected virtual void Start()
-		{
-			this.currentEnterRigidbodies  = new HashSet<Rigidbody>();
-			this.currentExitRigidbodies   = new HashSet<Rigidbody>();
-
-			this.previousEnterRigidbodies = new HashSet<Rigidbody>();
-			this.previousExitRigidbodies  = new HashSet<Rigidbody>();
 		}
 
 		protected virtual void FixedUpdate()
 		{
-			float xSize = this.raySourceBox.size.x;
-			float ySize = this.raySourceBox.size.y;
+			for (int i= 0; i < this.raySourceBoxes.Length; i++)
+			{
+				ManageRigidbodiesFor1Box(this.raySourceBoxes[i], this.layerMask, this.enableDebugRay, out HashSet<Rigidbody> rigidbodiesInEnterArea, out HashSet<Rigidbody> rigidbodiesInExitArea);
+
+				this.currentRigidbodiesInEnterArea.UnionWith(rigidbodiesInEnterArea);
+				this.currentRigidbodiesInExitArea .UnionWith(rigidbodiesInExitArea);
+			}
+
+			this.SendEnterEvent(this.currentRigidbodiesInEnterArea.Except(this.previousRigidbodiesInEnterArea));
+			this.SendExitEvent (this.previousRigidbodiesInExitArea.Except(this.currentRigidbodiesInExitArea));
+
+			this.previousRigidbodiesInEnterArea = new HashSet<Rigidbody>(this.currentRigidbodiesInEnterArea);
+			this.previousRigidbodiesInExitArea  = new HashSet<Rigidbody>(this.currentRigidbodiesInExitArea);
+
+			this.currentRigidbodiesInEnterArea.Clear();
+			this.currentRigidbodiesInExitArea .Clear();
+		}
+
+		protected static void ManageRigidbodiesFor1Box(BoxCollider raySourceBox, LayerMask layerMask, bool enableDebugRay, out HashSet<Rigidbody> rigidbodiesInEnterArea, out HashSet<Rigidbody> rigidbodiesInExitArea)
+		{
+			rigidbodiesInEnterArea = new HashSet<Rigidbody>();
+			rigidbodiesInExitArea  = new HashSet<Rigidbody>();
+
+			float xSize = raySourceBox.size.x;
+			float ySize = raySourceBox.size.y;
 
 			int xDivisionNumber = Convert.ToInt32(Math.Ceiling(xSize / RaySpacing));
 			int yDivisionNumber = Convert.ToInt32(Math.Ceiling(ySize / RaySpacing));
@@ -78,41 +93,32 @@ namespace SIGVerse.Common
 					float xPos = -xSize/2 + i*xSize/xDivisionNumber;
 					float yPos = -ySize/2 + j*ySize/yDivisionNumber;
 
-					Vector3 origin = this.raySourceBox.transform.TransformPoint(xPos, yPos, RaySourcePosZ);
+					Vector3 origin = raySourceBox.transform.TransformPoint(xPos, yPos, RaySourcePosZ);
 
-					Ray ray = new Ray (origin, this.raySourceBox.transform.forward);
+					Ray ray = new Ray (origin, raySourceBox.transform.forward);
 
 					RaycastHit hit;
 
-					if (Physics.Raycast(ray, out hit, MaxRayDistance, this.layerMask))
+					if (Physics.Raycast(ray, out hit, MaxRayDistance, layerMask))
 					{
-						if(!this.IsValidTrigger(hit.collider)){ continue; }
+						if(!IsValidTrigger(hit.collider)){ continue; }
 
 						if(hit.distance < EnterDistance-RaySourcePosZ)
 						{
-							this.currentEnterRigidbodies.Add(hit.rigidbody);
+							rigidbodiesInEnterArea.Add(hit.rigidbody);
 						}
 						if(hit.distance < ExitDistance-RaySourcePosZ)
 						{
-							this.currentExitRigidbodies.Add(hit.rigidbody);
+							rigidbodiesInExitArea.Add(hit.rigidbody);
 						}
 					}
 
-					if (this.enableDebugRay)
+					if (enableDebugRay)
 					{
-						Debug.DrawRay(origin, this.raySourceBox.transform.forward * MaxRayDistance, Color.red);
+						Debug.DrawRay(origin, raySourceBox.transform.forward * MaxRayDistance, Color.red);
 					}
 				}
 			}
-
-			this.SendEnterEvent(this.currentEnterRigidbodies.Except(this.previousEnterRigidbodies));
-			this.SendExitEvent (this.previousExitRigidbodies.Except(this.currentExitRigidbodies));
-
-			this.previousEnterRigidbodies = new HashSet<Rigidbody>(this.currentEnterRigidbodies);
-			this.previousExitRigidbodies  = new HashSet<Rigidbody>(this.currentExitRigidbodies);
-
-			this.currentEnterRigidbodies.Clear();
-			this.currentExitRigidbodies .Clear();
 		}
 
 		protected virtual void SendEnterEvent(IEnumerable<Rigidbody> rigidbodies)
@@ -143,7 +149,7 @@ namespace SIGVerse.Common
 			}
 		}
 
-		protected bool IsValidTrigger(Collider other)
+		protected static bool IsValidTrigger(Collider other)
 		{
 			if(other.isTrigger) { return false; }
 
