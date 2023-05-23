@@ -3,6 +3,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+#pragma warning disable CS0618
+
 public class EventSystemChecker : MonoBehaviour
 {
     //public GameObject eventSystem;

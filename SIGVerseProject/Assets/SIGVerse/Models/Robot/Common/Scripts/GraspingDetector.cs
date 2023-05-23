@@ -32,9 +32,7 @@ namespace SIGVerse.Common
 		protected float preLeftGripperAngle;
 		protected float preRightGripperAngle;
 
-		protected List<Rigidbody> graspableRigidbodies;
-
-		protected Rigidbody graspedRigidbody;
+		protected Rigidbody graspedRigidbody = null;
 		protected Transform savedParentObj;
 
 		protected bool  isGripperClosing;
@@ -48,20 +46,6 @@ namespace SIGVerse.Common
 
 		protected virtual void Awake()
 		{
-			this.graspableRigidbodies = new List<Rigidbody>();
-
-			foreach(string graspableTag in graspableTags)
-			{
-				List<GameObject> graspableObjects = GameObject.FindGameObjectsWithTag(graspableTag).ToList<GameObject>();
-
-				foreach(GameObject graspableObject in graspableObjects)
-				{
-					List<Rigidbody> rigidbodies = graspableObject.GetComponentsInChildren<Rigidbody>().ToList<Rigidbody>();
-
-					this.graspableRigidbodies.AddRange(rigidbodies);
-				}
-			}
-
 			this.leftCollidingObjects  = new HashSet<Rigidbody>();
 			this.rightCollidingObjects = new HashSet<Rigidbody>();
 		}
@@ -75,7 +59,6 @@ namespace SIGVerse.Common
 			this.preLeftGripperAngle  = this.leftGripperAngle;
 			this.preRightGripperAngle = this.rightGripperAngle;
 
-			this.graspedRigidbody    = null;
 			this.isGripperClosing = false;
 
 			this.openingAngle = 0.0f;
@@ -162,9 +145,9 @@ namespace SIGVerse.Common
 
 		protected virtual bool IsGraspable(Rigidbody targetRigidbody)
 		{
-			foreach(Rigidbody graspableRigidbody in this.graspableRigidbodies)
+			foreach(string graspableTag in this.graspableTags)
 			{
-				if(targetRigidbody==graspableRigidbody) { return true; }
+				if(targetRigidbody.tag==graspableTag) { return true; }
 			}
 
 			return false;
@@ -174,13 +157,15 @@ namespace SIGVerse.Common
 		{
 			this.savedParentObj = collidedRigidbody.gameObject.transform.parent;
 
+			// Parent-child structures are more stable than using ParentConstraint.
 			collidedRigidbody.gameObject.transform.parent = this.handPalm.transform;
 
 			collidedRigidbody.useGravity  = false;
 //			collidedRigidbody.isKinematic = true;
 			collidedRigidbody.constraints = RigidbodyConstraints.FreezeAll;
 
-			collidedRigidbody.gameObject.AddComponent<GraspedObjectFixer>();
+			GraspedObjectFixer graspedObjectFixer = collidedRigidbody.gameObject.AddComponent<GraspedObjectFixer>();
+			graspedObjectFixer.canChangeGraspPoint = true;
 
 			this.graspedRigidbody = collidedRigidbody;
 

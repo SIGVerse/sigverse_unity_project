@@ -34,6 +34,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 			if (this.photonView.IsMine)
 			{
 				this.GetComponent<GraspingDetectorForPun>().enabled = true;
+				this.GetComponent<SuctionDetectorForPun>().enabled = true;
 
 				this.GetComponent<AudioListener>().enabled = true;
 

@@ -1,18 +1,21 @@
 using UnityEngine;
+using static UnityEngine.UI.Image;
 
 namespace SIGVerse.Common
 {
 	public class GraspedObjectFixer : MonoBehaviour
 	{
-		private Vector3    prePos;
-		private Quaternion preRot;
+		public bool canChangeGraspPoint = false;
+
+		private Vector3    graspPos;
+		private Quaternion graspRot;
 
 		private Rigidbody graspedRigidbody;
 
 		void Awake()
 		{
-			this.prePos = this.transform.localPosition;
-			this.preRot = this.transform.localRotation;
+			this.graspPos = this.transform.localPosition;
+			this.graspRot = this.transform.localRotation;
 
 			this.graspedRigidbody = this.GetComponent<Rigidbody>();
 		}
@@ -21,8 +24,8 @@ namespace SIGVerse.Common
 		{
 			if(this.graspedRigidbody.constraints == RigidbodyConstraints.FreezeAll)
 			{
-				this.transform.localPosition = this.prePos;
-				this.transform.localRotation = this.preRot;
+				this.transform.localPosition = this.graspPos;
+				this.transform.localRotation = this.graspRot;
 			}
 		}
 
@@ -33,6 +36,8 @@ namespace SIGVerse.Common
 			if(!this.enabled){ return; }
 
 			this.graspedRigidbody.constraints = RigidbodyConstraints.None;
+
+//			Debug.LogWarning("GraspedObjectFixer OnCollisionEnter obj=" + collision.name);
 		}
 
 		void OnCollisionExit(Collision collision)
@@ -43,8 +48,11 @@ namespace SIGVerse.Common
 
 			this.graspedRigidbody.constraints = RigidbodyConstraints.FreezeAll;
 
-			this.prePos = this.transform.localPosition;
-			this.preRot = this.transform.localRotation;
+			if(this.canChangeGraspPoint)
+			{
+				this.graspPos = this.transform.localPosition;
+				this.graspRot = this.transform.localRotation;
+			}
 		}
 	}
 }
