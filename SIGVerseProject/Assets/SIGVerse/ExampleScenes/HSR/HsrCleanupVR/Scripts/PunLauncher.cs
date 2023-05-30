@@ -170,7 +170,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 		private bool ShouldDisconnect(out int numberOfLogins)
 		{
-			Player[] players = PhotonNetwork.PlayerListOthers;
+			Photon.Realtime.Player[] players = PhotonNetwork.PlayerListOthers;
 
 			numberOfLogins = this.isHuman? players.Count(p => p.NickName.StartsWith(HumanNamePrefix)) : players.Count(p => p.NickName.StartsWith(RobotNamePrefix));
 
