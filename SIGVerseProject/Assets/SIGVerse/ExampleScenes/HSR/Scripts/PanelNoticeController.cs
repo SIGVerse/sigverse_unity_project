@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -40,15 +41,15 @@ namespace SIGVerse.ExampleScenes.Hsr
 	{
 		public GameObject noticePanel;
 
-		private Text speakerText;
-		private Text messageText;
+		private TMP_Text speakerText;
+		private TMP_Text messageText;
 
 		private float hideTime = 0.0f;
 
 		void Awake()
 		{
-			this.speakerText = this.noticePanel.transform.Find("SpeakerText").GetComponent<Text>();
-			this.messageText = this.noticePanel.transform.Find("MessageText").GetComponent<Text>();
+			this.speakerText = this.noticePanel.transform.Find("SpeakerText").GetComponent<TMP_Text>();
+			this.messageText = this.noticePanel.transform.Find("MessageText").GetComponent<TMP_Text>();
 		}
 
 		void Start()
