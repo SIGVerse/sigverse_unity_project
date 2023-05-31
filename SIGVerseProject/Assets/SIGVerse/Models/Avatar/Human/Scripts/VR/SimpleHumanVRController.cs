@@ -56,17 +56,8 @@ namespace SIGVerse.Human.VR
 			}
 		}
 
-		protected virtual void Update()
+		protected virtual (float, float) GetInput()
 		{
-			if(Time.time > 0.1f && this.eyeAnchor.up.y > 0.1f)
-			{
-				this.animator.applyRootMotion = true;
-			}
-			else
-			{
-				this.animator.applyRootMotion = false;
-			}
-
 			// read inputs
 			float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
 			float vertical   = CrossPlatformInputManager.GetAxis("Vertical");
@@ -78,6 +69,21 @@ namespace SIGVerse.Human.VR
 				vertical   = SteamVR_Actions.sigverse.Move.axis.y;
 			}
 #endif
+			return (horizontal, vertical);
+		}
+
+		protected virtual void Update()
+		{
+			if(Time.time > 0.1f && this.eyeAnchor.up.y > 0.1f)
+			{
+				this.animator.applyRootMotion = true;
+			}
+			else
+			{
+				this.animator.applyRootMotion = false;
+			}
+
+			(float horizontal, float vertical) = this.GetInput();
 
 			(horizontal, vertical) = this.GetRestrictedInput(horizontal, vertical);
 
