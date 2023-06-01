@@ -15,10 +15,8 @@ using UnityEditor;
 #if SIGVERSE_PUN
 using Photon.Pun;
 using Photon.Realtime;
-using MySqlX.XDevAPI;
-using MySqlX.XDevAPI.Common;
-
 #endif
+
 #if SIGVERSE_STEAMVR
 using UnityEngine.XR.Management;
 #endif
@@ -246,7 +244,7 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 			SIGVerseLogger.Error(this.GetType().Name + " OnJoinRoomFailed: "+message);
 		}
 
-		public override void OnErrorInfo(Photon.Realtime.ErrorInfo errorInfo)
+		public override void OnErrorInfo(ErrorInfo errorInfo)
 		{
 			SIGVerseLogger.Error(this.GetType().Name + " OnErrorInfo: "+errorInfo.Info);
 		}
