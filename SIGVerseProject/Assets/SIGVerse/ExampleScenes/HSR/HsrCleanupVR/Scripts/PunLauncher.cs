@@ -15,8 +15,10 @@ using UnityEditor;
 #if SIGVERSE_PUN
 using Photon.Pun;
 using Photon.Realtime;
-#endif
+using MySqlX.XDevAPI;
+using MySqlX.XDevAPI.Common;
 
+#endif
 #if SIGVERSE_STEAMVR
 using UnityEngine.XR.Management;
 #endif
@@ -133,13 +135,6 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 			PhotonNetwork.JoinOrCreateRoom(this.roomName, new RoomOptions(), TypedLobby.Default);
 		}
 
-		public override void OnDisconnected(DisconnectCause cause)
-		{
-//			Debug.Log("OnDisconnected");
-
-			this.chatManager.ClearChatUserList();
-		}
-
 		public override void OnJoinedRoom()
 		{
 			if (this.ShouldDisconnect(out int numberOfLogins))
@@ -239,6 +234,31 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 			this.humanLoginButton.interactable = true;
 			this.robotLoginButton.interactable = true;
+		}
+
+		public override void OnCreateRoomFailed(short returnCode, string message)
+		{
+			SIGVerseLogger.Error(this.GetType().Name + " OnCreateRoomFailed: "+message);
+		}
+
+		public override void OnJoinRoomFailed(short returnCode, string message)
+		{
+			SIGVerseLogger.Error(this.GetType().Name + " OnJoinRoomFailed: "+message);
+		}
+
+		public override void OnErrorInfo(Photon.Realtime.ErrorInfo errorInfo)
+		{
+			SIGVerseLogger.Error(this.GetType().Name + " OnErrorInfo: "+errorInfo.Info);
+		}
+
+		public override void OnDisconnected(DisconnectCause cause)
+		{
+			if(cause!=DisconnectCause.None)
+			{
+				SIGVerseLogger.Error(this.GetType().Name + " OnDisconnected Cause="+cause.ToString());
+			}
+
+			this.chatManager.ClearChatUserList();
 		}
 
 		void OnDestroy()
