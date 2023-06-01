@@ -251,7 +251,11 @@ namespace SIGVerse.ExampleScenes.Hsr.HsrCleanupVR
 
 		public override void OnDisconnected(DisconnectCause cause)
 		{
-			if(cause!=DisconnectCause.None)
+			if(cause==DisconnectCause.DisconnectByServerLogic || cause==DisconnectCause.DisconnectByClientLogic)
+			{
+				SIGVerseLogger.Warn(this.GetType().Name + " OnDisconnected Cause="+cause.ToString());
+			}
+			else if(cause!=DisconnectCause.None)
 			{
 				SIGVerseLogger.Error(this.GetType().Name + " OnDisconnected Cause="+cause.ToString());
 			}
