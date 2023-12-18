@@ -1,10 +1,10 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using SIGVerse.RosBridge;
 using SIGVerse.Common;
-using System.Collections.Generic;
-using SIGVerse.ToyotaHSR;
-using System;
-using static SIGVerse.ToyotaHSR.HSRCommon;
+using Joint = SIGVerse.ToyotaHSR.HSRCommon.Joint;
+using Link  = SIGVerse.ToyotaHSR.HSRCommon.Link;
 
 namespace SIGVerse.ToyotaHSR
 {
@@ -37,61 +37,49 @@ namespace SIGVerse.ToyotaHSR
 			}
 		}
 
-		private Transform armLiftLink;
-		private Transform armFlexLink;
-		private Transform armRollLink;
-		private Transform wristFlexLink;
-		private Transform wristRollLink;
-		private Transform headPanLink;
-		private Transform headTiltLink;
-		private Transform torsoLiftLink;
-		private Transform handMotorDummyLink;
-		private Transform handLProximalLink;
-		private Transform handRProximalLink;
-		private Transform handLDistalLink;
-		private Transform handRDistalLink;
+		private Dictionary<Joint, Transform> linkMap = new Dictionary<Joint, Transform>();
 
 		private float armLiftLinkIniPosZ;
 		private float torsoLiftLinkIniPosZ;
 
-		private Dictionary<HSRCommon.Joint, TrajectoryInfo> trajectoryInfoMap;
-		private List<HSRCommon.Joint> trajectoryKeyList;
+		private Dictionary<Joint, TrajectoryInfo> trajectoryInfoMap;
+		private List<Joint> trajectoryKeyList;
 
 		private GameObject graspedObject;
 
 
 		void Awake()
 		{
-			this.armLiftLink        = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.arm_lift_link        .ToString());
-			this.armFlexLink        = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.arm_flex_link        .ToString());
-			this.armRollLink        = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.arm_roll_link        .ToString());
-			this.wristFlexLink      = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.wrist_flex_link      .ToString());
-			this.wristRollLink      = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.wrist_roll_link      .ToString());
-			this.headPanLink        = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.head_pan_link        .ToString());
-			this.headTiltLink       = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.head_tilt_link       .ToString());
-			this.torsoLiftLink      = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.torso_lift_link      .ToString());
-			this.handMotorDummyLink = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.hand_motor_dummy_link.ToString());
-			this.handLProximalLink  = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.hand_l_proximal_link .ToString());
-			this.handRProximalLink  = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.hand_r_proximal_link .ToString());
-			this.handLDistalLink    = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.hand_l_distal_link   .ToString());
-			this.handRDistalLink    = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.hand_r_distal_link   .ToString());
+			this.linkMap[Joint.arm_lift_joint]        = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.arm_lift_link        .ToString());
+			this.linkMap[Joint.arm_flex_joint]        = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.arm_flex_link        .ToString());
+			this.linkMap[Joint.arm_roll_joint]        = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.arm_roll_link        .ToString());
+			this.linkMap[Joint.wrist_flex_joint]      = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.wrist_flex_link      .ToString());
+			this.linkMap[Joint.wrist_roll_joint]      = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.wrist_roll_link      .ToString());
+			this.linkMap[Joint.head_pan_joint]        = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.head_pan_link        .ToString());
+			this.linkMap[Joint.head_tilt_joint]       = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.head_tilt_link       .ToString());
+			this.linkMap[Joint.torso_lift_joint]      = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.torso_lift_link      .ToString());
+			this.linkMap[Joint.hand_motor_joint]      = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.hand_motor_dummy_link.ToString());
+			this.linkMap[Joint.hand_l_proximal_joint] = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.hand_l_proximal_link .ToString());
+			this.linkMap[Joint.hand_l_distal_joint]   = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.hand_l_distal_link   .ToString());
+			this.linkMap[Joint.hand_r_proximal_joint] = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.hand_r_proximal_link .ToString());
+			this.linkMap[Joint.hand_r_distal_joint]   = SIGVerseUtils.FindTransformFromChild(this.transform.root, Link.hand_r_distal_link   .ToString());
 
-			this.armLiftLinkIniPosZ   = this.armLiftLink.localPosition.z;
-			this.torsoLiftLinkIniPosZ = this.torsoLiftLink.localPosition.z;
+			this.armLiftLinkIniPosZ   = this.linkMap[Joint.arm_lift_joint]  .localPosition.z * HSRCommon.JointAxis[Joint.arm_lift_joint]  .z;
+			this.torsoLiftLinkIniPosZ = this.linkMap[Joint.torso_lift_joint].localPosition.z * HSRCommon.JointAxis[Joint.torso_lift_joint].z;
 
-			this.trajectoryInfoMap = new Dictionary<HSRCommon.Joint, TrajectoryInfo>()
+			this.trajectoryInfoMap = new Dictionary<Joint, TrajectoryInfo>()
 			{
-				{ HSRCommon.Joint.arm_lift_joint  , null },
-				{ HSRCommon.Joint.arm_flex_joint  , null },
-				{ HSRCommon.Joint.arm_roll_joint  , null },
-				{ HSRCommon.Joint.wrist_flex_joint, null },
-				{ HSRCommon.Joint.wrist_roll_joint, null },
-				{ HSRCommon.Joint.head_pan_joint  , null },
-				{ HSRCommon.Joint.head_tilt_joint , null },
-				{ HSRCommon.Joint.hand_motor_joint, null },
+				{ Joint.arm_lift_joint  , null },
+				{ Joint.arm_flex_joint  , null },
+				{ Joint.arm_roll_joint  , null },
+				{ Joint.wrist_flex_joint, null },
+				{ Joint.wrist_roll_joint, null },
+				{ Joint.head_pan_joint  , null },
+				{ Joint.head_tilt_joint , null },
+				{ Joint.hand_motor_joint, null },
 			};
 
-			this.trajectoryKeyList = new List<HSRCommon.Joint>(trajectoryInfoMap.Keys);
+			this.trajectoryKeyList = new List<Joint>(trajectoryInfoMap.Keys);
 		}
 
 
@@ -115,32 +103,35 @@ namespace SIGVerse.ToyotaHSR
 
 		protected void FixedUpdate()
 		{
-			foreach(HSRCommon.Joint joint in this.trajectoryKeyList)
+			foreach(Joint joint in this.trajectoryKeyList)
 			{
 				if (this.trajectoryInfoMap[joint] == null){ continue; }
 
 				switch(joint)
 				{
-					case HSRCommon.Joint.arm_lift_joint:
+					case Joint.arm_lift_joint:
 					{
 						float newPos = GetPositionAndUpdateTrajectory(this.trajectoryInfoMap, joint);
 						
-						this.armLiftLink  .localPosition = new Vector3(this.armLiftLink  .localPosition.x, this.armLiftLink.localPosition.y,   this.armLiftLinkIniPosZ   + newPos);
-						this.torsoLiftLink.localPosition = new Vector3(this.torsoLiftLink.localPosition.x, this.torsoLiftLink.localPosition.y, this.torsoLiftLinkIniPosZ + newPos / 2.0f );
+						Transform armLift   = this.linkMap[Joint.arm_lift_joint];
+						Transform torsoLift = this.linkMap[Joint.torso_lift_joint];
+
+						armLift  .localPosition = new Vector3(armLift  .localPosition.x, armLift  .localPosition.y, armLiftLinkIniPosZ   + newPos);
+						torsoLift.localPosition = new Vector3(torsoLift.localPosition.x, torsoLift.localPosition.y, torsoLiftLinkIniPosZ + newPos / 2.0f );
 						break;
 					}
-					case HSRCommon.Joint.arm_flex_joint:   { this.UpdateLinkAngle(this.armFlexLink,   joint, Vector3.up);   break; }
-					case HSRCommon.Joint.arm_roll_joint:   { this.UpdateLinkAngle(this.armRollLink,   joint, Vector3.back); break; }
-					case HSRCommon.Joint.wrist_flex_joint: { this.UpdateLinkAngle(this.wristFlexLink, joint, Vector3.up);   break; }
-					case HSRCommon.Joint.wrist_roll_joint: { this.UpdateLinkAngle(this.wristRollLink, joint, Vector3.back); break; }
-					case HSRCommon.Joint.head_pan_joint:   { this.UpdateLinkAngle(this.headPanLink,   joint, Vector3.back); break; }
-					case HSRCommon.Joint.head_tilt_joint:  { this.UpdateLinkAngle(this.headTiltLink,  joint, Vector3.up);   break; }
-					case HSRCommon.Joint.hand_motor_joint:
+					case Joint.arm_flex_joint:
+					case Joint.arm_roll_joint:
+					case Joint.wrist_flex_joint:
+					case Joint.wrist_roll_joint:
+					case Joint.head_pan_joint:
+					case Joint.head_tilt_joint: { this.UpdateLinkAngle(joint); break; }
+					case Joint.hand_motor_joint:
 					{
 						float newPos = HSRCommon.GetNormalizedJointEulerAngle(GetPositionAndUpdateTrajectory(this.trajectoryInfoMap, joint) * Mathf.Rad2Deg, joint);
 						
 						// Grasping and hand closing
-						if (this.graspedObject!=null && this.IsAngleDecreasing(newPos, this.handMotorDummyLink.localEulerAngles.x))
+						if (this.graspedObject!=null && this.IsAngleDecreasing(newPos, this.linkMap[Joint.hand_motor_joint].localEulerAngles.x))
 						{
 							// Have to stop
 							this.trajectoryInfoMap[joint] = null;
@@ -148,11 +139,11 @@ namespace SIGVerse.ToyotaHSR
 						// Otherwise
 						else
 						{
-							this.handMotorDummyLink.localEulerAngles = new Vector3(+newPos, this.handMotorDummyLink.localEulerAngles.y, this.handMotorDummyLink.localEulerAngles.z);
-							this.handLProximalLink .localEulerAngles = new Vector3(+newPos, this.handLProximalLink .localEulerAngles.y, this.handLProximalLink .localEulerAngles.z);
-							this.handRProximalLink .localEulerAngles = new Vector3(-newPos, this.handRProximalLink .localEulerAngles.y, this.handRProximalLink .localEulerAngles.z);
-							this.handLDistalLink   .localEulerAngles = new Vector3(-newPos, this.handLDistalLink   .localEulerAngles.y, this.handLDistalLink   .localEulerAngles.z);
-							this.handRDistalLink   .localEulerAngles = new Vector3(+newPos, this.handRDistalLink   .localEulerAngles.y, this.handRDistalLink   .localEulerAngles.z);
+							this.UpdateLinkAngle(Joint.hand_motor_joint,      +newPos);
+							this.UpdateLinkAngle(Joint.hand_l_proximal_joint, +newPos);
+							this.UpdateLinkAngle(Joint.hand_l_distal_joint,   -newPos);
+							this.UpdateLinkAngle(Joint.hand_r_proximal_joint, +newPos);
+							this.UpdateLinkAngle(Joint.hand_r_distal_joint,   -newPos);
 						}
 						break;
 					}
@@ -160,26 +151,23 @@ namespace SIGVerse.ToyotaHSR
 			}
 		}
 
-		private void UpdateLinkAngle(Transform link, HSRCommon.Joint joint, Vector3 axis)
+		private void UpdateLinkAngle(Joint joint)
 		{
 			float newPos = HSRCommon.GetNormalizedJointEulerAngle(GetPositionAndUpdateTrajectory(this.trajectoryInfoMap, joint) * Mathf.Rad2Deg, joint);
 
-			if(Mathf.Abs(axis.x)==1)
-			{
-				link.localEulerAngles = new Vector3(0.0f, link.localEulerAngles.y, link.localEulerAngles.z) + newPos * axis;
-			}
-			else if(Mathf.Abs(axis.y)==1)
-			{
-				link.localEulerAngles = new Vector3(link.localEulerAngles.x, 0.0f, link.localEulerAngles.z) + newPos * axis;
-			}
-			else if(Mathf.Abs(axis.z)==1)
-			{
-				link.localEulerAngles = new Vector3(link.localEulerAngles.x, link.localEulerAngles.y, 0.0f) + newPos * axis;
-			}
+			this.UpdateLinkAngle(joint, newPos);
+		}
+
+		private void UpdateLinkAngle(Joint joint, float newPos)
+		{
+			Transform link = this.linkMap[joint];
+			Vector3 axis = HSRCommon.JointAxis[joint];
+
+			link.localEulerAngles = newPos * axis; // Values on other axes are 0
 		}
 
 
-		private static float GetPositionAndUpdateTrajectory(Dictionary<HSRCommon.Joint, TrajectoryInfo> trajectoryInfoMap, HSRCommon.Joint joint)
+		private static float GetPositionAndUpdateTrajectory(Dictionary<Joint, TrajectoryInfo> trajectoryInfoMap, Joint joint)
 		{
 			float minSpeed = HSRCommon.GetMinJointSpeed(joint);
 			float maxSpeed = HSRCommon.GetMaxJointSpeed(joint);
@@ -188,7 +176,7 @@ namespace SIGVerse.ToyotaHSR
 
 			int targetPointIndex = GetTargetPointIndex(trajectoryInfo);
 
-			float speed = 0.0f;
+			float speed;
 
 			if (trajectoryInfo.CurrentTime - trajectoryInfo.StartTime >= trajectoryInfo.Durations[targetPointIndex])
 			{
@@ -242,26 +230,26 @@ namespace SIGVerse.ToyotaHSR
 			
 			if (msg.joint_names.Count == 2) // Head
 			{
-				if (msg.joint_names.Contains(HSRCommon.Joint.head_pan_joint .ToString()) && 
-				    msg.joint_names.Contains(HSRCommon.Joint.head_tilt_joint.ToString()))
+				if (msg.joint_names.Contains(Joint.head_pan_joint .ToString()) && 
+				    msg.joint_names.Contains(Joint.head_tilt_joint.ToString()))
 				{
 					return true;
 				}
 			}
 			else if (msg.joint_names.Count == 5) // Arm
 			{
-				if (msg.joint_names.Contains(HSRCommon.Joint.wrist_flex_joint.ToString()) && 
-				    msg.joint_names.Contains(HSRCommon.Joint.wrist_roll_joint.ToString()) && 
-				    msg.joint_names.Contains(HSRCommon.Joint.arm_lift_joint  .ToString()) && 
-				    msg.joint_names.Contains(HSRCommon.Joint.arm_flex_joint  .ToString()) && 
-				    msg.joint_names.Contains(HSRCommon.Joint.arm_roll_joint  .ToString()))
+				if (msg.joint_names.Contains(Joint.wrist_flex_joint.ToString()) && 
+				    msg.joint_names.Contains(Joint.wrist_roll_joint.ToString()) && 
+				    msg.joint_names.Contains(Joint.arm_lift_joint  .ToString()) && 
+				    msg.joint_names.Contains(Joint.arm_flex_joint  .ToString()) && 
+				    msg.joint_names.Contains(Joint.arm_roll_joint  .ToString()))
 				{
 					return true;
 				}
 			}
 			else if (msg.joint_names.Count == 1) // Hand
 			{
-				if (msg.joint_names.Contains(HSRCommon.Joint.hand_motor_joint.ToString()))
+				if (msg.joint_names.Contains(Joint.hand_motor_joint.ToString()))
 				{
 					return true;
 				}
@@ -276,7 +264,7 @@ namespace SIGVerse.ToyotaHSR
 		{
 			for (int i = 0; i < msg.joint_names.Count; i++)
 			{
-				HSRCommon.Joint joint = (HSRCommon.Joint)Enum.Parse(typeof(HSRCommon.Joint), msg.joint_names[i]);
+				Joint joint = (Joint)Enum.Parse(typeof(Joint), msg.joint_names[i]);
 
 				List<float> positions = new List<float>();
 				List<float> durations = new List<float>();
@@ -289,33 +277,59 @@ namespace SIGVerse.ToyotaHSR
 
 				switch(joint)
 				{
-					case HSRCommon.Joint.arm_lift_joint: { this.SetJointTrajectoryPosition(joint, durations, positions, +this.armLiftLink.localPosition.z - this.armLiftLinkIniPosZ); break; }
+					case Joint.arm_lift_joint: { this.SetJointTrajectoryPosition(joint, durations, positions, this.linkMap[Joint.arm_lift_joint].localPosition.z - this.armLiftLinkIniPosZ); break; }
 
-					case HSRCommon.Joint.arm_flex_joint:  { this.SetJointTrajectoryRotation(joint, durations, positions, +this.armFlexLink       .localEulerAngles.y); break; }
-					case HSRCommon.Joint.arm_roll_joint:  { this.SetJointTrajectoryRotation(joint, durations, positions, -this.armRollLink       .localEulerAngles.z); break; }
-					case HSRCommon.Joint.wrist_flex_joint:{ this.SetJointTrajectoryRotation(joint, durations, positions, +this.wristFlexLink     .localEulerAngles.y); break; }
-					case HSRCommon.Joint.wrist_roll_joint:{ this.SetJointTrajectoryRotation(joint, durations, positions, -this.wristRollLink     .localEulerAngles.z); break; }
-					case HSRCommon.Joint.head_pan_joint:  { this.SetJointTrajectoryRotation(joint, durations, positions, -this.headPanLink       .localEulerAngles.z); break; }
-					case HSRCommon.Joint.head_tilt_joint: { this.SetJointTrajectoryRotation(joint, durations, positions, +this.headTiltLink      .localEulerAngles.y); break; }
-					case HSRCommon.Joint.hand_motor_joint:{ this.SetJointTrajectoryRotation(joint, durations, positions, +this.handMotorDummyLink.localEulerAngles.x); break; }
+					case Joint.arm_flex_joint:
+					case Joint.arm_roll_joint:
+					case Joint.wrist_flex_joint:
+					case Joint.wrist_roll_joint:
+					case Joint.head_pan_joint:
+					case Joint.head_tilt_joint:
+					case Joint.hand_motor_joint:{ this.SetJointTrajectoryRotation(joint, durations, positions); break; }
 				}
 			}
 		}
 
-		private void SetJointTrajectoryPosition(HSRCommon.Joint joint, List<float> durations, List<float> goalPositions, float currentPosition)
+		private void SetJointTrajectoryPosition(Joint joint, List<float> durations, List<float> goalPositions, float currentPosition)
 		{
 			this.trajectoryInfoMap[joint] = new TrajectoryInfo(durations, goalPositions, currentPosition);
 		}
 
-		private void SetJointTrajectoryRotation(HSRCommon.Joint joint, List<float> durations, List<float> goalPositions, float currentPosition)
+		private void SetJointTrajectoryRotation(Joint joint, List<float> durations, List<float> goalPositions)
 		{
+			float currentPosition = GetEulerAngle(joint);
+
 			this.trajectoryInfoMap[joint] = new TrajectoryInfo(durations, goalPositions, HSRCommon.GetNormalizedJointEulerAngle(currentPosition, joint) * Mathf.Deg2Rad);
+		}
+
+		private float GetEulerAngle(Joint joint)
+		{
+			Transform link = this.linkMap[joint];
+			Vector3 axis = HSRCommon.JointAxis[joint];
+
+			if(Mathf.Abs(axis.x)==1)
+			{
+				return link.localEulerAngles.x * axis.x;
+			}
+			else if(Mathf.Abs(axis.y)==1)
+			{
+				return link.localEulerAngles.y * axis.y;
+			}
+			else if(Mathf.Abs(axis.z)==1)
+			{
+				return link.localEulerAngles.z * axis.z;
+			}
+			else
+			{
+				Debug.Log("Illegal JointAxis="+HSRCommon.JointAxis[joint]);
+				throw new Exception("Illegal JointAxis="+HSRCommon.JointAxis[joint]);
+			}
 		}
 
 
 		private void CheckOverLimitSpeed()
 		{
-			foreach (HSRCommon.Joint joint in this.trajectoryKeyList)
+			foreach (Joint joint in this.trajectoryKeyList)
 			{
 				if (this.trajectoryInfoMap[joint] == null) { continue; }
 
@@ -340,7 +354,7 @@ namespace SIGVerse.ToyotaHSR
 			}
 		}
 
-		private static bool IsOverLimitSpeed(HSRCommon.Joint joint, double speed)
+		private static bool IsOverLimitSpeed(Joint joint, double speed)
 		{
 			return speed > HSRCommon.GetMaxJointSpeed(joint);
 		}

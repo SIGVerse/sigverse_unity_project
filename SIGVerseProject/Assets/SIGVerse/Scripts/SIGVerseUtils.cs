@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.XR;
 
 namespace SIGVerse.Common
 {
@@ -189,6 +190,29 @@ namespace SIGVerse.Common
 
 					string newDestinationDir = Path.Combine(destinationDir, subDir.Name);
 					CopyDirectory(subDir.FullName, newDestinationDir, true, excludedFolders);
+				}
+			}
+		}
+
+
+		public static IEnumerator GetXrDevice(XRNode xrNode, Action<InputDevice> callback)
+		{
+			var devices = new List<InputDevice>();
+
+			while(devices.Count != 1)
+			{
+				yield return new WaitForSecondsRealtime(1.0f);
+
+				InputDevices.GetDevicesAtXRNode(xrNode, devices);
+
+				if(devices.Count == 1)
+				{
+					callback(devices[0]);
+					Debug.Log("Find XR Device. Name="+devices[0].name);
+				}
+				else if(devices.Count != 1)
+				{
+					Debug.LogWarning(xrNode.ToString()+" Count != 1 Count="+devices.Count);
 				}
 			}
 		}

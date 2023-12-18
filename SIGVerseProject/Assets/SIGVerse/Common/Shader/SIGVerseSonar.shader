@@ -23,7 +23,8 @@ Shader "SIGVerse/SIGVerseSonar"
 
 			#include "UnityCG.cginc"
 
-			sampler2D _CameraDepthTexture;
+//			sampler2D _CameraDepthTexture;
+			UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
 
 			uniform float _SensorNear;
 			uniform float _IsDebug;

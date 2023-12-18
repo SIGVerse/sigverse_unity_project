@@ -1,41 +1,107 @@
 fileFormatVersion: 2
 guid: dcee533a1e32e1f42965b2b16423861f
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: Cube
-    100002: Cube.001
-    100004: Cube.002
-    100006: Keyboard
-    100008: //RootNode
-    100010: Plane
-    100012: Screen
-    400000: Cube
-    400002: Cube.001
-    400004: Cube.002
-    400006: Keyboard
-    400008: //RootNode
-    400010: Plane
-    400012: Screen
-    2300000: Cube
-    2300002: Cube.001
-    2300004: Cube.002
-    2300006: Keyboard
-    2300008: Plane
-    2300010: Screen
-    3300000: Cube
-    3300002: Cube.001
-    3300004: Cube.002
-    3300006: Keyboard
-    3300008: Plane
-    3300010: Screen
-    4300000: Plane
-    4300002: Keyboard
-    4300004: Cube.001
-    4300006: Cube.002
-    4300008: Cube
-    4300010: Screen
-    2186277476908879412: ImportLogs
+  serializedVersion: 21202
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Cube
+  - first:
+      1: 100002
+    second: Cube.001
+  - first:
+      1: 100004
+    second: Cube.002
+  - first:
+      1: 100006
+    second: Keyboard
+  - first:
+      1: 100008
+    second: //RootNode
+  - first:
+      1: 100010
+    second: Plane
+  - first:
+      1: 100012
+    second: Screen
+  - first:
+      4: 400000
+    second: Cube
+  - first:
+      4: 400002
+    second: Cube.001
+  - first:
+      4: 400004
+    second: Cube.002
+  - first:
+      4: 400006
+    second: Keyboard
+  - first:
+      4: 400008
+    second: //RootNode
+  - first:
+      4: 400010
+    second: Plane
+  - first:
+      4: 400012
+    second: Screen
+  - first:
+      23: 2300000
+    second: Cube
+  - first:
+      23: 2300002
+    second: Cube.001
+  - first:
+      23: 2300004
+    second: Cube.002
+  - first:
+      23: 2300006
+    second: Keyboard
+  - first:
+      23: 2300008
+    second: Plane
+  - first:
+      23: 2300010
+    second: Screen
+  - first:
+      33: 3300000
+    second: Cube
+  - first:
+      33: 3300002
+    second: Cube.001
+  - first:
+      33: 3300004
+    second: Cube.002
+  - first:
+      33: 3300006
+    second: Keyboard
+  - first:
+      33: 3300008
+    second: Plane
+  - first:
+      33: 3300010
+    second: Screen
+  - first:
+      43: 4300000
+    second: Plane
+  - first:
+      43: 4300002
+    second: Keyboard
+  - first:
+      43: 4300004
+    second: Cube.001
+  - first:
+      43: 4300006
+    second: Cube.002
+  - first:
+      43: 4300008
+    second: Cube
+  - first:
+      43: 4300010
+    second: Screen
+  - first:
+      41386430: 2186277476908879412
+    second: ImportLogs
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -113,7 +179,7 @@ ModelImporter:
       name: VGA
     second: {fileID: 2100000, guid: 46d97cf12b63a4642ba75b2fa7632ccd, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 0
@@ -122,6 +188,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -145,34 +212,47 @@ ModelImporter:
     globalScale: 100
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 0
     importBlendShapes: 1
     importCameras: 0
     importLights: 0
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 0
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -182,13 +262,17 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 100
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
   additionalBone: 0
   userData: 
   assetBundleName: 

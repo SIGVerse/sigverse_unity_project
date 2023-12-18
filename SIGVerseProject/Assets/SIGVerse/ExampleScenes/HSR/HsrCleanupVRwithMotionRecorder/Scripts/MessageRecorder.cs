@@ -8,7 +8,12 @@ using UnityEngine.EventSystems;
 
 namespace SIGVerse.ExampleScenes.MotionRecorder
 {
-	public class MessageRecorder : MonoBehaviour, IChatMessageHandler
+	public class MessageRecorder : MonoBehaviour, 
+#if SIGVERSE_PUN
+		SIGVerse.ExampleScenes.Hsr.HsrCleanupVR.IChatMessageHandler
+#else
+		SIGVerse.Common.IChatMessageHandler
+#endif
 	{
 		public GameObject motionRecorder;
 

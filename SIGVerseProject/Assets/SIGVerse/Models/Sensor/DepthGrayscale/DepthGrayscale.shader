@@ -10,7 +10,8 @@ Shader "Custom/DepthGrayscale" {
 #pragma fragment frag
 #include "UnityCG.cginc"
 
-			sampler2D _CameraDepthTexture;
+//			sampler2D _CameraDepthTexture;
+			UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
 
 			struct v2f {
 				float4 pos : SV_POSITION;

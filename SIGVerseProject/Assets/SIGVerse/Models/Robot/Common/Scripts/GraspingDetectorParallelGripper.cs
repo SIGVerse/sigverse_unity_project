@@ -59,6 +59,7 @@ namespace SIGVerse.Common
 
 			if(this.openingDistance > OpeningDistanceThreshold && this.graspedRigidbody!=null)
 			{
+//				Debug.LogWarning("openingDistance="+this.openingDistance);
 				this.Release();
 			}
 

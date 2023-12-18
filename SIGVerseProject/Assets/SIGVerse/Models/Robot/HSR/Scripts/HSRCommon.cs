@@ -77,23 +77,64 @@ namespace SIGVerse.ToyotaHSR
 
 		public enum Joint
 		{
+			base_roll_joint,
+			base_r_drive_wheel_joint,
+			base_l_drive_wheel_joint,
+			base_r_passive_wheel_x_frame_joint,
+			base_r_passive_wheel_y_frame_joint,
+			base_r_passive_wheel_z_joint,
+			base_l_passive_wheel_x_frame_joint,
+			base_l_passive_wheel_y_frame_joint,
+			base_l_passive_wheel_z_joint,
+			base_f_bumper_joint,
+			base_b_bumper_joint,
 			arm_lift_joint,
 			arm_flex_joint,
 			arm_roll_joint,
 			wrist_flex_joint,
 			wrist_roll_joint,
+			wrist_ft_sensor_frame_joint,
 			head_pan_joint,
 			head_tilt_joint,
 			torso_lift_joint,
-			hand_l_proximal_joint,
-			hand_r_proximal_joint,
-			hand_l_spring_proximal_joint,
-			hand_r_spring_proximal_joint,
 			hand_motor_joint,
+			hand_l_proximal_joint,
+			hand_l_spring_proximal_joint,
+			hand_l_mimic_distal_joint,
+			hand_l_distal_joint,
+			hand_r_proximal_joint,
+			hand_r_spring_proximal_joint,
+			hand_r_mimic_distal_joint,
+			hand_r_distal_joint,
 			odom_x,
 			odom_y,
+			odom_r,
 			odom_t,
 		}
+
+		public static Dictionary<Joint, Vector3> JointAxis = new Dictionary<Joint, Vector3>()
+		{
+			{ Joint.arm_lift_joint,               Vector3.forward },
+			{ Joint.arm_flex_joint,               Vector3.up },
+			{ Joint.arm_roll_joint,               Vector3.back },
+			{ Joint.wrist_flex_joint,             Vector3.up },
+			{ Joint.wrist_roll_joint,             Vector3.back },
+			{ Joint.head_pan_joint,               Vector3.back },
+			{ Joint.head_tilt_joint,              Vector3.up },
+			{ Joint.torso_lift_joint,             Vector3.forward },
+			{ Joint.hand_motor_joint,             Vector3.right },
+			{ Joint.hand_l_proximal_joint,        Vector3.right },
+			{ Joint.hand_l_spring_proximal_joint, Vector3.right },
+			{ Joint.hand_l_mimic_distal_joint,    Vector3.right },
+			{ Joint.hand_l_distal_joint,          Vector3.right },
+			{ Joint.hand_r_proximal_joint,        Vector3.left },
+			{ Joint.hand_r_spring_proximal_joint, Vector3.left },
+			{ Joint.hand_r_mimic_distal_joint,    Vector3.left },
+			{ Joint.hand_r_distal_joint,          Vector3.left },
+			{ Joint.odom_x,                       Vector3.right },
+			{ Joint.odom_y,                       Vector3.up },
+			{ Joint.odom_t,                       Vector3.forward },
+		};
 
 		private struct JointRange
 		{
@@ -175,6 +216,7 @@ namespace SIGVerse.ToyotaHSR
 		//	return HSRCommon.GetClampedPosition(value * Mathf.Deg2Rad, joint) * Mathf.Rad2Deg;
 		//}
 
+
 		public static float GetNormalizedJointEulerAngle(float value, Joint joint)
 		{
 			switch(joint)
@@ -203,6 +245,47 @@ namespace SIGVerse.ToyotaHSR
 			
 			return value;
 		}
+
+		public static double GetNormalizedJointRosAngle(Transform link, Joint joint)
+		{
+			// Check to be sure
+			float unityAngle;
+			Vector3 unityAxis;
+			link.localRotation.ToAngleAxis(out unityAngle, out unityAxis);
+
+			if(Mathf.Abs(unityAngle) > 1.0f && Vector3.Distance(Abs(unityAxis), Abs(JointAxis[joint]))>0.01f)
+			{
+				SIGVerseLogger.Warn("Illegal JointAxis. JointName=" + joint.ToString() + ", unityAngle="+unityAngle+ ", unityAxis="+unityAxis.ToString("F4")+", JointAxis="+JointAxis[joint].ToString("F4"));
+			}
+
+			float eulerAngle;
+
+			if (Mathf.Abs(JointAxis[joint].x)==1)
+			{
+				eulerAngle = link.localEulerAngles.x * JointAxis[joint].x;
+			}
+			else if(Mathf.Abs(JointAxis[joint].y)==1)
+			{
+				eulerAngle = link.localEulerAngles.y * JointAxis[joint].y;
+			}
+			else if(Mathf.Abs(JointAxis[joint].z)==1)
+			{
+				eulerAngle = link.localEulerAngles.z * JointAxis[joint].z;
+			}
+			else
+			{
+				Debug.Log("Illegal JointAxis="+JointAxis[joint]);
+				throw new Exception("Illegal JointAxis="+JointAxis[joint]);
+			}
+
+			return GetNormalizedJointEulerAngle(eulerAngle, joint) * Mathf.Deg2Rad;
+		}
+
+		public static Vector3 Abs(Vector3 vec)
+		{
+			return new Vector3(Mathf.Abs(vec.x), Mathf.Abs(vec.y), Mathf.Abs(vec.z));
+		}
+
 
 		public static float GetMaxJointSpeed(Joint joint)
 		{

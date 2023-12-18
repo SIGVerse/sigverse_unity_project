@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityStandardAssets_1_1_2.CrossPlatformInput;
+using UnityEngine.XR;
+using SIGVerse.Common;
 
 #if SIGVERSE_STEAMVR
 using Valve.VR;
@@ -21,7 +23,7 @@ namespace SIGVerse.Human.VR
 		public float moveSpeedByHmd        = 2.0f;
 		public float strideMax = 0.3f;
 
-		public bool useSteamVrInput = true;
+		public bool useSteamVrInput = false;
 		//////////////////////////////
 
 		private Animator animator;
@@ -31,6 +33,8 @@ namespace SIGVerse.Human.VR
 
 		private float preHorizontal = 0.0f;
 		private float preVertical   = 0.0f;
+
+		private InputDevice leftHandDevice;
 
 		protected virtual void Awake()
 		{
@@ -54,22 +58,39 @@ namespace SIGVerse.Human.VR
 			{
 				this.fixedQuaternionsOrg[i] = this.fixedTransforms[i].localRotation;
 			}
+
+			if(!useSteamVrInput)
+			{
+				StartCoroutine(GetXrDevice(XRNode.LeftHand));
+			}
+		}
+
+		private IEnumerator GetXrDevice(XRNode xrNode)
+		{
+			yield return StartCoroutine(SIGVerseUtils.GetXrDevice(xrNode, x => this.leftHandDevice = x));
 		}
 
 		protected virtual (float, float) GetInput()
 		{
-			// read inputs
-			float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
-			float vertical   = CrossPlatformInputManager.GetAxis("Vertical");
-
-#if SIGVERSE_STEAMVR
-			if (this.useSteamVrInput)
+			if(!useSteamVrInput)
 			{
+				// Read inputs
+				if(this.leftHandDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 leftHandStickValue))
+				{
+					return (leftHandStickValue.x, leftHandStickValue.y);
+				}
+			}
+			else
+			{
+#if SIGVERSE_STEAMVR
 				horizontal = SteamVR_Actions.sigverse.Move.axis.x;
 				vertical   = SteamVR_Actions.sigverse.Move.axis.y;
-			}
+
+				return (horizontal, vertical);
 #endif
-			return (horizontal, vertical);
+			}
+
+			return (0f, 0f);
 		}
 
 		protected virtual void Update()

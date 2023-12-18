@@ -14,7 +14,8 @@ Shader "SIGVerse/ImageConverterXtionDepth"
 			#pragma fragment frag
 			#include "UnityCG.cginc"
 
-			sampler2D _CameraDepthTexture;
+//			sampler2D _CameraDepthTexture;
+			UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
 
 			struct v2f 
 			{

@@ -14,7 +14,7 @@ namespace SIGVerse.Common
 		protected const float RayStartPos = -0.002f; // [m]  Ray from 2mm behind
 		protected const float MaxRayDistance = 0.003f; // [m]
 
-		public float releaseThresholdDistance = 0.01f; // [m]
+		public float releaseThresholdDistance = 0.05f; // [m] 
 		public float releaseThresholdAngle = 10.0f;    // [deg]
 
 		public Transform vacuum;
@@ -118,17 +118,17 @@ namespace SIGVerse.Common
 				}
 				else
 				{
-					// Check Collision
-					Vector3    relPos = this.suckedRigidbody.transform.localPosition;
-					Quaternion relRot = this.suckedRigidbody.transform.localRotation;
+					Vector3    relPos = this.vacuum.InverseTransformPoint(this.suckedRigidbody.position);
+					Quaternion relRot = Quaternion.Inverse(this.vacuum.rotation) * this.suckedRigidbody.rotation;
 
 					bool isReleasePos = Vector3.Distance(this.initSuckedRelPos, relPos) > this.releaseThresholdDistance;
 					bool isReleaseRot = Quaternion.Angle(this.initSuckedRelRot, relRot) > this.releaseThresholdAngle;
 
-					if(isReleasePos || isReleaseRot)
+					if (isReleasePos || isReleaseRot)
 					{
-						//SIGVerseLogger.Info("Suction Pos Diff="+Vector3.Distance(this.initSuckedRelPos, relPos));
-						//SIGVerseLogger.Info("Suction Rot Diff="+Quaternion.Angle(this.initSuckedRelRot, relRot));
+						if (isReleasePos) { SIGVerseLogger.Warn("Suction Pos Diff=" + Vector3.Distance(this.initSuckedRelPos, relPos)+" > "+this.releaseThresholdDistance); }
+						if (isReleaseRot) { SIGVerseLogger.Warn("Suction Rot Diff=" + Quaternion.Angle(this.initSuckedRelRot, relRot)+" > "+this.releaseThresholdAngle); }
+
 						this.Release();
 						SIGVerseLogger.Warn("The sucked object was released. (Probably due to collisions)");
 					}
@@ -164,9 +164,9 @@ namespace SIGVerse.Common
 			collidedRigidbody.gameObject.AddComponent<GraspedObjectFixer>();
 
 			this.suckedRigidbody = collidedRigidbody;
-
-			this.initSuckedRelPos = this.suckedRigidbody.transform.localPosition;
-			this.initSuckedRelRot = this.suckedRigidbody.transform.localRotation;
+			
+			this.initSuckedRelPos = this.vacuum.InverseTransformPoint(this.suckedRigidbody.position);
+			this.initSuckedRelRot = Quaternion.Inverse(this.vacuum.rotation) * this.suckedRigidbody.rotation;
 
 			SIGVerseLogger.Info("Suction: Sucked: " + this.suckedRigidbody.name);
 		}

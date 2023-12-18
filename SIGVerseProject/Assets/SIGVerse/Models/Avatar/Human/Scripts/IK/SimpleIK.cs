@@ -7,14 +7,9 @@ namespace SIGVerse.Human.IK
 	[RequireComponent(typeof(Animator))]
 	public class SimpleIK : MonoBehaviour
 	{
-		[HeaderAttribute ("Avatar")]
-		public Transform avatarLeftEye;
-		public Transform avatarRightEye;
-
 		[HeaderAttribute ("IK Effectors")]
 		public Transform bodyAnchor;
 		public Transform lookAtAnchor;
-		public Transform eyeAnchor;
 		public Transform leftHandAnchor;
 		public Transform rightHandAnchor;
 		public Transform leftFootAnchor;
@@ -59,8 +54,10 @@ namespace SIGVerse.Human.IK
 
 		void OnAnimatorIK(int layerIndex)
 		{
+			if (this.animator==null) { return; }
+
 //			this.animator.SetLookAtWeight(this.lookAtWeight,0.3f,0.6f,1.0f,0.5f);
-			this.animator.SetLookAtWeight(this.lookAtWeight, 0.0f, 1.0f, 1.0f, 1.0f);
+			this.animator.SetLookAtWeight(this.lookAtWeight);
 
 			this.animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, this.leftHandWeightPosition);
 			this.animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, this.leftHandWeightRotation);

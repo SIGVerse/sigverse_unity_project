@@ -138,6 +138,7 @@ namespace SIGVerse.Common
 				{
 					if(this.graspedRigidbody.constraints == RigidbodyConstraints.FreezeAll) { return; }
 
+//					Debug.LogWarning("The grasped object is released by the collision with other object.");
 					this.Release();
 				}
 			}
