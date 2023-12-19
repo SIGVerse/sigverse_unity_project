@@ -83,10 +83,7 @@ namespace SIGVerse.Human.VR
 			else
 			{
 #if SIGVERSE_STEAMVR
-				horizontal = SteamVR_Actions.sigverse.Move.axis.x;
-				vertical   = SteamVR_Actions.sigverse.Move.axis.y;
-
-				return (horizontal, vertical);
+				return (SteamVR_Actions.sigverse.Move.axis.x, SteamVR_Actions.sigverse.Move.axis.y);
 #endif
 			}
 
