@@ -51,7 +51,7 @@ namespace SIGVerse.Common
 			this.suckedRigidbody.useGravity  = true;
 			this.suckedRigidbody.constraints = RigidbodyConstraints.None;
 
-			GraspedObjectFixer graspedObjectFixer = this.suckedRigidbody.gameObject.GetComponent<GraspedObjectFixer>();
+			GraspedObjectFixerWithHolder graspedObjectFixer = this.suckedRigidbody.gameObject.GetComponent<GraspedObjectFixerWithHolder>();
 			graspedObjectFixer.enabled = false;
 			Destroy(graspedObjectFixer);
 
