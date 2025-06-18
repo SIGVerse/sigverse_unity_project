@@ -5,7 +5,7 @@ using UnityEngine;
 using Unity.XR.CoreUtils;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Inputs;
-using UnityEngine.XR.Interaction.Toolkit.UI;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.InputSystem.XR;
 using SIGVerse.Human.VR;
 

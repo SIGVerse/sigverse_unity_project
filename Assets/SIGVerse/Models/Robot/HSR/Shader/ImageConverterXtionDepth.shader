@@ -33,9 +33,18 @@ Shader "SIGVerse/ImageConverterXtionDepth"
 
 				return o;
 			}
-	
+
+			float2 DepthToRGEncoded(float v)
+			{
+				uint u = (uint)v; // For 16UC1
+				return float2(
+					(u >> 0)  & 0xFF,
+					(u >> 8)  & 0xFF
+				) / 255.0;
+			}
+
 			//Fragment Shader
-			half4 frag(v2f i) : COLOR
+			float4 frag(v2f i) : SV_Target
 			{
 				float depthValue = Linear01Depth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv));
 
@@ -50,16 +59,20 @@ Shader "SIGVerse/ImageConverterXtionDepth"
 					depth_mm = depthValue * _ProjectionParams.z * 1000;
 				}
 
-				float upperVal = trunc(depth_mm / 256);
-				float lowerVal = depth_mm - upperVal * 256;
+				// float upperVal = trunc(depth_mm / 256);
+				// float lowerVal = depth_mm - upperVal * 256;
 
-				half4 depth;
-				depth.r = (float)lowerVal / 256.0f;
-				depth.g = (float)upperVal / 256.0f;
-				depth.b = 0;
-				depth.a = 1;
+				// half4 depth;
+				// depth.r = (float)lowerVal / 255.0f;
+				// depth.g = (float)upperVal / 255.0f;
+				// depth.b = 0;
+				// depth.a = 1;
+
+				// return depth;
+
+				float2 rg = DepthToRGEncoded(depth_mm);
 		
-				return depth;
+				return float4(rg.x, rg.y, 0.0, 1.0);
 			}
 
 			ENDCG

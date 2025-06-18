@@ -47,7 +47,7 @@ namespace UnityStandardAssets_1_1_2.Utility
             transform.rotation = originalRotation;
             if (Rigidbody)
             {
-                Rigidbody.velocity = Vector3.zero;
+                Rigidbody.linearVelocity = Vector3.zero;
                 Rigidbody.angularVelocity = Vector3.zero;
             }
 

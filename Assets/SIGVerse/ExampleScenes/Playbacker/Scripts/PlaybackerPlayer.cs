@@ -315,7 +315,7 @@ namespace SIGVerse.ExampleScenes.Playbacker
 					this.rigidbodyIsKinematicMap.Add(rigidbody, rigidbody.isKinematic);
 
 					rigidbody.isKinematic     = true;
-					rigidbody.velocity        = Vector3.zero;
+					rigidbody.linearVelocity  = Vector3.zero;
 					rigidbody.angularVelocity = Vector3.zero;
 				}
 			}
@@ -365,7 +365,7 @@ namespace SIGVerse.ExampleScenes.Playbacker
 			foreach(KeyValuePair<Rigidbody, bool> pair in this.rigidbodyIsKinematicMap)
 			{
 				pair.Key.isKinematic     = pair.Value;
-				pair.Key.velocity        = Vector3.zero;
+				pair.Key.linearVelocity        = Vector3.zero;
 				pair.Key.angularVelocity = Vector3.zero;
 			}
 

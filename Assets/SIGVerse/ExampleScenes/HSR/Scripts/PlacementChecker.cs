@@ -83,7 +83,7 @@ namespace SIGVerse.ExampleScenes.Hsr
 				}
 				case JudgeType.In :
 				{
-					return this.placedRigidbodyMap.ContainsKey(targetRigidbody) && this.placedRigidbodyMap[targetRigidbody] > 0 && targetRigidbody.velocity.magnitude < ThresholdVelocity;
+					return this.placedRigidbodyMap.ContainsKey(targetRigidbody) && this.placedRigidbodyMap[targetRigidbody] > 0 && targetRigidbody.linearVelocity.magnitude < ThresholdVelocity;
 				}
 				default:
 				{

@@ -372,7 +372,7 @@ namespace SIGVerse.Common.Recorder
 			else if (type == typeof(Rigidbody))
 			{
 				((Rigidbody)component).isKinematic = true;
-				((Rigidbody)component).velocity = Vector3.zero;
+				((Rigidbody)component).linearVelocity = Vector3.zero;
 				((Rigidbody)component).angularVelocity = Vector3.zero;
 			}
 			else if(type == typeof(Animator))

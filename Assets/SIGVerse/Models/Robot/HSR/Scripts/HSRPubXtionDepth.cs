@@ -14,6 +14,7 @@ namespace SIGVerse.ToyotaHSR
 {
 	public class HSRPubXtionDepth : MonoBehaviour
 	{
+		public bool debugPrintForDepth = false;
 		//--------------------------------------------------
 
 		private System.Net.Sockets.TcpClient tcpClientCameraInfo = null;
@@ -30,7 +31,7 @@ namespace SIGVerse.ToyotaHSR
 		// Camera
 		private Camera targetCamera;
 		private Texture2D imageTexture;
-		byte[]  byteArray; 
+//		byte[]  byteArray; 
 
 
 		// TimeStamp
@@ -91,9 +92,9 @@ namespace SIGVerse.ToyotaHSR
 			int imageWidth  = this.targetCamera.targetTexture.width;
 			int imageHeight = this.targetCamera.targetTexture.height;
 
-			this.byteArray = Enumerable.Repeat<byte>(0xFF, imageWidth * imageHeight * 2).ToArray();
+//			this.byteArray = Enumerable.Repeat<byte>(0xFF, imageWidth * imageHeight * 2).ToArray();
 
-			this.imageTexture = new Texture2D(imageWidth, imageHeight, TextureFormat.RGB24, false);
+			this.imageTexture = new Texture2D(imageWidth, imageHeight, TextureFormat.RG16, false);
 
 
 			//  [CameraInfo]
@@ -215,24 +216,39 @@ namespace SIGVerse.ToyotaHSR
 //			yield return null;
 
 			// [Image_raw]
-			int textureWidth = this.imageTexture.width;
-			int textureHeight = this.imageTexture.height;
+			//int textureWidth = this.imageTexture.width;
+			//int textureHeight = this.imageTexture.height;
 
-			for (int row = 0; row < textureHeight; row++)
-			{
-				for (int col = 0; col < textureWidth; col++)
-				{
-					int index = row * textureWidth + col;
-					this.byteArray[index * 2 + 0] = rawTextureData[index * 3 + 0];
-					this.byteArray[index * 2 + 1] = rawTextureData[index * 3 + 1];
-				}
-			}
+			//for (int row = 0;row < textureHeight;row++)
+			//{
+			//	for (int col = 0;col < textureWidth;col++)
+			//	{
+			//		int index = row * textureWidth + col;
+			//		this.byteArray[index * 2 + 0] = rawTextureData[index * 3 + 0];
+			//		this.byteArray[index * 2 + 1] = rawTextureData[index * 3 + 1];
+			//	}
+			//}
 
 //			yield return null;
 
 			this.imageData.header = this.header;
-			this.imageData.data = this.byteArray;
+//			this.imageData.data = this.byteArray;
+			this.imageData.data = this.imageTexture.GetRawTextureData();
 			this.imageMsg.msg = this.imageData;
+
+			// Debug Print for Depth
+			if (this.debugPrintForDepth)
+			{
+				int center = this.imageTexture.width * this.imageTexture.height / 2 - this.imageTexture.width / 2;
+
+				uint depth =
+					((uint)this.imageData.data[center * 2 + 1]) << 8 |
+					((uint)this.imageData.data[center * 2 + 0]);
+
+				Debug.LogWarning("depth = " + BitConverter.ToUInt16(BitConverter.GetBytes(depth), 0) + "[mm]");
+
+				this.debugPrintForDepth = false;
+			}
 
 			if(this.isUsingThread)
 			{

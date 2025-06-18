@@ -32,8 +32,19 @@ Shader "SIGVerse/ZEDMiniDepth"
 				return o;
 			}
 	
+			float4 DepthToRGBAEncoded(float v)
+			{
+				uint u = asuint(v); // For 32FC1
+				return float4(
+					(u >> 0)  & 0xFF,
+					(u >> 8)  & 0xFF,
+					(u >> 16) & 0xFF,
+					(u >> 24) & 0xFF
+				) / 255.0;
+			}
+
 			//Fragment Shader
-			float frag(v2f i) : COLOR
+			float4 frag(v2f i) : SV_Target
 			{
 				float depthValue = Linear01Depth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv));
 
@@ -48,7 +59,7 @@ Shader "SIGVerse/ZEDMiniDepth"
 					depth_m = depthValue * _ProjectionParams.z;
 				}
 		
-				return depth_m;
+				return DepthToRGBAEncoded(depth_m);
 			}
 
 			ENDCG

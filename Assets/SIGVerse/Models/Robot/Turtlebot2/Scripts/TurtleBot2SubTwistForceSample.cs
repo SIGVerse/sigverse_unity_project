@@ -30,7 +30,7 @@ namespace SIGVerse.TurtleBot
 
 //			Debug.Log("val =" + this.baseRigidbody.transform.InverseTransformDirection(this.baseRigidbody.velocity).x + ", coef=" + coefAccelForce);
 
-			this.baseRigidbody.AddForce (this.coefForce  * this.baseRigidbody.mass * (coefAccelForce  * base.baseFootprint.transform.right   * (-linearVelX)  - this.baseRigidbody.velocity));
+			this.baseRigidbody.AddForce (this.coefForce  * this.baseRigidbody.mass * (coefAccelForce  * base.baseFootprint.transform.right   * (-linearVelX)  - this.baseRigidbody.linearVelocity));
 			this.baseRigidbody.AddTorque(this.coefTorque * this.baseRigidbody.mass * (coefAccelTorque * base.baseFootprint.transform.forward * (-angularVelZ) - this.baseRigidbody.angularVelocity));
 		}
 	}

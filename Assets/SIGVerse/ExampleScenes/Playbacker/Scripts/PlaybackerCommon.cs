@@ -148,7 +148,7 @@ namespace SIGVerse.ExampleScenes.Playbacker
 
 			foreach (Rigidbody rigidbody in this.targetRigidbodies)
 			{
-				rigidbody.velocity        = Vector3.zero;
+				rigidbody.linearVelocity        = Vector3.zero;
 				rigidbody.angularVelocity = Vector3.zero;
 			}
 		}
