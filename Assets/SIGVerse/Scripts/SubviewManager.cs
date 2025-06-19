@@ -208,7 +208,7 @@ namespace SIGVerse.Common
 
 
 			// Recreate the camera list
-			Camera[] allCameras = GameObject.FindObjectsOfType<Camera>();
+			Camera[] allCameras = GameObject.FindObjectsByType<Camera>(FindObjectsSortMode.None);
 
 			// Excluding subview cameras
 			Camera[] cameras = allCameras.Except(this.subviewCameras).ToArray();
@@ -401,7 +401,7 @@ namespace SIGVerse.Common
 
 		public static void SetSubviewCamera(SubviewType subviewType, Camera camera)
 		{
-			SIGVerseMenu sigverseMenu = GameObject.FindObjectOfType<SIGVerseMenu>();
+			SIGVerseMenu sigverseMenu = GameObject.FindAnyObjectByType<SIGVerseMenu>();
 
 			if(sigverseMenu == null)
 			{
@@ -539,7 +539,7 @@ namespace SIGVerse.Common
 
 		public static void SetSubviewPosition(SubviewType subviewType, SubviewPositionType subviewPositionType, float offsetX, float offsetY, float sizeX, float sizeY)
 		{
-			SIGVerseMenu sigverseMenu = GameObject.FindObjectOfType<SIGVerseMenu>();
+			SIGVerseMenu sigverseMenu = GameObject.FindAnyObjectByType<SIGVerseMenu>();
 
 			if(sigverseMenu == null)
 			{

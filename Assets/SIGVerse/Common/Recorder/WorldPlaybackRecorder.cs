@@ -174,7 +174,7 @@ namespace SIGVerse.Common.Recorder
 			{
 				case TargetType.AllObjects:
 				{
-					this.targetTransforms = FindObjectsOfType<Transform>().ToList(); // High Load
+					this.targetTransforms = FindObjectsByType<Transform>(FindObjectsSortMode.None).ToList(); // High Load
 
 					break;
 				}
@@ -182,7 +182,7 @@ namespace SIGVerse.Common.Recorder
 				{
 					HashSet<Transform> targetHashSet = new HashSet<Transform>();
 
-					Rigidbody[] rigidbodies = FindObjectsOfType<Rigidbody>(); // High Load
+					Rigidbody[] rigidbodies = FindObjectsByType<Rigidbody>(FindObjectsSortMode.None); // High Load
 
 					foreach (Rigidbody rb in rigidbodies)
 					{
@@ -195,7 +195,7 @@ namespace SIGVerse.Common.Recorder
 				}
 				case TargetType.ObjectsWithRigidbody:
 				{
-					Rigidbody[] rigidbodies = FindObjectsOfType<Rigidbody>(); // High Load
+					Rigidbody[] rigidbodies = FindObjectsByType<Rigidbody>(FindObjectsSortMode.None); // High Load
 
 					this.targetTransforms = rigidbodies.Select(x => x.transform).ToList();
 

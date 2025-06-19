@@ -356,7 +356,7 @@ namespace SIGVerse.Common.Recorder
 
 		protected virtual void DisableComponent()
 		{
-			List<Component> allComponents = GameObject.FindObjectsOfType<Component>().ToList(); // High Load
+			List<Component> allComponents = GameObject.FindObjectsByType<Component>(FindObjectsSortMode.None).ToList(); // High Load
 
 			allComponents.ForEach(component => this.DisableComponent(component));
 		}

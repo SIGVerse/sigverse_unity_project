@@ -88,7 +88,7 @@ namespace SIGVerse.Common
 		{
 			List<T> list = new List<T>();
 
-			Component[] allComponents = GameObject.FindObjectsOfType<Component>(); // High Load
+			Component[] allComponents = GameObject.FindObjectsByType<Component>(FindObjectsSortMode.None); // High Load
 
 			foreach (Component component in allComponents)
 			{

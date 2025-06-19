@@ -81,7 +81,7 @@ namespace SIGVerse.Common
 		[RuntimeInitializeOnLoadMethod()]
 		private static void Init()
 		{
-			if(GameObject.FindObjectOfType<SIGVerseMenu>()!=null) { return; };
+			if(GameObject.FindFirstObjectByType<SIGVerseMenu>()!=null) { return; };
 
 			if(!ConfigManager.Instance.configInfo.useSigverseMenu) { return; }
 
@@ -148,7 +148,7 @@ namespace SIGVerse.Common
 
 		private static void CreateEventSystem()
 		{
-			EventSystem eventSystem = GameObject.FindObjectOfType<EventSystem> ();
+			EventSystem eventSystem = GameObject.FindFirstObjectByType<EventSystem> ();
 
 			if(eventSystem==null)
 			{

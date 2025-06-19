@@ -14,7 +14,7 @@ namespace SIGVerse.Common
 			operationTarget.transform.root.Find(SubViewControllerStr).gameObject.SetActive(true);
 
 			// Update the camera list before enable SubviewOptionController
-			GameObject.FindObjectOfType<SubviewManager>().UpdateCameraList();
+			GameObject.FindAnyObjectByType<SubviewManager>().UpdateCameraList();
 
 			SubviewOptionController[] subviewOptionControllers = operationTarget.GetComponentsInChildren<SubviewOptionController>();
 
