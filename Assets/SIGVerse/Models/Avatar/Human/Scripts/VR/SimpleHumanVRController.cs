@@ -5,10 +5,6 @@ using UnityEngine;
 using UnityEngine.XR;
 using SIGVerse.Common;
 
-#if SIGVERSE_STEAMVR
-using Valve.VR;
-#endif
-
 namespace SIGVerse.Human.VR
 {
 	public class SimpleHumanVRController : MonoBehaviour
@@ -22,8 +18,6 @@ namespace SIGVerse.Human.VR
 		public float moveSpeedByController = 1.0f;
 		public float moveSpeedByHmd        = 2.0f;
 		public float strideMax = 0.3f;
-
-		public bool useSteamVrInput = false;
 		//////////////////////////////
 
 		private Animator animator;
@@ -59,10 +53,7 @@ namespace SIGVerse.Human.VR
 				this.fixedQuaternionsOrg[i] = this.fixedTransforms[i].localRotation;
 			}
 
-			if(!useSteamVrInput)
-			{
-				StartCoroutine(GetXrDevice(XRNode.LeftHand));
-			}
+			StartCoroutine(GetXrDevice(XRNode.LeftHand));
 		}
 
 		private IEnumerator GetXrDevice(XRNode xrNode)
@@ -72,19 +63,10 @@ namespace SIGVerse.Human.VR
 
 		protected virtual (float, float) GetInput()
 		{
-			if(!useSteamVrInput)
+			// Read inputs
+			if(this.leftHandDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 leftHandStickValue))
 			{
-				// Read inputs
-				if(this.leftHandDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 leftHandStickValue))
-				{
-					return (leftHandStickValue.x, leftHandStickValue.y);
-				}
-			}
-			else
-			{
-#if SIGVERSE_STEAMVR
-				return (SteamVR_Actions.sigverse.Move.axis.x, SteamVR_Actions.sigverse.Move.axis.y);
-#endif
+				return (leftHandStickValue.x, leftHandStickValue.y);
 			}
 
 			return (0f, 0f);
