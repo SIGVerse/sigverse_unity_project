@@ -37,7 +37,7 @@ namespace SIGVerse.Common
 
 				MethodInfo mUpdateCurrentMovementType = type.GetMethod("UpdateCurrentMovementType", BindingFlags.NonPublic | BindingFlags.Instance);
 				FieldInfo fM_Rigidbody = type.GetField("m_Rigidbody", BindingFlags.NonPublic | BindingFlags.Instance);
-				FieldInfo fM_DetachVelocity = type.GetField("m_DetachVelocity", BindingFlags.NonPublic | BindingFlags.Instance);
+				FieldInfo fM_DetachLinearVelocity = type.GetField("m_DetachLinearVelocity", BindingFlags.NonPublic | BindingFlags.Instance);
 				FieldInfo fM_DetachAngularVelocity = type.GetField("m_DetachAngularVelocity", BindingFlags.NonPublic | BindingFlags.Instance);
 				MethodInfo mInitializeTargetPoseAndScale = type.GetMethod("InitializeTargetPoseAndScale", BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -45,19 +45,14 @@ namespace SIGVerse.Common
 				//m_OriginalSceneParent = thisTransform.parent;
 				//thisTransform.SetParent(null);
 				
-				//UpdateCurrentMovementType();
 				mUpdateCurrentMovementType.Invoke(this, null);
-				//SetupRigidbodyGrab(m_Rigidbody);
 				SetupRigidbodyGrab((Rigidbody)(fM_Rigidbody.GetValue(this)));
 
 				// Reset detach velocities
-				//m_DetachVelocity = Vector3.zero;
-				fM_DetachVelocity.SetValue(this, Vector3.zero);
-				//m_DetachAngularVelocity = Vector3.zero;
+				fM_DetachLinearVelocity.SetValue(this, Vector3.zero);
 				fM_DetachAngularVelocity.SetValue(this, Vector3.zero);
 
 				// Initialize target pose and scale
-				//InitializeTargetPoseAndScale(transform);
 				mInitializeTargetPoseAndScale.Invoke(this, new object[] { transform });
 			}
 		}
