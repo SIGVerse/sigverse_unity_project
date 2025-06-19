@@ -5,6 +5,7 @@ using UnityEngine;
 using System.IO;
 using System;
 using UnityEngine.XR;
+using UnityEditor.Build;
 
 namespace SIGVerse.Common
 {
@@ -21,15 +22,13 @@ namespace SIGVerse.Common
 		private const string WindowName   = "SIGVerse";
 		private const string MenuItemName = "SIGVerse/SIGVerse Settings"; 
 
-		private static readonly BuildTargetGroup[] BuildTargetGroupList = new BuildTargetGroup[]
+		private static readonly NamedBuildTarget[] NamedBuildTargets = new NamedBuildTarget[]
 		{
-			BuildTargetGroup.Standalone,
-			BuildTargetGroup.iOS,
-			BuildTargetGroup.Android,
-			BuildTargetGroup.WebGL,
-			BuildTargetGroup.PS4
+			NamedBuildTarget.Standalone,
+			NamedBuildTarget.iOS,
+			NamedBuildTarget.Android,
+			NamedBuildTarget.WebGL
 		};
-
 
 		private Texture2D conceptTexture;
 		private Rect headerRect;
@@ -109,8 +108,6 @@ namespace SIGVerse.Common
 
 			EditorGUI.BeginChangeCheck();
 
-
-
 			this.rosbridgeIP         = EditorGUILayout.TextField("Rosbridge IP",                       this.rosbridgeIP,        GUILayout.Width(EditorGUIUtility.labelWidth + 120));
 			this.rosbridgePort       = EditorGUILayout.IntField ("Rosbridge Port",                     this.rosbridgePort,      GUILayout.Width(EditorGUIUtility.labelWidth + 80));
 			this.sigverseBridgePort  = EditorGUILayout.IntField ("SIGVerse Bridge Port",               this.sigverseBridgePort, GUILayout.Width(EditorGUIUtility.labelWidth + 80));
@@ -173,9 +170,9 @@ namespace SIGVerse.Common
 
 			if (EditorGUI.EndChangeCheck())
 			{
-				foreach (BuildTargetGroup buildTargetGroup in BuildTargetGroupList)
+				foreach (NamedBuildTarget namedBuildTarget in NamedBuildTargets)
 				{
-					string[] scriptingDefineSymbols  = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup).Split(SymbolSeparator);
+					string[] scriptingDefineSymbols  = PlayerSettings.GetScriptingDefineSymbols(namedBuildTarget).Split(SymbolSeparator);
 
 					List<string> scriptingDefineSymbolList = new List<string>(scriptingDefineSymbols);
 
@@ -191,7 +188,7 @@ namespace SIGVerse.Common
 					string defineSymbolsStr = String.Join(SymbolSeparator.ToString(), scriptingDefineSymbolList.ToArray());
 
 					// Update ScriptingDefineSymbols of PlayerSettings
-					PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, defineSymbolsStr);
+					PlayerSettings.SetScriptingDefineSymbols(namedBuildTarget, defineSymbolsStr);
 
 					// Update SIGVerseScriptingDefineSymbols of EditorUserSettings
 					EditorUserSettings.SetConfigValue(SIGVerseScriptingDefineSymbolsKey, defineSymbolsStr);
@@ -200,17 +197,6 @@ namespace SIGVerse.Common
 
 			GUILayout.Space(10);
 			GUILayout.Box("", GUILayout.Width(this.position.width), GUILayout.Height(2));
-
-
-			//// Create Scripts
-			//GUILayout.Label("Create Scripts", EditorStyles.boldLabel);
-
-			//EditorGUI.indentLevel++;
-
-			//if (GUILayout.Button ("Create '" +SIGVerseScriptCreator.ScriptName+ "'", GUILayout.Width(300)))
-			//{
-			//	SIGVerseScriptCreator.CreateScript();
-			//}
 		}
 
 		void UpdateScriptingDefineSymbolList(ref List<string> scriptingDefineSymbolList, bool isUsingDefine, string defineStr)
