@@ -1,5 +1,3 @@
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
 Shader "SIGVerse/ImageConverterXtionDepth" 
 {
 	SubShader
@@ -58,17 +56,6 @@ Shader "SIGVerse/ImageConverterXtionDepth"
 				{
 					depth_mm = depthValue * _ProjectionParams.z * 1000;
 				}
-
-				// float upperVal = trunc(depth_mm / 256);
-				// float lowerVal = depth_mm - upperVal * 256;
-
-				// half4 depth;
-				// depth.r = (float)lowerVal / 255.0f;
-				// depth.g = (float)upperVal / 255.0f;
-				// depth.b = 0;
-				// depth.a = 1;
-
-				// return depth;
 
 				float2 rg = DepthToRGEncoded(depth_mm);
 		

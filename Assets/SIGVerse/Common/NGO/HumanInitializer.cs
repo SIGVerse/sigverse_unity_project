@@ -55,7 +55,8 @@ namespace SIGVerse.Common
 
 				Array.ForEach(this.xritkSetup.GetComponentsInChildren<ActionBasedController>(), x => x.enabled = true);
 				Array.ForEach(this.xritkSetup.GetComponentsInChildren<XRDirectInteractor>(), x=>x.enabled = true);
-				Array.ForEach(this.xritkSetup.GetComponentsInChildren<GraspableHighlighter>(), x=>x.enabled = true);
+//				Array.ForEach(this.xritkSetup.GetComponentsInChildren<GraspableHighlighter>(), x=>x.enabled = true);
+				Array.ForEach(this.xritkSetup.GetComponentsInChildren<GraspableOutlineRenderer>(), x=>x.enabled = true);
 				Array.ForEach(this.xritkSetup.GetComponentsInChildren<SphereCollider>(), x=>x.enabled = true);
 
 				SubviewController.EnableSubview(this.gameObject);

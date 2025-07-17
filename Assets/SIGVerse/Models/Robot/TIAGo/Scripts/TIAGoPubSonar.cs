@@ -33,17 +33,17 @@ namespace SIGVerse.TIAGo
 
 			foreach(Camera camera in this.cameras)
 			{
-				ImageConverterForROS imageConverterForROS = camera.GetComponent<ImageConverterForROS>();
+				RobotCameraSettings robotCameraSettings = camera.GetComponent<RobotCameraSettings>();
 
 				Range range = new Range();
 				range.header = new Header(0, new SIGVerse.RosBridge.msg_helpers.Time(0, 0), camera.transform.parent.gameObject.name);
 				range.radiation_type = this.radiationType;
 				range.field_of_view  = camera.fieldOfView * Mathf.Deg2Rad ;
-				range.min_range      = imageConverterForROS.sensorNear;
+				range.min_range      = robotCameraSettings.sonarMinValue;
 				range.max_range      = camera.farClipPlane;
 
 				this.ranges.Add(range);
-				this.imageTextures.Add(new Texture2D(imageConverterForROS.width, imageConverterForROS.height, TextureFormat.RGB24, false));
+				this.imageTextures.Add(new Texture2D(robotCameraSettings.width, robotCameraSettings.height, TextureFormat.RGB24, false));
 			}
 		}
 

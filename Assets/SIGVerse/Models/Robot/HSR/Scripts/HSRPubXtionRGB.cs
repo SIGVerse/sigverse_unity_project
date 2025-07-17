@@ -8,6 +8,7 @@ using SIGVerse.Common;
 using SIGVerse.SIGVerseRosBridge;
 using System.Threading;
 using SIGVerse.RosBridge;
+using UnityEngine.Rendering;
 
 namespace SIGVerse.ToyotaHSR
 {
@@ -47,6 +48,16 @@ namespace SIGVerse.ToyotaHSR
 		void Awake()
 		{
 			this.cameraFrameObj = this.transform.parent.gameObject;
+		}
+
+		void OnEnable()
+		{
+			RenderPipelineManager.endCameraRendering += OnEndCameraRendering;
+		}
+
+		void OnDisable()
+		{
+			RenderPipelineManager.endCameraRendering -= OnEndCameraRendering;
 		}
 
 		public void Initialize(string rosBridgeIP, int sigverseBridgePort, string topicNameCameraInfo, string topicNameImage, bool isUsingThread)
@@ -161,7 +172,8 @@ namespace SIGVerse.ToyotaHSR
 		//{
 		//}
 
-		void OnPostRender()
+//		void OnPostRender()
+		protected virtual void OnEndCameraRendering(ScriptableRenderContext context, Camera camera)
 		{
 			if(this.shouldSendMessage)
 			{

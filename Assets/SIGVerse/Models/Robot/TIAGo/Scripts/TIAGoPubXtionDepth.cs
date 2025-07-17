@@ -40,25 +40,36 @@ namespace SIGVerse.TIAGo
 			return new ImageForSIGVerseBridge(null, imageHeight, imageWidth, encoding, isBigendian, step, null);
 		}
 
-		protected override byte[] GetImageData(Texture2D imageTexture)
+		protected override void DebugPrintForDepth()
 		{
-			byte[] rawTextureData = this.imageTexture.GetRawTextureData();
+			int center = this.imageTexture.width * this.imageTexture.height / 2 - this.imageTexture.width / 2;
 
-			int textureWidth  = this.imageTexture.width;
-			int textureHeight = this.imageTexture.height;
+			uint depth =
+				((uint)this.imageData.data[center * 2 + 1]) << 8 |
+				((uint)this.imageData.data[center * 2 + 0]);
 
-			for (int row = 0; row < textureHeight; row++)
-			{
-				for (int col = 0; col < textureWidth; col++)
-				{
-					int index = row * textureWidth + col;
-
-					this.imageByteArray[index * 2 + 0] = rawTextureData[index * 3 + 0];
-					this.imageByteArray[index * 2 + 1] = rawTextureData[index * 3 + 1];
-				}
-			}
-
-			return this.imageByteArray;
+			Debug.LogWarning("depth = " + BitConverter.ToUInt16(BitConverter.GetBytes(depth), 0) + "[mm]");
 		}
+
+		//protected override byte[] GetImageData(Texture2D imageTexture)
+		//{
+		//	byte[] rawTextureData = this.imageTexture.GetRawTextureData();
+
+		//	int textureWidth  = this.imageTexture.width;
+		//	int textureHeight = this.imageTexture.height;
+
+		//	for (int row = 0; row < textureHeight; row++)
+		//	{
+		//		for (int col = 0; col < textureWidth; col++)
+		//		{
+		//			int index = row * textureWidth + col;
+
+		//			this.imageByteArray[index * 2 + 0] = rawTextureData[index * 3 + 0];
+		//			this.imageByteArray[index * 2 + 1] = rawTextureData[index * 3 + 1];
+		//		}
+		//	}
+
+		//	return this.imageByteArray;
+		//}
 	}
 }

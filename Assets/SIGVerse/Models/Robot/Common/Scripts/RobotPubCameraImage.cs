@@ -8,6 +8,7 @@ using SIGVerse.Common;
 using SIGVerse.SIGVerseRosBridge;
 using System.Threading;
 using SIGVerse.RosBridge;
+using UnityEngine.Rendering;
 
 namespace SIGVerse.Common
 {
@@ -50,6 +51,16 @@ namespace SIGVerse.Common
 		protected virtual void Awake()
 		{
 			this.cameraFrameObj = this.transform.parent.gameObject;
+		}
+
+		void OnEnable()
+		{
+			RenderPipelineManager.endCameraRendering += OnEndCameraRendering;
+		}
+
+		void OnDisable()
+		{
+			RenderPipelineManager.endCameraRendering -= OnEndCameraRendering;
 		}
 
 		public virtual void Initialize(string rosBridgeIP, int sigverseBridgePort, string topicNameCameraInfo, string topicNameImage, bool isUsingThread)
@@ -180,7 +191,8 @@ namespace SIGVerse.Common
 		//{
 		//}
 
-		protected virtual void OnPostRender()
+//		protected virtual void OnPostRender()
+		protected virtual void OnEndCameraRendering(ScriptableRenderContext context, Camera camera)
 		{
 			if(this.shouldSendMessage)
 			{
@@ -230,15 +242,7 @@ namespace SIGVerse.Common
 			// Debug Print for Depth
 			if (this.debugPrintForDepth)
 			{
-				int center = this.imageTexture.width * this.imageTexture.height / 2 - this.imageTexture.width / 2;
-
-				uint depth =
-					((uint)this.imageData.data[center * 4 + 3]) << 24 |
-					((uint)this.imageData.data[center * 4 + 2]) << 16 |
-					((uint)this.imageData.data[center * 4 + 1]) << 8 |
-					((uint)this.imageData.data[center * 4 + 0]);
-
-				Debug.LogWarning("depth = " + BitConverter.ToSingle(BitConverter.GetBytes(depth), 0) + "[m]");
+				DebugPrintForDepth();
 
 				this.debugPrintForDepth = false;
 			}
@@ -266,6 +270,19 @@ namespace SIGVerse.Common
 		{
 			this.cameraInfoMsg.SendMsg(this.networkStreamCameraInfo);
 			this.isPublishingCameraInfo = false;
+		}
+
+		protected virtual void DebugPrintForDepth()
+		{
+			int center = this.imageTexture.width * this.imageTexture.height / 2 - this.imageTexture.width / 2;
+
+			uint depth =
+				((uint)this.imageData.data[center * 4 + 3]) << 24 |
+				((uint)this.imageData.data[center * 4 + 2]) << 16 |
+				((uint)this.imageData.data[center * 4 + 1]) << 8 |
+				((uint)this.imageData.data[center * 4 + 0]);
+
+			Debug.LogWarning("depth = " + BitConverter.ToSingle(BitConverter.GetBytes(depth), 0) + "[m]");
 		}
 
 		protected virtual void SendImage()

@@ -34,5 +34,10 @@ namespace SIGVerse.TIAGo
 
 			return new ImageForSIGVerseBridge(null, imageHeight, imageWidth, encoding, isBigendian, step, null);
 		}
+
+		protected override void DebugPrintForDepth()
+		{
+			Debug.LogWarning("Not Depth");
+		}
 	}
 }
