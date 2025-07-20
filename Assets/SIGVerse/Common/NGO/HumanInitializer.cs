@@ -8,6 +8,8 @@ using UnityEngine.XR.Interaction.Toolkit.Inputs;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.InputSystem.XR;
 using SIGVerse.Human.VR;
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Haptics;
+using UnityEngine.XR.Interaction.Toolkit.Feedback;
 
 namespace SIGVerse.Common
 {
@@ -45,19 +47,19 @@ namespace SIGVerse.Common
 
 				this.avatar.GetComponent<SimpleHumanVRControllerNgo>().enabled = true;
 
-				this.xritkSetup.GetComponentInChildren<InputActionManager>().enabled = true;
 				this.xritkSetup.GetComponentInChildren<XROrigin>().enabled = true;
+				this.xritkSetup.GetComponentInChildren<InputActionManager>().enabled = true;
 
 				this.xritkSetup.GetComponentInChildren<Camera>().enabled = true;
 				this.xritkSetup.GetComponentInChildren<AudioListener>().enabled = true;
-				this.xritkSetup.GetComponentInChildren<TrackedPoseDriver>().enabled = true;
+				Array.ForEach(this.xritkSetup.GetComponentsInChildren<TrackedPoseDriver>(), x => x.enabled = true);
 				this.xritkSetup.GetComponentInChildren<SIGVerse.Human.IK.AnchorPostureCalculator>().enabled = true;
 
-				Array.ForEach(this.xritkSetup.GetComponentsInChildren<ActionBasedController>(), x => x.enabled = true);
+				Array.ForEach(this.xritkSetup.GetComponentsInChildren<HapticImpulsePlayer>(), x => x.enabled = true);
 				Array.ForEach(this.xritkSetup.GetComponentsInChildren<XRDirectInteractor>(), x=>x.enabled = true);
-//				Array.ForEach(this.xritkSetup.GetComponentsInChildren<GraspableHighlighter>(), x=>x.enabled = true);
-				Array.ForEach(this.xritkSetup.GetComponentsInChildren<GraspableOutlineRenderer>(), x=>x.enabled = true);
 				Array.ForEach(this.xritkSetup.GetComponentsInChildren<SphereCollider>(), x=>x.enabled = true);
+				Array.ForEach(this.xritkSetup.GetComponentsInChildren<SimpleHapticFeedback>(), x=>x.enabled = true);
+				Array.ForEach(this.xritkSetup.GetComponentsInChildren<GraspableOutlineRenderer>(), x=>x.enabled = true);
 
 				SubviewController.EnableSubview(this.gameObject);
 				if (TryGetComponent<HumanChat>(out var chat)) 
