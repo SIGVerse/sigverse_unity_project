@@ -12,6 +12,7 @@ using UnityEngine.Rendering;
 
 namespace SIGVerse.ToyotaHSR
 {
+	[RequireComponent(typeof(Camera))]
 	public class HSRPubXtionRGB : MonoBehaviour
 	{
 		//--------------------------------------------------
@@ -94,7 +95,7 @@ namespace SIGVerse.ToyotaHSR
 
 
 			// Camera
-			this.targetCamera = this.cameraFrameObj.GetComponentInChildren<Camera>();
+			this.targetCamera = this.GetComponent<Camera>();
 
 			int imageWidth  = this.targetCamera.targetTexture.width;
 			int imageHeight = this.targetCamera.targetTexture.height;
@@ -172,9 +173,10 @@ namespace SIGVerse.ToyotaHSR
 		//{
 		//}
 
-//		void OnPostRender()
 		protected virtual void OnEndCameraRendering(ScriptableRenderContext context, Camera camera)
 		{
+			if (camera!=this.targetCamera) { return; }
+
 			if(this.shouldSendMessage)
 			{
 				this.shouldSendMessage = false;

@@ -191,9 +191,10 @@ namespace SIGVerse.Common
 		//{
 		//}
 
-//		protected virtual void OnPostRender()
 		protected virtual void OnEndCameraRendering(ScriptableRenderContext context, Camera camera)
 		{
+			if (camera!=this.targetCamera) { return; }
+
 			if(this.shouldSendMessage)
 			{
 				this.shouldSendMessage = false;
