@@ -43,7 +43,7 @@ namespace SIGVerse.Common
 				resourceData.cameraColor = destination;
 			}
 
-			public override void SetSettings(RobotCameraSettings settings, Material material)
+			public override void Setup(RobotCameraSettings settings, Material material)
 			{
 				// No specific settings
 			}

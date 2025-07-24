@@ -53,7 +53,7 @@ namespace SIGVerse.Common
 			foreach (MeshRenderer renderer in renderers)
 			{
 				string layerMaskName = (this.graspedObj==graspableObj)? OutlineGraspedLayerName : OutlineGraspableLayerName;
-				renderer.renderingLayerMask |= RenderingLayerMask.GetMask(layerMaskName);
+				renderer.renderingLayerMask |= RenderingLayerMask.GetMask(layerMaskName); // This outline will also be displayed on other cameras with the same script attached.
 			}
 
 			this.outlinedObjects.Add(graspableObj);

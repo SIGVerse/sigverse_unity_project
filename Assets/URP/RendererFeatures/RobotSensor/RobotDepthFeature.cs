@@ -20,7 +20,7 @@ namespace SIGVerse.Common
 		/// </summary>
 		public class DepthPass: SensorPassBase
 		{
-			public override void SetSettings(RobotCameraSettings settings, Material material)
+			public override void Setup(RobotCameraSettings settings, Material material)
 			{
 				material.SetFloat("_MinValidDepth", settings.depthMinValue);
 

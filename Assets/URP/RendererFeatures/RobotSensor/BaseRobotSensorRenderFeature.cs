@@ -66,7 +66,7 @@ namespace SIGVerse.Common
 
 			if (!ShouldEnqueuePass(settings)) { return; }
 
-			this.pass.SetSettings(settings, this.material);
+			this.pass.Setup(settings, this.material);
 
 			renderer.EnqueuePass(pass);
 		}
@@ -87,7 +87,7 @@ namespace SIGVerse.Common
 
 		public interface ISensorPass
 		{
-			public void SetSettings(RobotCameraSettings settings, Material material);
+			public void Setup(RobotCameraSettings settings, Material material);
 		}
 
 		/// <summary>
@@ -135,7 +135,7 @@ namespace SIGVerse.Common
 				return frameData.Get<UniversalResourceData>().activeColorTexture; // Default
 			}
 
-			public abstract void SetSettings(RobotCameraSettings settings, Material material);
+			public abstract void Setup(RobotCameraSettings settings, Material material);
 		}
 	}
 }
