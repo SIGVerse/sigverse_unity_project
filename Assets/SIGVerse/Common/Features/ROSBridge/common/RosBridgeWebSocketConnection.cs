@@ -360,7 +360,11 @@ namespace SIGVerse.RosBridge
 
 			this.webSocket.OnOpen    += (sender, eventArgs) => { Debug.Log("WebSocket Open  url=" + url); };
 			this.webSocket.OnMessage += (sender, eventArgs) => this.OnMessage<Tmsg>(eventArgs.Data);
-			this.webSocket.OnError   += (sender, eventArgs) => { Debug.LogError("WebSocket Error Message: " + eventArgs.Message); };
+			this.webSocket.OnError   += (sender, eventArgs) => 
+			{
+				if (this.isConnected) { Debug.LogError("WebSocket Error Message: " + eventArgs.Message); }
+				else { Debug.Log("WebSocket Error occurred when Not connected.: " + eventArgs.Message);}
+			};
 			this.webSocket.OnClose   += (sender, eventArgs) => this.OnClose();
 
 //			this.webSocket.Connect();
