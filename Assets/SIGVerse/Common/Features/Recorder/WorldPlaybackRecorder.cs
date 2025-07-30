@@ -4,8 +4,8 @@ using System.IO;
 using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine.UI;
 using System.Text.RegularExpressions;
+using TMPro;
 
 namespace SIGVerse.Common.Recorder
 {
@@ -37,7 +37,7 @@ namespace SIGVerse.Common.Recorder
 		public int recordingInterval = 20;
 
 		[HeaderAttribute("GUI")]
-		public Text mainPanelStatusText;
+		public TMP_Text mainPanelStatusText;
 
 
 		//-----------------------------------------------------

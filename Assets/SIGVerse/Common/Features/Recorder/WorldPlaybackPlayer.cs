@@ -4,9 +4,10 @@ using System.IO;
 using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -92,32 +93,32 @@ namespace SIGVerse.Common.Recorder
 
 
 		//--- GUI ---
-		protected Text statusText;
+		protected TMP_Text statusText;
 		protected Button readFileButton;
-		protected Text fileNameText;
-		protected Text elapsedTimeText;
-		protected Text totalTimeText;
+		protected TMP_Text fileNameText;
+		protected TMP_Text elapsedTimeText;
+		protected TMP_Text totalTimeText;
 		protected Slider timeSlider;
 		protected Button playButton;
-		protected Dropdown speedDropdown;
+		protected TMP_Dropdown speedDropdown;
 		protected Toggle repeatToggle;
-		protected InputField startTimeInputField;
-		protected InputField endTimeInputField;
+		protected TMP_InputField startTimeInputField;
+		protected TMP_InputField endTimeInputField;
 
 
 		protected virtual void Awake()
 		{
-			this.statusText          = this.playbackPanel.transform.Find("StatusText").GetComponent<Text>();
+			this.statusText          = this.playbackPanel.transform.Find("StatusText").GetComponent<TMP_Text>();
 			this.readFileButton      = this.playbackPanel.transform.Find("ReadFile/ReadFileButton").GetComponent<Button>();
-			this.fileNameText        = this.playbackPanel.transform.Find("ReadFile/FileNameText").GetComponent<Text>();
-			this.elapsedTimeText     = this.playbackPanel.transform.Find("ElapsedTime/ElapsedTimeText").GetComponent<Text>();
-			this.totalTimeText       = this.playbackPanel.transform.Find("TotalTime/TotalTimeText").GetComponent<Text>();
+			this.fileNameText        = this.playbackPanel.transform.Find("ReadFile/FileNameText").GetComponent<TMP_Text>();
+			this.elapsedTimeText     = this.playbackPanel.transform.Find("ElapsedTime/ElapsedTimeText").GetComponent<TMP_Text>();
+			this.totalTimeText       = this.playbackPanel.transform.Find("TotalTime/TotalTimeText").GetComponent<TMP_Text>();
 			this.timeSlider          = this.playbackPanel.transform.Find("TimeSlider").GetComponent<Slider>();
 			this.playButton          = this.playbackPanel.transform.Find("PlayButton").GetComponent<Button>();
-			this.speedDropdown       = this.playbackPanel.transform.Find("Speed/SpeedDropdown").GetComponent<Dropdown>();
+			this.speedDropdown       = this.playbackPanel.transform.Find("Speed/SpeedDropdown").GetComponent<TMP_Dropdown>();
 			this.repeatToggle        = this.playbackPanel.transform.Find("Repeat/RepeatToggle").GetComponent<Toggle>();
-			this.startTimeInputField = this.playbackPanel.transform.Find("StartTimeInputField").GetComponent<InputField>();
-			this.endTimeInputField   = this.playbackPanel.transform.Find("EndTimeInputField").GetComponent<InputField>();
+			this.startTimeInputField = this.playbackPanel.transform.Find("StartTimeInputField").GetComponent<TMP_InputField>();
+			this.endTimeInputField   = this.playbackPanel.transform.Find("EndTimeInputField").GetComponent<TMP_InputField>();
 		}
 
 		protected virtual void Start()
@@ -643,7 +644,7 @@ namespace SIGVerse.Common.Recorder
 			return this.startTime + (this.endTime - this.startTime) * this.timeSlider.value;
 		}
 
-		private void SetTextColorAlpha(Text text, float alpha)
+		private void SetTextColorAlpha(TMP_Text text, float alpha)
 		{
 			text.color = new Color(text.color.r, text.color.g, text.color.b, alpha);
 		}
