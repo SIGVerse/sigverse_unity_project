@@ -55,7 +55,7 @@ namespace SIGVerse.ToyotaHSR
 			base.Start();
 
 			this.jointState = new JointState();
-			this.jointState.header = new Header(0, new SIGVerse.RosBridge.msg_helpers.Time(0, 0), "hsrb_joint_states");
+			this.jointState.header = new Header(new SIGVerse.RosBridge.msg_helpers.Time(0, 0), "hsrb_joint_states");
 
 			this.jointState.name = new List<string>()
 			{

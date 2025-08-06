@@ -83,7 +83,7 @@ namespace SIGVerse.TurtleBot3
 			{
 				string name    = jointTrajectory.joint_names[i];
 				float position = TurtleBot3Common.GetClampedPosition(name, (float)jointTrajectory.points[Zero].positions[i]);
-				float duration = (float)jointTrajectory.points[Zero].time_from_start.secs + (float)jointTrajectory.points[Zero].time_from_start.nsecs * 1.0e-9f;
+				float duration = (float)jointTrajectory.points[Zero].time_from_start.sec + (float)jointTrajectory.points[Zero].time_from_start.nanosec * 1.0e-9f;
 
 				if(name == TurtleBot3Common.jointNameMap[JointType.Joint1])
 				{

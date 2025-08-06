@@ -95,8 +95,8 @@ namespace SIGVerse.SIGVerseRosBridge
 				TimeSpan epochTime = (DateTime.Now.ToUniversalTime() - UnixEpoch);
 
 				SIGVerse.RosBridge.std_msgs.Time time = new RosBridge.std_msgs.Time();
-				time.data.secs  = (int)epochTime.TotalSeconds;
-				time.data.nsecs = epochTime.Milliseconds * 1000 * 1000;
+				time.data.sec     = (int) epochTime.TotalSeconds;
+				time.data.nanosec = (uint)epochTime.Milliseconds * 1000 * 1000;
 
 				this.timeSyncMsg.msg = time;
 			

@@ -20,21 +20,22 @@ namespace SIGVerse.RosBridge
 			private static TimeSpan timeGap = TimeSpan.Zero;
 			private static object lockTimeGap = new object();
 
-			public System.UInt32 seq;
+			//public System.UInt32 seq;
 			public SIGVerse.RosBridge.msg_helpers.Time stamp;
 			public string frame_id;
 
 
 			public Header()
 			{
-				this.seq = 0;
+				//this.seq = 0;
 				this.stamp = new SIGVerse.RosBridge.msg_helpers.Time();
 				this.frame_id = "";
 			}
 
-			public Header(System.UInt32 seq, SIGVerse.RosBridge.msg_helpers.Time stamp, string frame_id)
+//			public Header(System.UInt32 seq, SIGVerse.RosBridge.msg_helpers.Time stamp, string frame_id)
+			public Header(SIGVerse.RosBridge.msg_helpers.Time stamp, string frame_id)
 			{
-				this.seq = seq;
+				//this.seq = seq;
 				this.stamp = stamp;
 				this.frame_id = frame_id;
 			}
@@ -42,7 +43,7 @@ namespace SIGVerse.RosBridge
 			// Added by hand
 			public void Update()
 			{
-				this.seq++;
+				//this.seq++;
 
 				if(SIGVerse.Common.ConfigManager.Instance.configInfo.setUpRosTimestamp)
 				{
@@ -53,8 +54,8 @@ namespace SIGVerse.RosBridge
 						epochTime = epochTime.Subtract(timeGap);
 					}
 
-					this.stamp.secs = (int)epochTime.TotalSeconds;
-					this.stamp.nsecs = epochTime.Milliseconds * 1000 * 1000;
+					this.stamp.sec     = (int) epochTime.TotalSeconds;
+					this.stamp.nanosec = (uint)epochTime.Milliseconds * 1000 * 1000;
 				}
 			}
 
@@ -69,13 +70,13 @@ namespace SIGVerse.RosBridge
 
 			new public static string GetMessageType()
 			{
-				return "std_msgs/Header";
+				return "std_msgs/msg/Header";
 			}
 
-			new public static string GetMD5Hash()
-			{
-				return "2176decaecbce78abc3b96ef049fabed";
-			}
+			//new public static string GetMD5Hash()
+			//{
+			//	return "2176decaecbce78abc3b96ef049fabed";
+			//}
 		} // class Header
 	} // namespace std_msgs
 } // namespace SIGVerse.ROSBridge

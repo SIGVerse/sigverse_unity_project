@@ -38,13 +38,13 @@ namespace SIGVerse.RosBridge
 
 			new public static string GetMessageType()
 			{
-				return "trajectory_msgs/JointTrajectory";
+				return "trajectory_msgs/msg/JointTrajectory";
 			}
 
-			new public static string GetMD5Hash()
-			{
-				return "65b4f94a94d1ed67169da35a02f33d3f";
-			}
+			//new public static string GetMD5Hash()
+			//{
+			//	return "65b4f94a94d1ed67169da35a02f33d3f";
+			//}
 		} // class JointTrajectory
 	} // namespace trajectory_msgs
 } // namespace SIGVerse.ROSBridge

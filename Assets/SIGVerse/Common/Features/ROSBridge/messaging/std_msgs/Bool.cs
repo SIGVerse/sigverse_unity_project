@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using SIGVerse.RosBridge;
 using UnityEngine;
 
-
 namespace SIGVerse.RosBridge 
 {
 	namespace std_msgs 
@@ -16,7 +15,6 @@ namespace SIGVerse.RosBridge
 		public class Bool : RosMessage
 		{
 			public bool data;
-
 
 			public Bool()
 			{
@@ -30,13 +28,13 @@ namespace SIGVerse.RosBridge
 
 			new public static string GetMessageType()
 			{
-				return "std_msgs/Bool";
+				return "std_msgs/msg/Bool";
 			}
 
-			new public static string GetMD5Hash()
-			{
-				return "8b94c1b53db61fb6aed406028ad6332a";
-			}
+			//new public static string GetMD5Hash()
+			//{
+			//	return "8b94c1b53db61fb6aed406028ad6332a";
+			//}
 		} // class Bool
 	} // namespace std_msgs
 } // namespace SIGVerse.ROSBridge

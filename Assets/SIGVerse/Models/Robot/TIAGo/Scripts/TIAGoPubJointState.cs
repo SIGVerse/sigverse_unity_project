@@ -72,7 +72,7 @@ namespace SIGVerse.TIAGo
 			base.Start();
 
 			this.jointState = new JointState();
-			this.jointState.header = new Header(0, new SIGVerse.RosBridge.msg_helpers.Time(0, 0), "");
+			this.jointState.header = new Header(new SIGVerse.RosBridge.msg_helpers.Time(0, 0), "");
 
 			this.jointState.name = new List<string>()
 			{

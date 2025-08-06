@@ -112,7 +112,7 @@ namespace SIGVerse.Common
 			this.imageData = this.InitializeImage((uint)imageHeight, (uint)imageWidth);
 
 
-			this.header = new Header(0, new SIGVerse.RosBridge.msg_helpers.Time(0, 0), this.cameraFrameObj.name);
+			this.header = new Header(new SIGVerse.RosBridge.msg_helpers.Time(0, 0), this.cameraFrameObj.name);
 
 			this.cameraInfoMsg = new SIGVerseRosBridgeMessage<CameraInfoForSIGVerseBridge>("publish", topicNameCameraInfo, CameraInfoForSIGVerseBridge.GetMessageType(), this.cameraInfoData);
 			this.imageMsg      = new SIGVerseRosBridgeMessage<ImageForSIGVerseBridge>     ("publish", topicNameImage,      ImageForSIGVerseBridge.GetMessageType(),      this.imageData);

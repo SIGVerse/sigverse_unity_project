@@ -34,13 +34,13 @@ namespace SIGVerse.RosBridge
 
 			new public static string GetMessageType()
 			{
-				return "geometry_msgs/Twist";
+				return "geometry_msgs/msg/Twist";
 			}
 
-			new public static string GetMD5Hash()
-			{
-				return "9f195f881246fdfa2798d1d3eebca84a";
-			}
+			//new public static string GetMD5Hash()
+			//{
+			//	return "9f195f881246fdfa2798d1d3eebca84a";
+			//}
 		} // class Twist
 	} // namespace geometry_msgs
 } // namespace SIGVerse.ROSBridge

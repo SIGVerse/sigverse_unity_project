@@ -54,7 +54,7 @@ namespace SIGVerse.Common
 
 		protected virtual void Awake()
 		{
-			this.header = new Header(0, new SIGVerse.RosBridge.msg_helpers.Time(0, 0), this.sensorLink.name);
+			this.header = new Header(new SIGVerse.RosBridge.msg_helpers.Time(0, 0), this.sensorLink.name);
 
 			this.InitializeVariables();
 

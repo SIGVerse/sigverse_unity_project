@@ -5,19 +5,21 @@ namespace SIGVerse.RosBridge
 		[System.Serializable]
 		public class Time
 		{
-			public int secs;
-			public int nsecs;
+//			public int secs;
+//			public int nsecs;
+			public int sec;
+			public uint nanosec;
 
 			public Time()
 			{
-				secs = 0;
-				nsecs = 0;
+				sec = 0;
+				nanosec = 0;
 			}
 
-			public Time(int seconds, int nanoseconds)
+			public Time(int seconds, uint nanoseconds)
 			{
-				secs = seconds;
-				nsecs = nanoseconds;
+				sec = seconds;
+				nanosec = nanoseconds;
 			}
 		}
 
@@ -25,7 +27,7 @@ namespace SIGVerse.RosBridge
 		public class Duration : Time
 		{
 			public Duration() : base() { }
-			public Duration(int seconds, int nanoseconds) : base(seconds, nanoseconds) { }
+			public Duration(int seconds, uint nanoseconds) : base(seconds, nanoseconds) { }
 		}
 	}
 }

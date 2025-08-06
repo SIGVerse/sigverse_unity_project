@@ -232,7 +232,7 @@ namespace SIGVerse.TIAGo
 				for (int pointIndex = 0; pointIndex < msg.points.Count; pointIndex++)
 				{
 					positions.Add(TIAGoCommon.GetClampedPosition((float)msg.points[pointIndex].positions[i], joint));
-					durations.Add((float)msg.points[pointIndex].time_from_start.secs + (float)msg.points[pointIndex].time_from_start.nsecs * 1.0e-9f);
+					durations.Add((float)msg.points[pointIndex].time_from_start.sec + (float)msg.points[pointIndex].time_from_start.nanosec * 1.0e-9f);
 				}
 
 				switch(joint)

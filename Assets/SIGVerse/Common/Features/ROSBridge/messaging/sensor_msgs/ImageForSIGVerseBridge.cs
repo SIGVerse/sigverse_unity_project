@@ -51,13 +51,13 @@ namespace SIGVerse.RosBridge
 
 			new public static string GetMessageType()
 			{
-				return "sensor_msgs/Image";
+				return "sensor_msgs/msg/Image";
 			}
 
-			new public static string GetMD5Hash()
-			{
-				return "060021388200f6f0f447d0fcd9c64743";
-			}
+			//new public static string GetMD5Hash()
+			//{
+			//	return "060021388200f6f0f447d0fcd9c64743";
+			//}
 		} // class ImageForSIGVerseBridge
 	} // namespace sensor_msgs
 } // namespace SIGVerse.ROSBridge

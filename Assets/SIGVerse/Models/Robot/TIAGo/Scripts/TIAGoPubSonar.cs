@@ -22,7 +22,7 @@ namespace SIGVerse.TIAGo
 		private List<Range> ranges = new List<Range>();
 		private List<Texture2D> imageTextures = new List<Texture2D>();
 
-		private uint headerSeq = 0; // The sequence number of the message header is shared
+		//private uint headerSeq = 0; // The sequence number of the message header is shared
 
 		private float elapsedTime= 0.0f;
 
@@ -36,7 +36,7 @@ namespace SIGVerse.TIAGo
 				RobotCameraSettings robotCameraSettings = camera.GetComponent<RobotCameraSettings>();
 
 				Range range = new Range();
-				range.header = new Header(0, new SIGVerse.RosBridge.msg_helpers.Time(0, 0), camera.transform.parent.gameObject.name);
+				range.header = new Header(new SIGVerse.RosBridge.msg_helpers.Time(0, 0), camera.transform.parent.gameObject.name);
 				range.radiation_type = this.radiationType;
 				range.field_of_view  = camera.fieldOfView * Mathf.Deg2Rad ;
 				range.min_range      = robotCameraSettings.sonarMinValue;
@@ -62,7 +62,7 @@ namespace SIGVerse.TIAGo
 
 			for(int i=0; i<this.cameras.Length; i++)
 			{
-				this.headerSeq++;
+				//this.headerSeq++;
 
 				RenderTexture.active = cameras[i].targetTexture;
 
@@ -97,7 +97,7 @@ namespace SIGVerse.TIAGo
 				}
 
 				this.ranges[i].header.Update();
-				this.ranges[i].header.seq = this.headerSeq;
+				//this.ranges[i].header.seq = this.headerSeq;
 				this.ranges[i].range = minRange;
 
 				this.publisher.Publish(this.ranges[i]);

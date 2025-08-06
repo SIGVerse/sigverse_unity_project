@@ -43,13 +43,13 @@ namespace SIGVerse.RosBridge
 
 			new public static string GetMessageType()
 			{
-				return "sensor_msgs/JointState";
+				return "sensor_msgs/msg/JointState";
 			}
 
-			new public static string GetMD5Hash()
-			{
-				return "3066dcd76a6cfaef579bd0f34173e9fd";
-			}
+			//new public static string GetMD5Hash()
+			//{
+			//	return "3066dcd76a6cfaef579bd0f34173e9fd";
+			//}
 		} // class JointState
 	} // namespace sensor_msgs
 } // namespace SIGVerse.ROSBridge

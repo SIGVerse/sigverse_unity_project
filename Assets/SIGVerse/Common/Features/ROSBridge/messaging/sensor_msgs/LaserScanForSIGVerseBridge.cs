@@ -58,13 +58,13 @@ namespace SIGVerse.RosBridge
 
 			new public static string GetMessageType()
 			{
-				return "sensor_msgs/LaserScan";
+				return "sensor_msgs/msg/LaserScan";
 			}
 
-			new public static string GetMD5Hash()
-			{
-				return "90c7ef2dc6895d81024acba2ac42f369";
-			}
+			//new public static string GetMD5Hash()
+			//{
+			//	return "90c7ef2dc6895d81024acba2ac42f369";
+			//}
 		} // class ImageForSIGVerseBridge
 	} // namespace sensor_msgs
 } // namespace SIGVerse.ROSBridge

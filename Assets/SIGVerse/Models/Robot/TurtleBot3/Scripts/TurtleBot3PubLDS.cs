@@ -97,7 +97,7 @@ namespace SIGVerse.TurtleBot3
 			this.networkStream.ReadTimeout  = 100000;
 			this.networkStream.WriteTimeout = 100000;
 
-			this.header = new Header(0, new SIGVerse.RosBridge.msg_helpers.Time(0, 0), this.sensorLink.name);
+			this.header = new Header(new SIGVerse.RosBridge.msg_helpers.Time(0, 0), this.sensorLink.name);
 
 			this.laserScan = new LaserScanForSIGVerseBridge();
 

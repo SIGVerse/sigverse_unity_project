@@ -21,14 +21,13 @@ namespace SIGVerse.RosBridge
 			public System.UInt32 height;
 			public System.UInt32 width;
 			public string distortion_model;
-			public double[]  D;
-			public double[]  K;
-			public double[]  R;
-			public double[]  P;
+			public double[]  d;
+			public double[]  k;
+			public double[]  r;
+			public double[]  p;
 			public System.UInt32 binning_x;
 			public System.UInt32 binning_y;
 			public sensor_msgs.RegionOfInterest roi;
-
 
 			public CameraInfoForSIGVerseBridge()
 			{
@@ -36,10 +35,10 @@ namespace SIGVerse.RosBridge
 				this.height = 0;
 				this.width = 0;
 				this.distortion_model = "";
-				this.D = new double[0];
-				this.K = new double[9];
-				this.R = new double[9];
-				this.P = new double[12];
+				this.d = new double[0];
+				this.k = new double[9];
+				this.r = new double[9];
+				this.p = new double[12];
 				this.binning_x = 0;
 				this.binning_y = 0;
 				this.roi = new sensor_msgs.RegionOfInterest();
@@ -51,10 +50,10 @@ namespace SIGVerse.RosBridge
 				this.height = height;
 				this.width = width;
 				this.distortion_model = distortion_model;
-				this.D = D;
-				this.K = K;
-				this.R = R;
-				this.P = P;
+				this.d = D;
+				this.k = K;
+				this.r = R;
+				this.p = P;
 				this.binning_x = binning_x;
 				this.binning_y = binning_y;
 				this.roi = roi;
@@ -62,13 +61,13 @@ namespace SIGVerse.RosBridge
 
 			new public static string GetMessageType()
 			{
-				return "sensor_msgs/CameraInfo";
+				return "sensor_msgs/msg/CameraInfo";
 			}
 
-			new public static string GetMD5Hash()
-			{
-				return "c9a58c1b0b154e0e6da7578cb991d214";
-			}
+			//new public static string GetMD5Hash()
+			//{
+			//	return "c9a58c1b0b154e0e6da7578cb991d214";
+			//}
 		} // class CameraInfo
 	} // namespace sensor_msgs
 } // namespace SIGVerse.ROSBridge
