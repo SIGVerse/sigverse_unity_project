@@ -15,7 +15,6 @@ namespace SIGVerse.RosBridge
 
 		protected RosBridgePublisher<Tmsg> publisher;
 
-
 		protected virtual void Start()
 		{
 			if (this.rosBridgeIP.Equals(string.Empty))

@@ -1,10 +1,13 @@
-using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Bson;
+using SIGVerse.Common;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
-using WebSocketSharp;
 using UnityEngine;
-using SIGVerse.Common;
+using WebSocketSharp;
 
 namespace SIGVerse.RosBridge
 {
@@ -138,6 +141,9 @@ namespace SIGVerse.RosBridge
 			}
 		}
 
+		// true: BSON, false: JSON
+		public static readonly bool UseBson = false;
+
 		private const int ConnectionTimeOut = 5000;
 
 		private static HashSet<string> cannotConnectUrlList = new HashSet<string>();
@@ -175,8 +181,6 @@ namespace SIGVerse.RosBridge
 
 		private object lockMsgQueue;
 
-
-
 		public bool IsConnected
 		{
 			get { return this.isConnected; }
@@ -210,7 +214,7 @@ namespace SIGVerse.RosBridge
 
 			if (this.IsConnected)
 			{
-				this.webSocket.Send(RosBridgeMsg.AdvertiseTopic(publisher.Topic, publisher.Type));
+				RosBridgeMsg.SendAdvertiseTopic(this.webSocket, publisher.Topic, publisher.Type);
 			}
 
 			return publisher;
@@ -224,7 +228,7 @@ namespace SIGVerse.RosBridge
 		{
 			if (this.IsConnected)
 			{
-				this.webSocket.Send(RosBridgeMsg.UnAdvertiseTopic(publisher.Topic));
+				RosBridgeMsg.SendUnadvertiseTopic(this.webSocket, publisher.Topic);
 			}
 
 			publisher.Unadvertise();
@@ -267,7 +271,7 @@ namespace SIGVerse.RosBridge
 
 			if (this.IsConnected)
 			{
-				this.webSocket.Send(RosBridgeMsg.Subscribe(subscriber.Topic, subscriber.Type));
+				RosBridgeMsg.SendSubscribe(this.webSocket, subscriber.Topic, subscriber.Type);
 			}
 
 			return subscriber;
@@ -290,7 +294,7 @@ namespace SIGVerse.RosBridge
 
 			if (this.IsConnected)
 			{
-				this.webSocket.Send(RosBridgeMsg.UnSubscribe(subscriber.Topic));
+				RosBridgeMsg.SendUnsubscribe(this.webSocket, subscriber.Topic);
 			}
 		}
 
@@ -319,7 +323,7 @@ namespace SIGVerse.RosBridge
 
 			if (this.IsConnected)
 			{
-				this.webSocket.Send(RosBridgeMsg.AdvertiseService(srv.Name, srv.Type));
+				RosBridgeMsg.SendAdvertiseService(this.webSocket, srv.Name, srv.Type);
 			}
 
 			return srv;
@@ -333,7 +337,7 @@ namespace SIGVerse.RosBridge
 		{
 			if (this.IsConnected)
 			{
-				this.webSocket.Send(RosBridgeMsg.UnadvertiseService(serviceProvider.Name));
+				RosBridgeMsg.SendUnadvertiseService(this.webSocket, serviceProvider.Name);
 			}
 
 			this.serviceProviders.Remove(serviceProvider);
@@ -359,7 +363,11 @@ namespace SIGVerse.RosBridge
 			this.webSocket = new WebSocket(url);
 
 			this.webSocket.OnOpen    += (sender, eventArgs) => { Debug.Log("WebSocket Open  url=" + url); };
-			this.webSocket.OnMessage += (sender, eventArgs) => this.OnMessage<Tmsg>(eventArgs.Data);
+			this.webSocket.OnMessage += (sender, eventArgs) =>
+			{
+				if (UseBson) { this.OnMessage<Tmsg>(eventArgs.RawData); }
+				else         { this.OnMessage<Tmsg>(eventArgs.Data); }
+			};
 			this.webSocket.OnError   += (sender, eventArgs) => 
 			{
 				if (this.isConnected) { Debug.LogError("WebSocket Error Message: " + eventArgs.Message); }
@@ -395,18 +403,15 @@ namespace SIGVerse.RosBridge
 
 				foreach (var sub in this.subscribers)
 				{
-					this.webSocket.Send(RosBridgeMsg.Subscribe(sub.Key.Topic, sub.Key.Type));
-					Debug.Log("Sending: " + RosBridgeMsg.Subscribe(sub.Key.Topic, sub.Key.Type));
+					RosBridgeMsg.SendSubscribe(this.webSocket, sub.Key.Topic, sub.Key.Type);
 				}
 				foreach (RosBridgePublisher pub in this.publishers)
 				{
-					this.webSocket.Send(RosBridgeMsg.AdvertiseTopic(pub.Topic, pub.Type));
-					Debug.Log("Sending " + RosBridgeMsg.AdvertiseTopic(pub.Topic, pub.Type));
+					RosBridgeMsg.SendAdvertiseTopic(this.webSocket, pub.Topic, pub.Type);
 				}
 				foreach (var srv in this.serviceProviders)
 				{
-					this.webSocket.Send(RosBridgeMsg.AdvertiseService(srv.Key.Name, srv.Key.Type));
-					Debug.Log("Sending: " + RosBridgeMsg.AdvertiseService(srv.Key.Name, srv.Key.Type));
+					RosBridgeMsg.SendAdvertiseService(this.webSocket, srv.Key.Name, srv.Key.Type);
 				}
 
 				this.isConnected = true;
@@ -425,27 +430,43 @@ namespace SIGVerse.RosBridge
 		{
 			if (!this.IsConnected) { return; }
 
-			//	this.sendMsgThread.Abort();
+			//this.sendMsgThread.Abort();
 
 			this.isConnected = false;
 			Thread.Sleep(15);
 
 			foreach (var sub in this.subscribers)
 			{
-				this.webSocket.Send(RosBridgeMsg.UnSubscribe(sub.Key.Topic));
+				RosBridgeMsg.SendUnsubscribe(this.webSocket, sub.Key.Topic);
 			}
 			foreach (var pub in this.publishers)
 			{
-				this.webSocket.Send(RosBridgeMsg.UnAdvertiseTopic(pub.Topic));
+				RosBridgeMsg.SendUnadvertiseTopic(this.webSocket, pub.Topic);
 				pub.Unadvertise();
 			}
 			foreach (var srv in this.serviceProviders)
 			{
-				this.webSocket.Send(RosBridgeMsg.UnadvertiseService(srv.Key.Name));
+				RosBridgeMsg.SendUnadvertiseService(this.webSocket, srv.Key.Name);
 			}
 
 			this.webSocket.Close();
 			this.msgQueue.Clear();
+		}
+
+		private void OnMessage<Tmsg>(byte[] messageByte) where Tmsg : RosMessage
+		{
+			string message = null;
+
+			using (var bsonStream = new MemoryStream(messageByte))
+			using (var reader = new BsonDataReader(bsonStream))
+			{
+				var jsonSerializer = new JsonSerializer();
+				var jsonString = JsonConvert.SerializeObject(jsonSerializer.Deserialize(reader));
+
+				message = jsonString;
+			}
+
+			OnMessage<Tmsg>(message);
 		}
 
 		private void OnMessage<Tmsg>(string message) where Tmsg : RosMessage
@@ -559,10 +580,8 @@ namespace SIGVerse.RosBridge
 					// invoke service handler
 					bool success =this.serviceProviders[svcTask.Service](svcTask.ServiceArgs, out response);
 
-					Debug.Log("Sending service response: \n" + RosBridgeMsg.ServiceResponse(success, svcTask.Service.Name, svcTask.Id, JsonUtility.ToJson(response)));
 					// send response
-//					this.webSocket.SendAsync(ROSBridgeMsg.ServiceResponse(success, svcTask.Service.Name, svcTask.Id, JsonUtility.ToJson(response)), null);
-					this.webSocket.Send(RosBridgeMsg.ServiceResponse(success, svcTask.Service.Name, svcTask.Id, JsonUtility.ToJson(response)));
+					RosBridgeMsg.SendServiceResponse(this.webSocket, success, svcTask.Service.Name, svcTask.Id, JsonUtility.ToJson(response));
 				}
 
 				elapsedTime = Time.realtimeSinceStartup - startTime;
@@ -623,7 +642,7 @@ namespace SIGVerse.RosBridge
 		{
 			if (this.webSocket != null && this.IsConnected)
 			{
-				this.webSocket.Send(msgStr);
+				RosBridgeMsg.Publish(this.webSocket, msgStr);
 			}
 			else
 			{

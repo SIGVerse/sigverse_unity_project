@@ -23,7 +23,6 @@ namespace SIGVerse.SIGVerseRosBridge
 			this.msg = msg;
 		}
 
-
 		public void SendMsg(NetworkStream networkStream)
 		{
 			MemoryStream memoryStream = new MemoryStream();
