@@ -65,7 +65,7 @@ namespace SIGVerse.Common
 		/// <summary>
 		/// Robot -> Human Avatar
 		/// </summary>
-		public void OnReceiveRosStringMsg(RosBridge.std_msgs.String rosMsg)
+		public void OnReceiveRosStringMsg(RosBridge.std_msgs.msg.String rosMsg)
 		{
 			this.SendChatMessage(rosMsg.data);
 

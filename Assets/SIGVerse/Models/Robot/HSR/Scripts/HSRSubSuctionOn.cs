@@ -5,11 +5,11 @@ using SIGVerse.Common;
 
 namespace SIGVerse.ToyotaHSR
 {
-	public class HSRSubSuctionOn : RosSubMessage<SIGVerse.RosBridge.std_msgs.Bool>
+	public class HSRSubSuctionOn : RosSubMessage<SIGVerse.RosBridge.std_msgs.msg.Bool>
 	{
 		public SuctionDetector suctionDetector;
 
-		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.std_msgs.Bool suctionOn)
+		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.std_msgs.msg.Bool suctionOn)
 		{
 			Debug.Log("Receive SuctionOn=" + suctionOn.data);
 

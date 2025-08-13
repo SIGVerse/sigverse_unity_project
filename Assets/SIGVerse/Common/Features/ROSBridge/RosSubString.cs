@@ -8,14 +8,14 @@ namespace SIGVerse.RosBridge
 {
 	public interface IRosReceivingStringMsgHandler : IEventSystemHandler
 	{
-		void OnReceiveRosStringMsg(SIGVerse.RosBridge.std_msgs.String rosMsg);
+		void OnReceiveRosStringMsg(SIGVerse.RosBridge.std_msgs.msg.String rosMsg);
 	}
 
-	public class RosSubString : RosSubMessage<SIGVerse.RosBridge.std_msgs.String>
+	public class RosSubString : RosSubMessage<SIGVerse.RosBridge.std_msgs.msg.String>
 	{
 		public List<GameObject> forwardingDestinations;
 
-		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.std_msgs.String rosMsg)
+		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.std_msgs.msg.String rosMsg)
 		{
 			SIGVerseLogger.Info("Received string message :"+rosMsg.data);
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
-using SIGVerse.RosBridge.sensor_msgs;
-using SIGVerse.RosBridge.std_msgs;
+using SIGVerse.RosBridge.sensor_msgs.msg;
+using SIGVerse.RosBridge.std_msgs.msg;
 using SIGVerse.Common;
 using SIGVerse.SIGVerseRosBridge;
 using System.Collections;
@@ -97,7 +97,7 @@ namespace SIGVerse.TurtleBot3
 			this.networkStream.ReadTimeout  = 100000;
 			this.networkStream.WriteTimeout = 100000;
 
-			this.header = new Header(new SIGVerse.RosBridge.msg_helpers.Time(0, 0), this.sensorLink.name);
+			this.header = new Header(new SIGVerse.RosBridge.builtin_interfaces.msg.Time(0, 0), this.sensorLink.name);
 
 			this.laserScan = new LaserScanForSIGVerseBridge();
 

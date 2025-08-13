@@ -1,7 +1,7 @@
 using UnityEngine;
 
 using System;
-using SIGVerse.RosBridge.sensor_msgs;
+using SIGVerse.RosBridge.sensor_msgs.msg;
 using SIGVerse.Common;
 
 namespace SIGVerse.Common

@@ -9,7 +9,7 @@ using static SIGVerse.ToyotaHSR.HSRCommon;
 
 namespace SIGVerse.ToyotaHSR
 {
-	public class HSRSubJointTrajectoryOmni : RosSubMessage<SIGVerse.RosBridge.trajectory_msgs.JointTrajectory>
+	public class HSRSubJointTrajectoryOmni : RosSubMessage<SIGVerse.RosBridge.trajectory_msgs.msg.JointTrajectory>
 	{
 		public class TrajectoryData
 		{
@@ -64,7 +64,7 @@ namespace SIGVerse.ToyotaHSR
 		}
 
 
-		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.trajectory_msgs.JointTrajectory jointTrajectory)
+		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.trajectory_msgs.msg.JointTrajectory jointTrajectory)
 		{
 			if(this.twist!=null && this.twist.IsRunning())
 			{
@@ -205,7 +205,7 @@ namespace SIGVerse.ToyotaHSR
 		}
 
 
-		private static bool IsTrajectryMsgCorrect(ref SIGVerse.RosBridge.trajectory_msgs.JointTrajectory msg)
+		private static bool IsTrajectryMsgCorrect(ref SIGVerse.RosBridge.trajectory_msgs.msg.JointTrajectory msg)
 		{
 			for(int i = 0; i < msg.points.Count; i++)
 			{
@@ -252,7 +252,7 @@ namespace SIGVerse.ToyotaHSR
 		}
 
 		
-		private void SetTrajectoryInfoMap(ref SIGVerse.RosBridge.trajectory_msgs.JointTrajectory msg)
+		private void SetTrajectoryInfoMap(ref SIGVerse.RosBridge.trajectory_msgs.msg.JointTrajectory msg)
 		{
 			for (int i = 0; i < msg.joint_names.Count; i++)
 			{

@@ -1,6 +1,5 @@
 using UnityEngine.EventSystems;
 using SIGVerse.Common;
-using SIGVerse.RosBridge;
 
 namespace SIGVerse.RosBridge
 {
@@ -9,13 +8,13 @@ namespace SIGVerse.RosBridge
 		void OnSendRosStringMsg(string message);
 	}
 
-	public class RosPubString : RosPubMessage<SIGVerse.RosBridge.std_msgs.String>, IRosSendingStringMsgHandler
+	public class RosPubString : RosPubMessage<SIGVerse.RosBridge.std_msgs.msg.String>, IRosSendingStringMsgHandler
 	{
 		public void OnSendRosStringMsg(string message)
 		{
 			SIGVerseLogger.Info("Sending string message :" + message);
 
-			SIGVerse.RosBridge.std_msgs.String rosMsg = new SIGVerse.RosBridge.std_msgs.String();
+			SIGVerse.RosBridge.std_msgs.msg.String rosMsg = new SIGVerse.RosBridge.std_msgs.msg.String();
 			rosMsg.data = message;
 
 			this.publisher.Publish(rosMsg);

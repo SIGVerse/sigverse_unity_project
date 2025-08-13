@@ -5,7 +5,7 @@ using SIGVerse.Common;
 
 namespace SIGVerse.Common
 {
-	public abstract class RobotSubTwist : RosSubMessage<SIGVerse.RosBridge.geometry_msgs.Twist>
+	public abstract class RobotSubTwist : RosSubMessage<SIGVerse.RosBridge.geometry_msgs.msg.Twist>
 	{
 //		protected const float WheelInclinationThreshold = 0.985f; // 80[deg]
 		protected const float WheelInclinationThreshold = 0.965f; // 75[deg]
@@ -38,7 +38,7 @@ namespace SIGVerse.Common
 		protected abstract void InitializeVariables();
 
 
-		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.geometry_msgs.Twist twist)
+		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.geometry_msgs.msg.Twist twist)
 		{
 			float linearVel = Mathf.Sqrt(Mathf.Pow(twist.linear.x, 2) + Mathf.Pow(twist.linear.y, 2));
 

@@ -363,7 +363,7 @@ namespace SIGVerse.ExampleScenes.Hsr
 			}
 		}
 
-		public void OnReceiveRosStringMsg(SIGVerse.RosBridge.std_msgs.String rosMsg)
+		public void OnReceiveRosStringMsg(SIGVerse.RosBridge.std_msgs.msg.String rosMsg)
 		{
 			if(this.isTaskFinished)
 			{

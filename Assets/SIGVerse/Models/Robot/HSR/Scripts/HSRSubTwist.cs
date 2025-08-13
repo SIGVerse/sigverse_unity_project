@@ -2,10 +2,9 @@ using UnityEngine;
 using SIGVerse.RosBridge;
 using SIGVerse.Common;
 
-
 namespace SIGVerse.ToyotaHSR
 {
-	public class HSRSubTwist : RosSubMessage<SIGVerse.RosBridge.geometry_msgs.Twist>
+	public class HSRSubTwist : RosSubMessage<SIGVerse.RosBridge.geometry_msgs.msg.Twist>
 	{
 //		private const float WheelInclinationThreshold = 0.985f; // 80[deg]
 		private const float WheelInclinationThreshold = 0.965f; // 75[deg]
@@ -36,7 +35,7 @@ namespace SIGVerse.ToyotaHSR
 			this.jointTrajectoryOmni = this.transform.GetComponentInChildren<HSRSubJointTrajectoryOmni>(true);
 		}
 
-		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.geometry_msgs.Twist twist)
+		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.geometry_msgs.msg.Twist twist)
 		{
 			if(this.jointTrajectoryOmni!=null && this.jointTrajectoryOmni.IsRunning())
 			{

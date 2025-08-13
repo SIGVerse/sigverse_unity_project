@@ -5,7 +5,7 @@ using SIGVerse.Common;
 
 namespace SIGVerse.TurtleBot3
 {
-	public class TurtleBot3SubTwist : RosSubMessage<SIGVerse.RosBridge.geometry_msgs.Twist>
+	public class TurtleBot3SubTwist : RosSubMessage<SIGVerse.RosBridge.geometry_msgs.msg.Twist>
 	{
 		private const float wheelInclinationThreshold = 0.985f; // 80[deg]
 
@@ -25,7 +25,7 @@ namespace SIGVerse.TurtleBot3
 			this.baseRigidbody = this.baseFootprint.GetComponent<Rigidbody>();
 		}
 
-		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.geometry_msgs.Twist twist)
+		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.geometry_msgs.msg.Twist twist)
 		{
 			float linearVel = Mathf.Sqrt(Mathf.Pow(twist.linear.x, 2) + Mathf.Pow(twist.linear.y, 2));
 

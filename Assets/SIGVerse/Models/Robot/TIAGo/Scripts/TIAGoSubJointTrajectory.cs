@@ -7,7 +7,7 @@ using static SIGVerse.TIAGo.TIAGoCommon;
 
 namespace SIGVerse.TIAGo
 {
-	public class TIAGoSubJointTrajectory : RosSubMessage<SIGVerse.RosBridge.trajectory_msgs.JointTrajectory>, IGraspedObjectHandler
+	public class TIAGoSubJointTrajectory : RosSubMessage<SIGVerse.RosBridge.trajectory_msgs.msg.JointTrajectory>, IGraspedObjectHandler
 	{
 		private Transform torsoLiftLink;
 		private Transform head1Link;
@@ -89,7 +89,7 @@ namespace SIGVerse.TIAGo
 		}
 
 
-		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.trajectory_msgs.JointTrajectory jointTrajectory)
+		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.trajectory_msgs.msg.JointTrajectory jointTrajectory)
 		{
 			if (this.IsTrajectryMsgCorrect(ref jointTrajectory) == false){ return; }
 
@@ -169,7 +169,7 @@ namespace SIGVerse.TIAGo
 		}
 
 
-		private bool IsTrajectryMsgCorrect(ref SIGVerse.RosBridge.trajectory_msgs.JointTrajectory msg)
+		private bool IsTrajectryMsgCorrect(ref SIGVerse.RosBridge.trajectory_msgs.msg.JointTrajectory msg)
 		{
 			for (int i = 0; i < msg.points.Count; i++)
 			{
@@ -220,7 +220,7 @@ namespace SIGVerse.TIAGo
 		}
 
 
-		private void SetTrajectoryInfoMap(ref SIGVerse.RosBridge.trajectory_msgs.JointTrajectory msg)
+		private void SetTrajectoryInfoMap(ref SIGVerse.RosBridge.trajectory_msgs.msg.JointTrajectory msg)
 		{
 			for (int i = 0; i < msg.joint_names.Count; i++)
 			{

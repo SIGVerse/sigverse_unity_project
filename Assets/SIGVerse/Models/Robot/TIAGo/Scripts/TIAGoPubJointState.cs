@@ -1,7 +1,7 @@
 using UnityEngine;
 using SIGVerse.RosBridge;
-using SIGVerse.RosBridge.std_msgs;
-using SIGVerse.RosBridge.sensor_msgs;
+using SIGVerse.RosBridge.std_msgs.msg;
+using SIGVerse.RosBridge.sensor_msgs.msg;
 using SIGVerse.Common;
 using System.Collections.Generic;
 using System;
@@ -72,7 +72,7 @@ namespace SIGVerse.TIAGo
 			base.Start();
 
 			this.jointState = new JointState();
-			this.jointState.header = new Header(new SIGVerse.RosBridge.msg_helpers.Time(0, 0), "");
+			this.jointState.header = new Header(new SIGVerse.RosBridge.builtin_interfaces.msg.Time(0, 0), "");
 
 			this.jointState.name = new List<string>()
 			{

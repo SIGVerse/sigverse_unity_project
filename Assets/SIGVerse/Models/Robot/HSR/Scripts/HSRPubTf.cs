@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using SIGVerse.Common;
 using SIGVerse.SIGVerseRosBridge;
-using SIGVerse.RosBridge.geometry_msgs;
+using SIGVerse.RosBridge.geometry_msgs.msg;
 using System.Collections.Generic;
 using System.Threading;
 using SIGVerse.RosBridge;

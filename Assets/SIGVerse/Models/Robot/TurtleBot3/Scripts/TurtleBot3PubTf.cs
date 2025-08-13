@@ -2,7 +2,7 @@ using UnityEngine;
 
 using System.Collections;
 using SIGVerse.SIGVerseRosBridge;
-using SIGVerse.RosBridge.geometry_msgs;
+using SIGVerse.RosBridge.geometry_msgs.msg;
 using System.Collections.Generic;
 using System.Threading;
 using SIGVerse.RosBridge;

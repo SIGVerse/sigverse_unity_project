@@ -8,9 +8,9 @@ namespace SIGVerse.RosBridge
 			return null;
 		}
 
-		public static string GetMD5Hash()
-		{
-			return null;
-		}
+		//public static string GetMD5Hash()
+		//{
+		//	return null;
+		//}
 	}
 }

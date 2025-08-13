@@ -19,7 +19,7 @@ namespace SIGVerse.SIGVerseRosBridge
 		private System.Net.Sockets.TcpClient tcpClient = null;
 		private System.Net.Sockets.NetworkStream networkStream = null;
 
-		private SIGVerseRosBridgeMessage<SIGVerse.RosBridge.std_msgs.Time> timeSyncMsg = null;
+		private SIGVerseRosBridgeMessage<SIGVerse.RosBridge.builtin_interfaces.msg.Time> timeSyncMsg = null;
 
 		protected override void Start()
 		{
@@ -41,7 +41,7 @@ namespace SIGVerse.SIGVerseRosBridge
 			this.networkStream.ReadTimeout  = 100000;
 			this.networkStream.WriteTimeout = 100000;
 
-			this.timeSyncMsg = new SIGVerseRosBridgeMessage<SIGVerse.RosBridge.std_msgs.Time>("publish", this.topicName, "sigverse/TimeSync", null);
+			this.timeSyncMsg = new SIGVerseRosBridgeMessage<SIGVerse.RosBridge.builtin_interfaces.msg.Time>("publish", this.topicName, "sigverse/TimeSync", null);
 		}
 
 
@@ -69,7 +69,7 @@ namespace SIGVerse.SIGVerseRosBridge
 					{
 						SIGVerseLogger.Info("Time gap sec="+messageArray[1]+", msec="+ messageArray[2]);
 
-						SIGVerse.RosBridge.std_msgs.Header.SetTimeGap(Int32.Parse(messageArray[1]), Int32.Parse(messageArray[2]));
+						SIGVerse.RosBridge.std_msgs.msg.Header.SetTimeGap(Int32.Parse(messageArray[1]), Int32.Parse(messageArray[2]));
 					}
 					else
 					{
@@ -94,9 +94,9 @@ namespace SIGVerse.SIGVerseRosBridge
 				 */
 				TimeSpan epochTime = (DateTime.Now.ToUniversalTime() - UnixEpoch);
 
-				SIGVerse.RosBridge.std_msgs.Time time = new RosBridge.std_msgs.Time();
-				time.data.sec     = (int) epochTime.TotalSeconds;
-				time.data.nanosec = (uint)epochTime.Milliseconds * 1000 * 1000;
+				SIGVerse.RosBridge.builtin_interfaces.msg.Time time = new RosBridge.builtin_interfaces.msg.Time();
+				time.sec     = (int) epochTime.TotalSeconds;
+				time.nanosec = (uint)epochTime.Milliseconds * 1000 * 1000;
 
 				this.timeSyncMsg.msg = time;
 			

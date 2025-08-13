@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using SIGVerse.RosBridge;
-using SIGVerse.RosBridge.std_msgs;
-using SIGVerse.RosBridge.sensor_msgs;
+using SIGVerse.RosBridge.std_msgs.msg;
+using SIGVerse.RosBridge.sensor_msgs.msg;
 using SIGVerse.Common;
 
 using JointType = SIGVerse.TurtleBot3.TurtleBot3JointInfo.JointType;
@@ -43,7 +43,7 @@ namespace SIGVerse.TurtleBot3
 			base.Start();
 
 			this.jointState = new JointState();
-			this.jointState.header = new Header(new SIGVerse.RosBridge.msg_helpers.Time(0, 0), "tb3_omc_joint_state");
+			this.jointState.header = new Header(new SIGVerse.RosBridge.builtin_interfaces.msg.Time(0, 0), "tb3_omc_joint_state");
 
 			this.jointState.name = new List<string>();
 			this.jointState.name.Add(TurtleBot3Common.jointNameMap[JointType.Joint1]);

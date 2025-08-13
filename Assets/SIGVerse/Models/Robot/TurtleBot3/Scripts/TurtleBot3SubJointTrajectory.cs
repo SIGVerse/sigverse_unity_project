@@ -7,7 +7,7 @@ using JointType = SIGVerse.TurtleBot3.TurtleBot3JointInfo.JointType;
 
 namespace SIGVerse.TurtleBot3
 {
-	public class TurtleBot3SubJointTrajectory : RosSubMessage<SIGVerse.RosBridge.trajectory_msgs.JointTrajectory>, ITurtleBot3GraspedObjectHandler
+	public class TurtleBot3SubJointTrajectory : RosSubMessage<SIGVerse.RosBridge.trajectory_msgs.msg.JointTrajectory>, ITurtleBot3GraspedObjectHandler
 	{
 		public class TrajectoryInfo
 		{
@@ -69,7 +69,7 @@ namespace SIGVerse.TurtleBot3
 		}
 
 
-		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.trajectory_msgs.JointTrajectory jointTrajectory)
+		protected override void SubscribeMessageCallback(SIGVerse.RosBridge.trajectory_msgs.msg.JointTrajectory jointTrajectory)
 		{
 			if(jointTrajectory.joint_names.Count != jointTrajectory.points[0].positions.Count)
 			{

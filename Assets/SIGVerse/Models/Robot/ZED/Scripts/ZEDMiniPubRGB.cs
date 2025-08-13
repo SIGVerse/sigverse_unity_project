@@ -2,7 +2,7 @@ using UnityEngine;
 
 using System;
 using System.Collections;
-using SIGVerse.RosBridge.sensor_msgs;
+using SIGVerse.RosBridge.sensor_msgs.msg;
 using SIGVerse.Common;
 
 namespace SIGVerse.ZEDMini

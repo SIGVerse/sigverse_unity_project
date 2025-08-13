@@ -1,7 +1,7 @@
 using UnityEngine;
 using SIGVerse.RosBridge;
-using SIGVerse.RosBridge.std_msgs;
-using SIGVerse.RosBridge.sensor_msgs;
+using SIGVerse.RosBridge.std_msgs.msg;
+using SIGVerse.RosBridge.sensor_msgs.msg;
 using SIGVerse.Common;
 using System.Collections.Generic;
 
@@ -36,7 +36,7 @@ namespace SIGVerse.TIAGo
 				RobotCameraSettings robotCameraSettings = camera.GetComponent<RobotCameraSettings>();
 
 				Range range = new Range();
-				range.header = new Header(new SIGVerse.RosBridge.msg_helpers.Time(0, 0), camera.transform.parent.gameObject.name);
+				range.header = new Header(new SIGVerse.RosBridge.builtin_interfaces.msg.Time(0, 0), camera.transform.parent.gameObject.name);
 				range.radiation_type = this.radiationType;
 				range.field_of_view  = camera.fieldOfView * Mathf.Deg2Rad ;
 				range.min_range      = robotCameraSettings.sonarMinValue;

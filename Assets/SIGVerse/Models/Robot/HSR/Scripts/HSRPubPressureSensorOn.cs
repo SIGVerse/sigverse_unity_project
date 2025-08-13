@@ -6,7 +6,7 @@ using System;
 
 namespace SIGVerse.ToyotaHSR
 {
-	public class HSRPubPressureSensorOn : RosPubMessage<SIGVerse.RosBridge.std_msgs.Bool>
+	public class HSRPubPressureSensorOn : RosPubMessage<SIGVerse.RosBridge.std_msgs.msg.Bool>
 	{
 		[TooltipAttribute("milliseconds")]
 		public float sendingInterval = 200;
@@ -29,7 +29,7 @@ namespace SIGVerse.ToyotaHSR
 
 			this.elapsedTime = 0.0f;
 
-			SIGVerse.RosBridge.std_msgs.Bool pressureSensorOn =  new SIGVerse.RosBridge.std_msgs.Bool();
+			SIGVerse.RosBridge.std_msgs.msg.Bool pressureSensorOn =  new SIGVerse.RosBridge.std_msgs.msg.Bool();
 
 			pressureSensorOn.data = suctionDetector.IsPressureSensorOn();
 
