@@ -6,7 +6,7 @@ using System.Collections;
 using System.IO;
 using UnityEngine;
 using WebSocketSharp;
-using static SIGVerse.RosBridge.RosBridgeWebSocketConnection;
+using Conn = SIGVerse.RosBridge.RosBridgeWebSocketConnection;
 
 namespace SIGVerse.RosBridge
 {
@@ -53,8 +53,8 @@ namespace SIGVerse.RosBridge
 		{
 			Debug.Log("Sending " + AdvertiseTopic<string>(topic, type));
 
-			if (UseBson){ webSocket.Send(AdvertiseTopic<byte[]>(topic, type)); }
-			else        { webSocket.Send(AdvertiseTopic<string>(topic, type)); }
+			if (Conn.UseBson){ webSocket.Send(AdvertiseTopic<byte[]>(topic, type)); }
+			else             { webSocket.Send(AdvertiseTopic<string>(topic, type)); }
 		}
 
 		private static T UnadvertiseTopic<T>(string topic)
@@ -67,8 +67,8 @@ namespace SIGVerse.RosBridge
 		{
 			Debug.Log("Sending " + UnadvertiseTopic<string>(topic));
 
-			if (UseBson){ webSocket.Send(UnadvertiseTopic<byte[]>(topic)); }
-			else        { webSocket.Send(UnadvertiseTopic<string>(topic)); }
+			if (Conn.UseBson){ webSocket.Send(UnadvertiseTopic<byte[]>(topic)); }
+			else             { webSocket.Send(UnadvertiseTopic<string>(topic)); }
 		}
 		
 		private static T AdvertiseService<T>(string service, string type)
@@ -81,8 +81,8 @@ namespace SIGVerse.RosBridge
 		{
 			Debug.Log("Sending " + AdvertiseService<string>(service, type));
 
-			if (UseBson){ webSocket.Send(AdvertiseService<byte[]>(service, type)); }
-			else        { webSocket.Send(AdvertiseService<string>(service, type)); }
+			if (Conn.UseBson){ webSocket.Send(AdvertiseService<byte[]>(service, type)); }
+			else             { webSocket.Send(AdvertiseService<string>(service, type)); }
 		}
 
 		private static T UnadvertiseService<T>(string service)
@@ -95,8 +95,8 @@ namespace SIGVerse.RosBridge
 		{
 			Debug.Log("Sending " + UnadvertiseService<string>(service));
 
-			if (UseBson){ webSocket.Send(UnadvertiseService<byte[]>(service)); }
-			else        { webSocket.Send(UnadvertiseService<string>(service)); }
+			if (Conn.UseBson){ webSocket.Send(UnadvertiseService<byte[]>(service)); }
+			else             { webSocket.Send(UnadvertiseService<string>(service)); }
 		}
 
 		private static T ServiceResponse<T>(bool success, string service, string id, string resultValues)
@@ -109,8 +109,8 @@ namespace SIGVerse.RosBridge
 		{
 			Debug.Log("Sending " + ServiceResponse<string>(success, service, id, resultValues));
 
-			if (UseBson){ webSocket.Send(ServiceResponse<byte[]>(success, service, id, resultValues)); }
-			else        { webSocket.Send(ServiceResponse<string>(success, service, id, resultValues)); }
+			if (Conn.UseBson){ webSocket.Send(ServiceResponse<byte[]>(success, service, id, resultValues)); }
+			else             { webSocket.Send(ServiceResponse<string>(success, service, id, resultValues)); }
 		}
 
 		private static T Subscribe<T>(string topic)
@@ -123,8 +123,8 @@ namespace SIGVerse.RosBridge
 		{
 			Debug.Log("Sending " + Subscribe<string>(topic));
 
-			if (UseBson){ webSocket.Send(Subscribe<byte[]>(topic)); }
-			else        { webSocket.Send(Subscribe<string>(topic)); }
+			if (Conn.UseBson){ webSocket.Send(Subscribe<byte[]>(topic)); }
+			else             { webSocket.Send(Subscribe<string>(topic)); }
 		}
 
 		private static T Subscribe<T>(string topic, string type)
@@ -137,8 +137,8 @@ namespace SIGVerse.RosBridge
 		{
 			Debug.Log("Sending " + Subscribe<string>(topic, type));
 
-			if (UseBson){ webSocket.Send(Subscribe<byte[]>(topic, type)); }
-			else        { webSocket.Send(Subscribe<string>(topic, type)); }
+			if (Conn.UseBson){ webSocket.Send(Subscribe<byte[]>(topic, type)); }
+			else             { webSocket.Send(Subscribe<string>(topic, type)); }
 		}
 
 		private static T Unsubscribe<T>(string topic)
@@ -151,16 +151,16 @@ namespace SIGVerse.RosBridge
 		{
 			Debug.Log("Sending " + Unsubscribe<string>(topic));
 
-			if (UseBson){ webSocket.Send(Unsubscribe<byte[]>(topic)); }
-			else        { webSocket.Send(Unsubscribe<string>(topic)); }
+			if (Conn.UseBson){ webSocket.Send(Unsubscribe<byte[]>(topic)); }
+			else             { webSocket.Send(Unsubscribe<string>(topic)); }
 		}
 
 		public static void Publish(WebSocket webSocket, string message)
 		{
 //			Debug.Log("Publish " + message);
 
-			if (UseBson){ webSocket.Send(ConvertToBytes(message)); }
-			else        { webSocket.Send(message); }
+			if (Conn.UseBson){ webSocket.Send(ConvertToBytes(message)); }
+			else             { webSocket.Send(message); }
 		}
 	}
 }
