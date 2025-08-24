@@ -12,29 +12,32 @@ namespace SIGVerse.ExampleScenes.TurtleBot3
 		public GameObject destinationOfRosMessage;
 
 		/////////////
+		[SerializeField] private float yawSpeed = 60f; // Rotation speed (deg/sec)
+		[SerializeField] private float yawLimit = 30f; // +/- limit from initial (deg)
 
-		// Use this for initialization
-		void Start ()
-		{
-		}
+		private Quaternion initialLocalRot;
+		private float yawOffsetDeg = 0f;
 	
+		private void Start()
+		{
+			this.initialLocalRot = this.rightArmObject.localRotation;
+		}
+
 		// Update is called once per frame
 		void Update ()
 		{
-			// Move the right arm
-			if(Input.GetKey(KeyCode.RightArrow))
+			float input = 0f;
+			if (Input.GetKey(KeyCode.RightArrow)){ input -= 1f; }
+			if (Input.GetKey(KeyCode.LeftArrow)) { input += 1f; }
+
+			// Update only when there is some input
+			if (Mathf.Abs(input) > 0f)
 			{
-				float newY = Mathf.Max(this.rightArmObject.localEulerAngles.y - 30.0f * Time.deltaTime, 285.0f);
+				this.yawOffsetDeg += input * this.yawSpeed * Time.deltaTime;
+				this.yawOffsetDeg = Mathf.Clamp(this.yawOffsetDeg, -this.yawLimit, this.yawLimit);
 
-				this.rightArmObject.localEulerAngles = new Vector3(this.rightArmObject.localEulerAngles.x, newY, this.rightArmObject.localEulerAngles.z);
-			}
-
-			// Move the right arm
-			if (Input.GetKey(KeyCode.LeftArrow))
-			{
-				float newY = Mathf.Min(this.rightArmObject.localEulerAngles.y + 30.0f * Time.deltaTime, 358.0f);
-
-				this.rightArmObject.localEulerAngles = new Vector3(this.rightArmObject.localEulerAngles.x, newY, this.rightArmObject.localEulerAngles.z);
+				// Apply rotation: use the startup rotation combined with relative yaw around local Y
+				this.rightArmObject.localRotation = this.initialLocalRot * Quaternion.Euler(0f, this.yawOffsetDeg, 0f);
 			}
 
 			// Send the instruction message
