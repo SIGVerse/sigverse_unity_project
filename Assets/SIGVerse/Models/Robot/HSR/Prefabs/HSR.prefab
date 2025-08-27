@@ -3177,7 +3177,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4565211342487820}
   - component: {fileID: 114886854865315070}
-  - component: {fileID: 7254182473044821343}
   - component: {fileID: 82603200551281952}
   m_Layer: 9
   m_Name: HSR
@@ -3224,30 +3223,6 @@ MonoBehaviour:
   - DummyGraspingCandidates
   graspingNotificationDestinations:
   - {fileID: 1872639706377518}
---- !u!114 &7254182473044821343
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1490779182462594}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5098b3e7b0757c44b8f2a52aea8c2bb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  releaseThresholdDistance: 0.01
-  releaseThresholdAngle: 10
-  vacuum: {fileID: 4529231341188272}
-  vacuumCollider: {fileID: 9149733698890941654}
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 2305
-  enableDebugRay: 1
-  graspableTags:
-  - Graspable
-  - GraspingCandidates
-  - DummyGraspingCandidates
 --- !u!82 &82603200551281952
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5773,8 +5748,6 @@ GameObject:
   - component: {fileID: 114247472335588442}
   - component: {fileID: 114626428202431274}
   - component: {fileID: 114242712182628556}
-  - component: {fileID: 1041171873925199933}
-  - component: {fileID: 5154551844000788535}
   m_Layer: 9
   m_Name: RosBridgeScripts
   m_TagString: Untagged
@@ -6048,39 +6021,6 @@ MonoBehaviour:
   topicNameCameraInfo: /hsrb/hand_camera/camera_info
   topicNameImage: /hsrb/hand_camera/image_raw
   sendingInterval: 100
---- !u!114 &1041171873925199933
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1872639706377518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40b0f014827d8484f8f731b964bdf518, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rosBridgeIP: 
-  rosBridgePort: 0
-  topicName: /hsrb/suction_on
-  suctionDetector: {fileID: 7254182473044821343}
---- !u!114 &5154551844000788535
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1872639706377518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d83730bfff3f7114a97582b4b911be6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rosBridgeIP: 
-  rosBridgePort: 0
-  topicName: /hsrb/pressure_sensor_on
-  sendingInterval: 200
-  suctionDetector: {fileID: 7254182473044821343}
 --- !u!1 &1880997157683976
 GameObject:
   m_ObjectHideFlags: 0
