@@ -27,8 +27,8 @@ namespace SIGVerse.TurtleBot3
 		//public const string Joint2 = "joint2"; // Rotate Link3
 		//public const string Joint3 = "joint3"; // Rotate Link4
 		//public const string Joint4 = "joint4"; // Rotate Link5
-		//public const string GripJoint    = "grip_joint";
-		//public const string GripJointSub = "grip_joint_sub";
+		//public const string GripJoint    = "gripper_left_link";
+		//public const string GripJointSub = "gripper_right_link";
 
 		
 		public static Dictionary<LinkType, string>              linkNameMap;
@@ -72,8 +72,10 @@ namespace SIGVerse.TurtleBot3
 			linkNameMap.Add(LinkType.Link3,       "link3");
 			linkNameMap.Add(LinkType.Link4,       "link4");
 			linkNameMap.Add(LinkType.Link5,       "link5");
-			linkNameMap.Add(LinkType.GripLink,    "grip_link");
-			linkNameMap.Add(LinkType.GripLinkSub, "grip_link_sub");
+			linkNameMap.Add(LinkType.GripLink,    "gripper_left_link");
+			linkNameMap.Add(LinkType.GripLinkSub, "gripper_right_link");
+			linkNameMap.Add(LinkType.EndEffectorLink, "end_effector_link");
+			linkNameMap.Add(LinkType.DummyMimicFix,   "dummy_mimic_fix");
 		}
 
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -90,8 +92,8 @@ namespace SIGVerse.TurtleBot3
 			jointNameMap.Add(JointType.Joint2,      "joint2"); 
 			jointNameMap.Add(JointType.Joint3,      "joint3"); 
 			jointNameMap.Add(JointType.Joint4,      "joint4"); 
-			jointNameMap.Add(JointType.GripJoint,   "grip_joint");
-			jointNameMap.Add(JointType.GripJointSub,"grip_joint_sub");
+			jointNameMap.Add(JointType.GripJoint,   "gripper_left_joint");
+			jointNameMap.Add(JointType.GripJointSub,"gripper_right_joint");
 
 
 			jointInfoMap = new Dictionary<string, TurtleBot3JointInfo>();
@@ -101,10 +103,10 @@ namespace SIGVerse.TurtleBot3
 			jointInfoMap.Add(jointNameMap[JointType.WheelRightJoint], new TurtleBot3JointInfo(JointType.WheelRightJoint, LinkType.WheelRightLink, MovementType.Angular, MovementAxis.MinusY, -180.0f, +180.0f)); // rad=3.14
 
 			// Joints of Open-Manipulator
-			jointInfoMap.Add(jointNameMap[JointType.Joint1],       new TurtleBot3JointInfo(JointType.Joint1,       LinkType.Link2,       MovementType.Angular, MovementAxis.MinusZ, -162.15f, +162.15f)); // rad=2.83
-			jointInfoMap.Add(jointNameMap[JointType.Joint2],       new TurtleBot3JointInfo(JointType.Joint2,       LinkType.Link3,       MovementType.Angular, MovementAxis.MinusY, -110.00f, +110.00f)); // rad=1.92
-			jointInfoMap.Add(jointNameMap[JointType.Joint3],       new TurtleBot3JointInfo(JointType.Joint3,       LinkType.Link4,       MovementType.Angular, MovementAxis.MinusY, -162.15f, +162.15f)); // rad=2.83
-			jointInfoMap.Add(jointNameMap[JointType.Joint4],       new TurtleBot3JointInfo(JointType.Joint4,       LinkType.Link5,       MovementType.Angular, MovementAxis.MinusY, -162.15f, +162.15f)); // rad=2.83
+			jointInfoMap.Add(jointNameMap[JointType.Joint1],       new TurtleBot3JointInfo(JointType.Joint1,       LinkType.Link2,       MovementType.Angular, MovementAxis.MinusZ, -161.5f, +161.5f)); // rad=2.82
+			jointInfoMap.Add(jointNameMap[JointType.Joint2],       new TurtleBot3JointInfo(JointType.Joint2,       LinkType.Link3,       MovementType.Angular, MovementAxis.MinusY, -102.5f, + 90.0f)); // rad=-1.79/+1.57
+			jointInfoMap.Add(jointNameMap[JointType.Joint3],       new TurtleBot3JointInfo(JointType.Joint3,       LinkType.Link4,       MovementType.Angular, MovementAxis.MinusY, - 53.8f, + 79.0f)); // rad=-0.94/+1.38
+			jointInfoMap.Add(jointNameMap[JointType.Joint4],       new TurtleBot3JointInfo(JointType.Joint4,       LinkType.Link5,       MovementType.Angular, MovementAxis.MinusY, -102.5f, +116.8f)); // rad=-1.79/+2.04
 			jointInfoMap.Add(jointNameMap[JointType.GripJoint],    new TurtleBot3JointInfo(JointType.GripJoint,    LinkType.GripLink,    MovementType.Linear,  MovementAxis.MinusY, -  0.01f, +  0.035f));
 			jointInfoMap.Add(jointNameMap[JointType.GripJointSub], new TurtleBot3JointInfo(JointType.GripJointSub, LinkType.GripLinkSub, MovementType.Linear,  MovementAxis.PlusY,  -  0.01f, +  0.035f));
 		}
@@ -171,6 +173,8 @@ namespace SIGVerse.TurtleBot3
 			AddLink(linkList, FindGameObjectFromChild(root, LinkType.Link5));
 			AddLink(linkList, FindGameObjectFromChild(root, LinkType.GripLink));
 			AddLink(linkList, FindGameObjectFromChild(root, LinkType.GripLinkSub));
+			AddLink(linkList, FindGameObjectFromChild(root, LinkType.EndEffectorLink));
+			AddLink(linkList, FindGameObjectFromChild(root, LinkType.DummyMimicFix));
 
 			return linkList;
 		}

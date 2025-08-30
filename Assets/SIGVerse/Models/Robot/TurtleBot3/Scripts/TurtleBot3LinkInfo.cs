@@ -37,6 +37,8 @@ namespace SIGVerse.TurtleBot3
 			Link5,
 			GripLink,
 			GripLinkSub,
+			EndEffectorLink,
+			DummyMimicFix
 		}
 
 		public LinkType linkType;

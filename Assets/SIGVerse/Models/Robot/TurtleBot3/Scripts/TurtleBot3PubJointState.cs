@@ -82,9 +82,9 @@ namespace SIGVerse.TurtleBot3
 			//4 joint4
 			positions.Add(-TurtleBot3Common.GetCorrectedJointsEulerAngle(TurtleBot3Common.jointNameMap[JointType.Joint4], this.joint4Link.localEulerAngles.y) * Mathf.Deg2Rad);
 			// TODO Have to check sensor data of a real turtlebot3 
-			//5 grip_joint
+			//5 gripper_left_link
 			positions.Add(-this.gripJointLink.localPosition.y);
-			//6 grip_joint_sub
+			//6 gripper_right_link
 			positions.Add(+this.gripJointSubLink.localPosition.y);
 
 //			Debug.Log("Pub JointState joint1="+positions[0]);
