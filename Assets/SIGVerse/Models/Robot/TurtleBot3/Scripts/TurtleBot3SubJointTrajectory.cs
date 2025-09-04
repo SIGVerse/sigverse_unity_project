@@ -11,18 +11,18 @@ namespace SIGVerse.TurtleBot3
 	{
 		public class TrajectoryInfo
 		{
-			public float StartTime    { get; set; }
-			public float Duration     { get; set; }
-			public float GoalPosition { get; set; }
-			public float CurrentTime     { get; set; }
-			public float CurrentPosition { get; set; }
+			public float       StartTime       { get; set; }
+			public List<float> Durations       { get; set; }
+			public List<float> GoalPositions   { get; set; }
+			public float       CurrentTime     { get; set; }
+			public float       CurrentPosition { get; set; }
 
-			public TrajectoryInfo(float startTime, float duration, float goalPosition, float currentTime, float currentPosition)
+			public TrajectoryInfo(List<float> durations, List<float> goalPositions, float currentPosition)
 			{
-				this.StartTime       = startTime;
-				this.Duration        = duration;
-				this.GoalPosition    = goalPosition;
-				this.CurrentTime     = currentTime;
+				this.StartTime       = Time.time;
+				this.Durations       = durations;
+				this.GoalPositions   = goalPositions;
+				this.CurrentTime     = Time.time;
 				this.CurrentPosition = currentPosition;
 			}
 		}
@@ -77,42 +77,47 @@ namespace SIGVerse.TurtleBot3
 				return;
 			}
 
-			const int Zero = 0;
-
 			for(int i=0; i < jointTrajectory.joint_names.Count; i++)
 			{
-				string name    = jointTrajectory.joint_names[i];
-				float position = TurtleBot3Common.GetClampedPosition(name, (float)jointTrajectory.points[Zero].positions[i]);
-				float duration = (float)jointTrajectory.points[Zero].time_from_start.sec + (float)jointTrajectory.points[Zero].time_from_start.nanosec * 1.0e-9f;
+				string name = jointTrajectory.joint_names[i];
+
+				List<float> positions = new List<float>();
+				List<float> durations = new List<float>();
+
+				for(int pointIndex=0; pointIndex<jointTrajectory.points.Count; pointIndex++)
+				{
+					positions.Add(TurtleBot3Common.GetClampedPosition(name, (float)jointTrajectory.points[pointIndex].positions[i]));
+					durations.Add((float)jointTrajectory.points[pointIndex].time_from_start.sec + (float)jointTrajectory.points[pointIndex].time_from_start.nanosec * 1.0e-9f);
+				}
 
 				if(name == TurtleBot3Common.jointNameMap[JointType.Joint1])
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, duration, -position, Time.time, TurtleBot3Common.GetCorrectedJointsEulerAngle(name, this.joint1Link.localEulerAngles.z) * Mathf.Deg2Rad);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(durations, positions.ConvertAll(p => -p), TurtleBot3Common.GetCorrectedJointsEulerAngle(name, this.joint1Link.localEulerAngles.z) * Mathf.Deg2Rad);
 				}
 
 				if(name == TurtleBot3Common.jointNameMap[JointType.Joint2])
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, duration, -position, Time.time, TurtleBot3Common.GetCorrectedJointsEulerAngle(name, this.joint2Link.localEulerAngles.y) * Mathf.Deg2Rad);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(durations, positions.ConvertAll(p => -p), TurtleBot3Common.GetCorrectedJointsEulerAngle(name, this.joint2Link.localEulerAngles.y) * Mathf.Deg2Rad);
 				}
 
 				if(name == TurtleBot3Common.jointNameMap[JointType.Joint3])
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, duration, -position, Time.time, TurtleBot3Common.GetCorrectedJointsEulerAngle(name, this.joint3Link.localEulerAngles.y) * Mathf.Deg2Rad);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(durations, positions.ConvertAll(p => -p), TurtleBot3Common.GetCorrectedJointsEulerAngle(name, this.joint3Link.localEulerAngles.y) * Mathf.Deg2Rad);
 				}
 
 				if(name == TurtleBot3Common.jointNameMap[JointType.Joint4])
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, duration, -position, Time.time, TurtleBot3Common.GetCorrectedJointsEulerAngle(name, this.joint4Link.localEulerAngles.y) * Mathf.Deg2Rad);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(durations, positions.ConvertAll(p => -p), TurtleBot3Common.GetCorrectedJointsEulerAngle(name, this.joint4Link.localEulerAngles.y) * Mathf.Deg2Rad);
 				}
 
 				if(name == TurtleBot3Common.jointNameMap[JointType.GripJoint])
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, duration, -position, Time.time, this.gripJointLink.localPosition.y);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(durations, positions.ConvertAll(p => -p), this.gripJointLink.localPosition.y);
 				}
 
 				if(name == TurtleBot3Common.jointNameMap[JointType.GripJointSub])
 				{
-					this.trajectoryInfoMap[name] = new TrajectoryInfo(Time.time, duration, +position, Time.time, -this.gripJointLink.localPosition.y);
+					this.trajectoryInfoMap[name] = new TrajectoryInfo(durations, positions, -this.gripJointLink.localPosition.y);
 				}
 			}
 		}
@@ -198,16 +203,18 @@ namespace SIGVerse.TurtleBot3
 		{
 			TrajectoryInfo trajectoryInfo = trajectoryInfoMap[jointName];
 
-			// Calculate move speed
-			float speed = 0.0f;
+			int targetPointIndex = GetTargetPointIndex(trajectoryInfo);
 
-			if (trajectoryInfo.CurrentTime - trajectoryInfo.StartTime >= trajectoryInfo.Duration)
+			// Calculate move speed
+			float speed;
+
+			if (trajectoryInfo.CurrentTime - trajectoryInfo.StartTime >= trajectoryInfo.Durations[targetPointIndex])
 			{
 				speed = maxSpeed;
 			}
 			else
 			{
-				speed = Mathf.Abs((trajectoryInfo.GoalPosition - trajectoryInfo.CurrentPosition) / (trajectoryInfo.Duration - (trajectoryInfo.CurrentTime - trajectoryInfo.StartTime)));
+				speed = Mathf.Abs((trajectoryInfo.GoalPositions[targetPointIndex] - trajectoryInfo.CurrentPosition) / (trajectoryInfo.Durations[targetPointIndex] - (trajectoryInfo.CurrentTime - trajectoryInfo.StartTime)));
 				speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
 			}
 
@@ -215,16 +222,16 @@ namespace SIGVerse.TurtleBot3
 			float newPosition;
 			float movingDistance = speed * (Time.time - trajectoryInfo.CurrentTime);
 
-			if (movingDistance > Mathf.Abs(trajectoryInfo.GoalPosition - trajectoryInfo.CurrentPosition))
+			if (movingDistance > Mathf.Abs(trajectoryInfo.GoalPositions[targetPointIndex] - trajectoryInfo.CurrentPosition))
 			{
-				newPosition = trajectoryInfo.GoalPosition;
+				newPosition = trajectoryInfo.GoalPositions[targetPointIndex];
 				trajectoryInfoMap[jointName] = null;
 			}
 			else
 			{
 				trajectoryInfo.CurrentTime = Time.time;
 
-				if (trajectoryInfo.GoalPosition > trajectoryInfo.CurrentPosition)
+				if (trajectoryInfo.GoalPositions[targetPointIndex] > trajectoryInfo.CurrentPosition)
 				{
 					trajectoryInfo.CurrentPosition = trajectoryInfo.CurrentPosition + movingDistance;
 
@@ -241,10 +248,25 @@ namespace SIGVerse.TurtleBot3
 			return newPosition;
 		}
 
+		private static int GetTargetPointIndex(TrajectoryInfo trajectoryInfo)
+		{
+			int targetPointIndex = 0;
+
+			for (int i = 0; i < trajectoryInfo.Durations.Count; i++)
+			{
+				targetPointIndex = i;
+
+				if (Time.time - trajectoryInfo.StartTime < trajectoryInfo.Durations[targetPointIndex])
+				{
+					break;
+				}
+			}
+			return targetPointIndex;
+		}
+
 		public void OnChangeGraspedObject(GameObject graspedObject)
 		{
 			this.graspedObject = graspedObject;
 		}
 	}
 }
-

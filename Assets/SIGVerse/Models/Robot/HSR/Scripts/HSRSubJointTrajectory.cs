@@ -18,15 +18,6 @@ namespace SIGVerse.ToyotaHSR
 			public float       CurrentTime     { get; set; }
 			public float       CurrentPosition { get; set; }
 
-			public TrajectoryInfo(float startTime, List<float> duration, List<float> goalPosition, float currentTime, float currentPosition)
-			{
-				this.StartTime       = startTime;
-				this.Durations       = duration;
-				this.GoalPositions   = goalPosition;
-				this.CurrentTime     = currentTime;
-				this.CurrentPosition = currentPosition;
-			}
-
 			public TrajectoryInfo(List<float> duration, List<float> goalPosition, float currentPosition)
 			{
 				this.StartTime       = Time.time;
