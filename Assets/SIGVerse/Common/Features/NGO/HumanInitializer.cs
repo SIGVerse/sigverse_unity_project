@@ -1,22 +1,23 @@
-﻿using System;
+﻿using SIGVerse.Human.VR;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
 using Unity.XR.CoreUtils;
-using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.XR.Interaction.Toolkit.Inputs;
-using UnityEngine.XR.Interaction.Toolkit.Interactors;
+using UnityEngine;
 using UnityEngine.InputSystem.XR;
-using SIGVerse.Human.VR;
-using UnityEngine.XR.Interaction.Toolkit.Inputs.Haptics;
+using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Feedback;
+using UnityEngine.XR.Interaction.Toolkit.Inputs;
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Haptics;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 namespace SIGVerse.Common
 {
 	public class HumanInitializer : CommonInitializer
 	{
 		public GameObject avatar;
-		public GameObject xritkSetup;
+		public GameObject xrOrigin;
 		public GameObject personalPanel;
 
 		private bool isInitialized = false;
@@ -47,19 +48,21 @@ namespace SIGVerse.Common
 
 				this.avatar.GetComponent<SimpleHumanVRControllerNgo>().enabled = true;
 
-				this.xritkSetup.GetComponentInChildren<XROrigin>().enabled = true;
-				this.xritkSetup.GetComponentInChildren<InputActionManager>().enabled = true;
+				this.xrOrigin.GetComponentInChildren<XROrigin>().enabled = true;
+				this.xrOrigin.GetComponentInChildren<InputActionManager>().enabled = true;
 
-				this.xritkSetup.GetComponentInChildren<Camera>().enabled = true;
-				this.xritkSetup.GetComponentInChildren<AudioListener>().enabled = true;
-				Array.ForEach(this.xritkSetup.GetComponentsInChildren<TrackedPoseDriver>(), x => x.enabled = true);
-				this.xritkSetup.GetComponentInChildren<SIGVerse.Human.IK.AnchorPostureCalculator>().enabled = true;
+				this.xrOrigin.GetComponentInChildren<Camera>().enabled = true;
+				this.xrOrigin.GetComponentInChildren<AudioListener>().enabled = true;
+				Array.ForEach(this.xrOrigin.GetComponentsInChildren<TrackedPoseDriver>(), x => x.enabled = true);
+				this.xrOrigin.GetComponentInChildren<SIGVerse.Human.IK.AnchorPostureCalculator>().enabled = true;
 
-				Array.ForEach(this.xritkSetup.GetComponentsInChildren<HapticImpulsePlayer>(), x => x.enabled = true);
-				Array.ForEach(this.xritkSetup.GetComponentsInChildren<XRDirectInteractor>(), x=>x.enabled = true);
-				Array.ForEach(this.xritkSetup.GetComponentsInChildren<SphereCollider>(), x=>x.enabled = true);
-				Array.ForEach(this.xritkSetup.GetComponentsInChildren<SimpleHapticFeedback>(), x=>x.enabled = true);
-				Array.ForEach(this.xritkSetup.GetComponentsInChildren<GraspableOutlineRenderer>(), x=>x.enabled = true);
+				Array.ForEach(this.xrOrigin.GetComponentsInChildren<HapticImpulsePlayer>(), x => x.enabled = true);
+				Array.ForEach(this.xrOrigin.GetComponentsInChildren<XRDirectInteractor>(), x=>x.enabled = true);
+				this.xrOrigin.GetComponentsInChildren<SphereCollider>()
+					.Where(col => !col.GetComponent<XRDirectInteractor>()) //If an XRDirectInteractor is attached to the same GameObject, do nothing.
+					.ToList().ForEach(col => col.enabled = true);
+				Array.ForEach(this.xrOrigin.GetComponentsInChildren<SimpleHapticFeedback>(), x=>x.enabled = true);
+				Array.ForEach(this.xrOrigin.GetComponentsInChildren<GraspableOutlineRenderer>(), x=>x.enabled = true);
 
 				SubviewController.EnableSubview(this.gameObject);
 				if (TryGetComponent<HumanChat>(out var chat)) 

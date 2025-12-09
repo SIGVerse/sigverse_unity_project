@@ -1,14 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
-using Unity.Netcode;
 using UnityEngine.XR;
 
 namespace SIGVerse.Common
 {
-	public class HumanHandController : NetworkBehaviour
+	public class HumanHandController : MonoBehaviour
 	{
 		public enum HandType
 		{
@@ -21,34 +20,45 @@ namespace SIGVerse.Common
 		public GameObject avatarPointing;
 
 		//-----------
-		private Transform thumb1, index1, middle1, ring1, little1;
-		private Transform thumb2, index2, middle2, ring2, little2;
-		private Transform thumb3, index3, middle3, ring3, little3;
+		protected Transform thumb1, index1, middle1, ring1, little1;
+		protected Transform thumb2, index2, middle2, ring2, little2;
+		protected Transform thumb3, index3, middle3, ring3, little3;
 
-		private Quaternion thumb1Start, thumb2Start, thumb3Start;
-		private Quaternion index1Start, index2Start, index3Start;
-		private Quaternion middle1Start, middle2Start, middle3Start;
-		private Quaternion ring1Start, ring2Start, ring3Start;
-		private Quaternion little1Start, little2Start, little3Start;
+		protected Quaternion thumb1Start, thumb2Start, thumb3Start;
+		protected Quaternion index1Start, index2Start, index3Start;
+		protected Quaternion middle1Start, middle2Start, middle3Start;
+		protected Quaternion ring1Start, ring2Start, ring3Start;
+		protected Quaternion little1Start, little2Start, little3Start;
 
-		private Quaternion thumb1End , thumb2End , thumb3End;
-		private Quaternion index1End , index2End , index3End;
-		private Quaternion middle1End, middle2End, middle3End;
-		private Quaternion ring1End  , ring2End  , ring3End;
-		private Quaternion little1End, little2End, little3End;
+		protected Quaternion thumb1End , thumb2End , thumb3End;
+		protected Quaternion index1End , index2End , index3End;
+		protected Quaternion middle1End, middle2End, middle3End;
+		protected Quaternion ring1End  , ring2End  , ring3End;
+		protected Quaternion little1End, little2End, little3End;
 
-		private InputDevice handDevice;
+		protected InputDevice handDevice;
 
-		private NetworkVariable<float> handPostureRatio = new(0.0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+		private float handPostureRatio;
 
-		void Start()
+		public virtual void Awake()
 		{
-			if(IsOwner || !IsSpawned)
-			{
-				if(this.handType==HandType.Left) { StartCoroutine(GetXrDevice(XRNode.LeftHand)); }
-				if(this.handType==HandType.Right){ StartCoroutine(GetXrDevice(XRNode.RightHand)); }
-			}
-			
+		}
+
+		public virtual void Start()
+		{
+			if(this.handType==HandType.Left) { StartCoroutine(GetXrDevice(XRNode.LeftHand)); }
+			if(this.handType==HandType.Right){ StartCoroutine(GetXrDevice(XRNode.RightHand)); }
+
+			InitializeFingerPostures();
+		}
+
+		protected virtual IEnumerator GetXrDevice(XRNode xrNode)
+		{
+			yield return StartCoroutine(SIGVerseUtils.GetXrDevice(xrNode, x => this.handDevice = x));
+		}
+
+		protected virtual void InitializeFingerPostures()
+		{
 			Transform[] baseTransforms;
 
 			GameObject avatarBaseInstance     = Instantiate(this.avatarBase,     Vector3.zero, Quaternion.identity);  // If not instantiated, GetBoneTransform returns null. https://issuetracker.unity3d.com/issues/animator-dot-getbonetransform-doesnt-get-bones-transform-from-prefab
@@ -86,12 +96,7 @@ namespace SIGVerse.Common
 			this.little1 = targetTransforms[12]; this.little2 = targetTransforms[13]; this.little3 = targetTransforms[14];
 		}
 
-		private IEnumerator GetXrDevice(XRNode xrNode)
-		{
-			yield return StartCoroutine(SIGVerseUtils.GetXrDevice(xrNode, x => this.handDevice = x));
-		}
-
-		private void GetFingerRotations(out Transform[] transforms, Animator animator)
+		protected virtual void GetFingerRotations(out Transform[] transforms, Animator animator)
 		{
 			transforms = new Transform[15];
 
@@ -141,17 +146,9 @@ namespace SIGVerse.Common
 			}
 		}
 
-		void LateUpdate()
+		public void LateUpdate()
 		{
-			if(IsOwner || !IsSpawned)
-			{
-				if(this.handDevice.TryGetFeatureValue(CommonUsages.grip, out float handTriggerValue))
-				{
-					this.handPostureRatio.Value = handTriggerValue;
-				}
-			}
-
-			float ratio = this.handPostureRatio.Value;
+			float ratio = GetHandPostureRatio();
 
 			// Change hand posture
 			this.thumb1.localRotation = Quaternion.Slerp(this.thumb1Start, this.thumb1End, ratio);
@@ -173,6 +170,16 @@ namespace SIGVerse.Common
 			this.little1.localRotation = Quaternion.Slerp(this.little1Start, this.little1End, ratio);
 			this.little2.localRotation = Quaternion.Slerp(this.little2Start, this.little2End, ratio);
 			this.little3.localRotation = Quaternion.Slerp(this.little3Start, this.little3End, ratio);
+		}
+
+		protected virtual float GetHandPostureRatio()
+		{
+			if(this.handDevice.TryGetFeatureValue(CommonUsages.grip, out float handTriggerValue))
+			{
+				this.handPostureRatio = handTriggerValue;
+			}
+
+			return this.handPostureRatio;
 		}
 	}
 }

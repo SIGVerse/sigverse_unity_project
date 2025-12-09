@@ -32,7 +32,7 @@ namespace SIGVerse.Common
 				Array.ForEach(GetComponentsInChildren<GripperTriggerTransfererRay>(true), x=>x.enabled = true);
 
 				this.GetComponent<GraspingDetectorNgo>().enabled = true;
-				this.GetComponent<SuctionDetectorNgo>().enabled = true;
+//				this.GetComponent<SuctionDetectorNgo>().enabled = true;
 
 				if (TryGetComponent<RobotChat>(out var chat)) 
 				{ 
