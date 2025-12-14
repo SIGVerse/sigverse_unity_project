@@ -1,11 +1,12 @@
+using SIGVerse.Common;
+using SIGVerse.ExampleScenes.Hsr;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using SIGVerse.Common;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using SIGVerse.ExampleScenes.Hsr;
 using UnityEngine.XR;
 
 namespace SIGVerse.Common
@@ -23,6 +24,13 @@ namespace SIGVerse.Common
 
 		public string msgRightPrimary2DAxisClick = "Good!";
 		public string msgLeftPrimary2DAxisClick  = "Bad!";
+
+		[SerializeField] private InputActionReference leftPrimaryButton;
+		[SerializeField] private InputActionReference leftSecondaryButton;
+		[SerializeField] private InputActionReference leftThumbstickClick;
+		[SerializeField] private InputActionReference rightPrimaryButton;
+		[SerializeField] private InputActionReference rightSecondaryButton;
+		[SerializeField] private InputActionReference rightThumbstickClick;
 		//-----------------------------
 
 		private const float MessageSendingInterval = 0.5f;
@@ -30,9 +38,6 @@ namespace SIGVerse.Common
 		private float lastMessageSentTime = 0.0f;
 
 		private SAPISpeechSynthesis sapiSpeechSynthesis;
-
-		private InputDevice leftHandDevice;
-		private InputDevice rightHandDevice;
 
 		protected override void Awake()
 		{
@@ -53,33 +58,6 @@ namespace SIGVerse.Common
 			}
 		}
 
-		protected override void Start()
-		{
-			base.Start();
-
-			StartCoroutine(GetLeftHandDevice(XRNode.LeftHand));
-			StartCoroutine(GetRightHandDevice(XRNode.RightHand));
-
-			//StartCoroutine(GetXrDevice(XRNode.LeftHand,  this.leftHandDevice));
-			//StartCoroutine(GetXrDevice(XRNode.RightHand, this.rightHandDevice));
-		}
-
-		private IEnumerator GetLeftHandDevice(XRNode xrNode)
-		{
-			yield return StartCoroutine(SIGVerseUtils.GetXrDevice(xrNode, x => this.leftHandDevice = x));
-		}
-
-		private IEnumerator GetRightHandDevice(XRNode xrNode)
-		{
-			yield return StartCoroutine(SIGVerseUtils.GetXrDevice(xrNode, x => this.rightHandDevice = x));
-		}
-
-
-		private IEnumerator GetXrDevice(XRNode xrNode, InputDevice inputDevice)
-		{
-			yield return StartCoroutine(SIGVerseUtils.GetXrDevice(xrNode, x => inputDevice = x));
-		}
-
 		protected override void Update()
 		{
 			if (!IsOwner) { return; }
@@ -88,30 +66,30 @@ namespace SIGVerse.Common
 
 			if (Time.time - this.lastMessageSentTime > MessageSendingInterval)
 			{
-				if(this.rightHandDevice.TryGetFeatureValue(CommonUsages.primaryButton, out bool rightPrimaryButton) && rightPrimaryButton)
-				{
-					this.PublishMessage(this.msgRightPrimaryButton);
-				}
-				if(this.rightHandDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out bool rightSecondaryButton) && rightSecondaryButton)
-				{
-					this.PublishMessage(this.msgRightSecondaryButton);
-				}
-				if(this.leftHandDevice.TryGetFeatureValue(CommonUsages.primaryButton, out bool leftPrimaryButton) && leftPrimaryButton)
+				if(this.leftPrimaryButton.action.WasPressedThisFrame())
 				{
 					this.PublishMessage(this.msgLeftPrimaryButton);
 				}
-				if(this.leftHandDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out bool leftSecondaryButton) && leftSecondaryButton)
+				if(this.leftSecondaryButton.action.WasPressedThisFrame())
 				{
 					this.PublishMessage(this.msgLeftSecondaryButton);
 				}
-
-				if(this.rightHandDevice.TryGetFeatureValue(CommonUsages.primary2DAxisClick, out bool rightPrimary2DAxisClick) && rightPrimary2DAxisClick)
+				if(this.rightPrimaryButton.action.WasPressedThisFrame())
 				{
-					this.PublishMessage(this.msgRightPrimary2DAxisClick);
+					this.PublishMessage(this.msgRightPrimaryButton);
 				}
-				if(this.leftHandDevice.TryGetFeatureValue(CommonUsages.primary2DAxisClick, out bool leftPrimary2DAxisClick) && leftPrimary2DAxisClick)
+				if(this.rightSecondaryButton.action.WasPressedThisFrame())
+				{
+					this.PublishMessage(this.msgRightSecondaryButton);
+				}
+
+				if(this.leftThumbstickClick.action.WasPressedThisFrame())
 				{
 					this.PublishMessage(this.msgLeftPrimary2DAxisClick);
+				}
+				if(this.rightThumbstickClick.action.WasPressedThisFrame())
+				{
+					this.PublishMessage(this.msgRightPrimary2DAxisClick);
 				}
 			}
 		}
