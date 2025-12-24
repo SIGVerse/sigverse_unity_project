@@ -402,7 +402,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4000011936903778}
-  - component: {fileID: 95000010780892470}
   m_Layer: 8
   m_Name: systemkitchen_B
   m_TagString: Untagged
@@ -431,28 +430,6 @@ Transform:
   - {fileID: 4000010991642164}
   m_Father: {fileID: 4000012906960688}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &95000010780892470
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000010465452236}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 0465f963a5179614b809eebbaa471734, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1000010712725472
 GameObject:
   m_ObjectHideFlags: 0
@@ -2362,7 +2339,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000012359305704}
   m_Layer: 8
-  m_Name: living
+  m_Name: living_room
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3435,7 +3412,6 @@ GameObject:
   - component: {fileID: 4000011404636836}
   - component: {fileID: 33000012641887292}
   - component: {fileID: 23000010873925118}
-  - component: {fileID: 95000013961569486}
   - component: {fileID: 64939502661755538}
   m_Layer: 8
   m_Name: systemkitchen_A
@@ -3517,28 +3493,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!95 &95000013961569486
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000013046777586}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 301dc9b7dfff75447841288e6de69bc3, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!64 &64939502661755538
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -6104,7 +6058,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4270996481582820}
-  - component: {fileID: 95013198356141468}
   m_Layer: 0
   m_Name: trashbox_c01
   m_TagString: Untagged
@@ -6129,28 +6082,6 @@ Transform:
   - {fileID: 4707294831931472}
   m_Father: {fileID: 4000012359305704}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &95013198356141468
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1051886087286628}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 85d9218bc607bc847b40c2d7e8763d78, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1054985183061454
 GameObject:
   m_ObjectHideFlags: 0
@@ -9006,7 +8937,6 @@ GameObject:
   - component: {fileID: 4580042011250542}
   - component: {fileID: 33087241081683384}
   - component: {fileID: 23656720284282708}
-  - component: {fileID: 95208792510946242}
   - component: {fileID: 64765636253585428}
   m_Layer: 0
   m_Name: flowervase_A_c01
@@ -9083,28 +9013,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!95 &95208792510946242
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1225339405892314}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 3c051202a1527074f964fd9626d443e7, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!64 &64765636253585428
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -10743,7 +10651,6 @@ GameObject:
   - component: {fileID: 4604543802947794}
   - component: {fileID: 33852298954075076}
   - component: {fileID: 23502164929966310}
-  - component: {fileID: 95855921095853988}
   - component: {fileID: 64524664400486836}
   m_Layer: 0
   m_Name: cupboard_A_c02
@@ -10822,28 +10729,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!95 &95855921095853988
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1339561014817090}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 8fcc74efb14d80843a78a269f8c518f2, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!64 &64524664400486836
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11202,7 +11087,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4134410051244084}
-  - component: {fileID: 95442230707850284}
   m_Layer: 0
   m_Name: trashbox_c02
   m_TagString: Untagged
@@ -11227,28 +11111,6 @@ Transform:
   - {fileID: 4258955638042378}
   m_Father: {fileID: 4000012359305704}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &95442230707850284
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1349910424356808}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 68ce37f758548bf4882a15732ce71fb4, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1351107898019798
 GameObject:
   m_ObjectHideFlags: 0
@@ -12406,7 +12268,6 @@ GameObject:
   - component: {fileID: 4819513878665232}
   - component: {fileID: 33178439171727476}
   - component: {fileID: 23750083223032830}
-  - component: {fileID: 95697723873754888}
   - component: {fileID: 64164096233179516}
   m_Layer: 0
   m_Name: TVbass_A
@@ -12485,28 +12346,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!95 &95697723873754888
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1401246824790390}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 42140b0015637cf48aed8a39dc572999, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!64 &64164096233179516
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -15478,7 +15317,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4394922585185754}
-  - component: {fileID: 95428313562482794}
   m_Layer: 0
   m_Name: trashbox_c03
   m_TagString: Untagged
@@ -15503,28 +15341,6 @@ Transform:
   - {fileID: 4036097375584382}
   m_Father: {fileID: 4000012359305704}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &95428313562482794
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1575842283358128}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: d7167e39162e12949bc7a539738e50be, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1581202460308658
 GameObject:
   m_ObjectHideFlags: 0
