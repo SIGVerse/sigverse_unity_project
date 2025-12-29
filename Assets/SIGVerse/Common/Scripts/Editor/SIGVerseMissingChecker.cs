@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace SIGVerse.Common
 {
-	public static class MissingChecker
+	public static class SIGVerseMissingChecker
 	{
 		[MenuItem("SIGVerse/Missing/Check Current Stage (Scene or Prefab)")]
 		public static void CheckCurrentStage()
