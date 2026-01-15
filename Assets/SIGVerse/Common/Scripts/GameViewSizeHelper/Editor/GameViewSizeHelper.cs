@@ -136,7 +136,7 @@ namespace Kyusyukeigo.Helper
             }
             if (index != -1)
             {
-                PropertyInfo selectedSizeIndex = Types.gameView.GetProperty("selectedSizeIndex", BindingFlags.Instance | BindingFlags.NonPublic);
+                PropertyInfo selectedSizeIndex = Types.gameView.GetProperty("selectedSizeIndex", BindingFlags.Instance | BindingFlags.Public);
                 selectedSizeIndex.SetValue(gameView, index, null);
             }
         }
